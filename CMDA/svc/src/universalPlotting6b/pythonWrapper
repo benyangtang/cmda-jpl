@@ -2806,6 +2806,18 @@ if cr['services__']       == 1:
     temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
     runF(temp1)
 
+
+    nc1 = Dataset(a.fList[0])
+    nc2 = Dataset(dataFile, 'r+')
+    NC1.copy_att(nc1,nc2)
+    nc2.close()
+
+    '''
+                        temp1 += 'ncrename -v lon,longitude -v lat,latitude %s\n'%(fn2)
+                            temp1 += 'ncrename -d longitude,lon -d latitude,lat  %s\n'%(fn2)
+                                temp1 += 'ncrename -v longitude,lon -v latitude,lat %s\n'%(fn2)
+                                '''
+
     #sys.exit()
 
   #== mapView__
