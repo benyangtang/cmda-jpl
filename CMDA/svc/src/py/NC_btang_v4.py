@@ -532,6 +532,8 @@ def copy_att(nc1, nc2, overwrite=0):
   for a in attr1:
     print(a)
     nc2.setncattr(a, nc1.getncattr(a))
+    print(nc1.getncattr(a))
+    print(nc2.getncattr(a))
 
 #== def_copy_dim
 def copy_dim(nc1, nc2, overwrite=0):
