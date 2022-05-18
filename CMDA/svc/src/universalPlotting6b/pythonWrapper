@@ -2803,6 +2803,8 @@ if cr['services__']       == 1:
 
   #== subsetDownload__
   if a.service=='subsetDownload':
+    #import NC_btang_v4 as NC1
+
     temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
     runF(temp1)
 
@@ -2819,7 +2821,7 @@ if cr['services__']       == 1:
                                 temp1 += 'ncrename -v longitude,lon -v latitude,lat %s\n'%(fn2)
                                 '''
 
-    #sys.exit()
+    sys.exit()
 
   #== mapView__
   if a.service=='mapView':
