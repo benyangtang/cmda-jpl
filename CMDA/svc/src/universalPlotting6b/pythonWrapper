@@ -2810,6 +2810,7 @@ if cr['services__']       == 1:
     nc1 = Dataset(a.fList[0][0])
     nc2 = Dataset(dataFile, 'r+')
     NC1.copy_att(nc1,nc2)
+    nc1.close()
     nc2.close()
 
     '''

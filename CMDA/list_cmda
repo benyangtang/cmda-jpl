@@ -2,6 +2,7 @@
 #== js2__
 #== src_universalPlotting6b
 #== src_cmda1
+#== src_py
 #== src_universalPlotting
 
 start.sh   ###
@@ -87,6 +88,15 @@ svc/src/des
 svc/src/EOF
 svc/src/py
 svc/src/universalPlotting3
+
+#== src_py
+svc/src/py/checkNc2.py
+svc/src/py/checkNc.py
+svc/src/py/cmac.py
+svc/src/py/download_file_from_url.py
+svc/src/py/__init__.py
+svc/src/py/NC_btang_v4.py
+svc/src/py/pca_v4.py
 
 #== src_universalPlotting
 svc/src/universalPlotting/call_universalPlotting.py   ####
