@@ -2807,7 +2807,7 @@ if cr['services__']       == 1:
     runF(temp1)
 
 
-    nc1 = Dataset(a.fList[0])
+    nc1 = Dataset(a.fList[0][0])
     nc2 = Dataset(dataFile, 'r+')
     NC1.copy_att(nc1,nc2)
     nc2.close()
