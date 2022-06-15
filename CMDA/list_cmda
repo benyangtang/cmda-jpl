@@ -4,6 +4,7 @@
 #== src_cmda1
 #== src_py
 #== src_universalPlotting
+#== src_updataData
 
 start.sh   ###
 app.py     ###
@@ -98,6 +99,8 @@ svc/src/py/__init__.py
 svc/src/py/NC_btang_v4.py
 svc/src/py/pca_v4.py
 
+svc/src/tools/shtpy192a  -- correct netcdf files
+
 #== src_universalPlotting
 svc/src/universalPlotting/call_universalPlotting.py   ####
 svc/src/universalPlotting/pythonWrapper   
@@ -119,4 +122,15 @@ svc/src/universalPlotting6b/wrapper
 svc/src/cmda1/pythonWrapper   ####
 svc/src/cmda1
 svc/src/cmda1/call_universalPlotting6b.py
+
+#== src_updataData
+svc/src/updateData/updateData
+svc/src/updateData/updateData1
+svc/src/updateData/updateData2
+svc/src/updateData/updateData3
+
+svc/src/updateData/change_reference_date.py
+svc/src/updateData/mkdes2_
+svc/src/updateData/README.txt
+svc/src/updateData/shtpy185a -- collect meta data for the new universal services. 
 
