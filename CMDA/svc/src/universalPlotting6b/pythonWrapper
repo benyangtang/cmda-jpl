@@ -2805,10 +2805,12 @@ if cr['services__']       == 1:
   if a.service=='subsetDownload':
     #import NC_btang_v4 as NC1
 
+    # save dataFile
     temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
     runF(temp1)
 
-
+    
+    # copy globle attr
     nc1 = Dataset(a.fList[0][0])
     nc2 = Dataset(dataFile, 'r+')
     NC1.copy_att(nc1,nc2)

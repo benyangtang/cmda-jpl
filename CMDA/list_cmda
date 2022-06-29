@@ -26,6 +26,7 @@ access.log
 == html__
 html/cmda.html   ####
 html/cmda1.html   ####
+html/cmda2.html   ####
 html/anomaly.html
 html/CMDA_intro.html
 html/cmda_services.html

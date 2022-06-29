@@ -1,6 +1,9 @@
 #!/home/btang/install/bin/python25
 
 '''
+rsyncec2 /home/btang/projects/cmda1/CMDA/svc/src/updateData/shtpy185a $ec21:/home/ubuntu/CMDA0/svc/src/updateData 
+exec(open('/home/ubuntu/CMDA0/svc/src/updateData/shtpy185a').read())
+
 execfile('/home/bytang/bin/shtpy/shtpy185a')
 
 #execfile('/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/updateData/shtpy185a')
@@ -10,7 +13,6 @@ rsync8022 shtpy185a $cmda0:/home/bytang/bin/shtpy
 
 rsync8022 shtpy185a $cmda0:/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/updateData
 
-rsyncec2 shtpy185a $ec21:/home/ubuntu/CMDA0/svc/src/updateData 
 
 
 rsync8022 $ec21:/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/updateData/shtpy185a  .
@@ -31,6 +33,7 @@ cr = {
 'import_':              1,   # 0  1   1  0
 # readme__
 #parameters_':  
+#== data_labels
 #parameters__':
 #                              1  2  3  4
 # 1 -- gather list of files
@@ -72,7 +75,7 @@ if cr['import_']       == 1:
   import pickle
   import json
   import yaml
-  sys.path.append('%s/bin/py'%home)
+  #sys.path.append('%s/bin/py'%home)
   #import btang
 
   import tempfile
@@ -86,7 +89,7 @@ if cr['import_']       == 1:
 
   # numpy
   import numpy as np
-  import numpy_btang as np1
+  #import numpy_btang as np1
 
   if 0:
     #import scikits
@@ -106,7 +109,8 @@ if cr['import_']       == 1:
     import pyferret as PF
 
 if 1:
-  sys.path.append('/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/py')
+  myPyDir = '/home/ubuntu/CMDA0/svc/src/py'
+  sys.path.append(myPyDir)
   import  checkNc2
   importlib.reload(checkNc2)
 
@@ -138,8 +142,7 @@ fileList.js -- for web
 mainDir = '/mnt/data/data_clean/cmip5'
 dataDir = mainDir
 
-outDir = '/home/bytang'
-#outDir = '/home/svc'
+outDir = '/home/ubuntu'
 
 #nFile = 100
 nFile = -1 # do all
@@ -152,12 +155,13 @@ saveTo = '0'   # saved to a temp with affix '0'
 
 redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
-redoFailData = 2  # not in the database, so including the failed ones and new ones
+#redoFailData = 2  # not in the database, so including the failed ones and new ones
 #redoFailData = 3  # from a list of files
 
-dumpDir = '/mnt/cmda_mnt/dump_files'
+dumpDir = '/home/ubuntu/dumpFiles'
 tempfile.tempdir = dumpDir
 
+#== data_labels
 '''
 rsus_Amon_CMCC-CM_amip_r1i1p1_197901-198812.nc
 
@@ -351,10 +355,13 @@ if cr['command_arg']       == 1:
 if cr['collect_fileList']       == 1:
   fileList = []
   exclude1 = ['no_good',]
+  # t -- parent dir?
+  # d -- dir
+  # f -- file
   for t,d,f in os.walk(mainDir, followlinks=True):
     #print(t)
     #print(d)
-    d[:] = [dd for dd in d if dd not in exclude1]
+    d[:] = [dd for dd in d if dd not in exclude1]  # ?
     for ff in f:
       temp1 = ff.rfind('.')
       if ff[temp1:] in ('.nc', '.cdf'):
@@ -435,7 +442,7 @@ if cr['save_list_of_files']       == 1:
 
 # cp_files
   '''
-cd /home/bytang
+cd /home/ubuntu
 mv files0.js files9.js
 
 '''
@@ -532,6 +539,14 @@ if cr['extract_info_inside']       == 1:
     d9 = {  
 '/mnt/data/data_clean/cmip5/others/sst.wkmean_*-*.nc':1,
 '/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_uwind_profile_1pt5x1pt5_monthly_*.nc':1,
+'/mnt/data/data_clean/cmip5/users/era5/era5_high_level_cloud_cover_197901_202107.nc':1,
+'/mnt/data/data_clean/cmip5/users/era5/era5_low_level_cloud_cover_197901_202107.nc':1,
+'/mnt/data/data_clean/cmip5/users/era5/era5_mid_level_cloud_cover_197901_202107.nc':1,
+'/mnt/data/data_clean/cmip5/users/era5/era5_sea_level_pressure_197901_202107.nc':1,
+'/mnt/data/data_clean/cmip5/users/era5/era5_uwind_10m_197901_202107.nc':1,
+'/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_vwind_profile_1pt5x1pt5_monthly_*.nc':1,
+'/mnt/data/data_clean/cmip5/cccma/canam4/amip/hur_Amon_CanAM4_amip_r1i1p1_195001-200912.nc':1,
+
 #'/mnt/data/data_clean/cmip5/wrf/co-kf/rlut_Amon_wrf_co-kf_200401-200412.nc':1,
 #'/mnt/data/data_clean/cmip5/users/tkubar/output_monthly_misr_terra_l3_cloud_top_height_dist_apr2002_jan2019.nc':1,
 }
@@ -597,15 +612,15 @@ if cr['save_json']       == 1:
   fid.close()
 
 if cr['combine_old_new']       == 1:
+  fn1 = '%s/filesDict01.js'%outDir
+  filesGoodNew = yaml.safe_load( open(fn1).read() )
+  kNew = list(filesGoodNew.keys())
+
   fn2 = '%s/filesDict9.js'%outDir
   if os.path.isfile(fn2):
     filesGoodOld = yaml.safe_load( open(fn2).read() )
 
-    fn1 = '%s/filesDict01.js'%outDir
-    filesGoodNew = yaml.safe_load( open(fn1).read() )
-
     kOld = list(filesGoodOld.keys())
-    kNew = list(filesGoodNew.keys())
 
     for k in kNew:
       filesGoodOld[k] = filesGoodNew[k]
@@ -629,8 +644,9 @@ if cr['combine_old_new']       == 1:
 
 # cp_fileDict
   '''
-cd /home/bytang
-mv filesDict0.js filesDict9.js
+cd /home/ubuntu
+#mv filesDict0.js filesDict9.js
+mv filesDict0.js filesDict8.js
 
 '''
 
@@ -644,7 +660,8 @@ if cr['facet_list']       == 1:
   varL = {}
   varLongL = {}
 
-  fn2 = '%s/filesDict9.js'%outDir
+  #fn2 = '%s/filesDict9.js'%outDir
+  fn2 = '%s/filesDict8.js'%outDir
   dict2 = yaml.safe_load( open(fn2).read() )
 
   dimLen = {}
@@ -824,9 +841,11 @@ if cr['save_json_for_web']       == 1:
 #== on my laptop ubuntu 20.04:
 # for old cmda server:
 # do this as user svc:
-outdir=/home/bytang
-cd /home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html/js2
-rsync -av $outdir/fileList0.js fileList_cloud_full.js
+outdir=/home/ubuntu
+cd /home/ubuntu/CMDA0/html/js2
+rsync -av $outdir/fileList0.js fileList_cloud_full8.js
+
+rsyncec2 $ec21:/home/ubuntu/CMDA0/html/js2/fileList_cloud_full8.js .
 
 # diff
 outdir=/home/bytang
