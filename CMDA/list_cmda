@@ -24,9 +24,9 @@ temp1
 access.log
 
 == html__
-html/cmda.html   ####
-html/cmda1.html   ####
-html/cmda2.html   ####
+html/cmda.html   ####   ?
+html/cmda1.html   ####  use src cmda1
+html/cmda2.html   ####  meta table, downloadOri. uses src *6b
 html/anomaly.html
 html/CMDA_intro.html
 html/cmda_services.html
@@ -119,7 +119,7 @@ svc/src/universalPlotting6b/call_universalPlotting6b.py.bak0
 svc/src/universalPlotting6b/pythonWrapper.bak0
 svc/src/universalPlotting6b/wrapper
 
-#== src_cmda1
+#== src_cmda1    only used by cmda1.html
 svc/src/cmda1/pythonWrapper   ####
 svc/src/cmda1
 svc/src/cmda1/call_universalPlotting6b.py

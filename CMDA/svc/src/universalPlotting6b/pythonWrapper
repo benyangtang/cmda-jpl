@@ -2713,14 +2713,23 @@ if cr['services__']       == 1:
 
   #== download_original
   if a.service=='downloadOriginal':
-    ncFile = a.fList[0][0]
-    #ncFile = os.path.split(a.fList[0][0])[1]
-    dataFile = '%s/%s'%(a.outDir, os.path.split(ncFile)[1])
+    if len(a.fList[0])==1: # only download the first file
+      ncFile = a.fList[0][0]
+      #ncFile = os.path.split(a.fList[0][0])[1]
+      dataFile = '%s/%s'%(a.outDir, os.path.split(ncFile)[1])
 
-    #temp1 = 'cp -f %s %s'%(ncFile, dataFile)
-    temp1 = 'rsync -tv %s %s'%(ncFile, dataFile)
-    print(temp1)
-    os.system(temp1)
+      #temp1 = 'cp -f %s %s'%(ncFile, dataFile)
+      temp1 = 'rsync -tv %s %s'%(ncFile, dataFile)
+      print(temp1)
+      os.system(temp1)
+
+    else: # tar files 
+      dataFile = '%s/data.tar'%(a.outDir)
+      temp1 = 'tar -cf %s '%(dataFile)
+      for f in a.fList[0]:
+        temp1 = temp1 + f + ' '
+      print(temp1)
+      os.system(temp1)
 
     print('dataFile: %s'%dataFile)
 
