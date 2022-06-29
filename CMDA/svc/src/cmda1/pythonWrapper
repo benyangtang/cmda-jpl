@@ -2768,13 +2768,6 @@ if cr['services__']       == 1:
 
     runF(temp1)
 
-#  clim = ds.groupby("time.month").mean('time')
-#  anom = ds.groupby("time.month") - clim
-#
-#  climSub = dsSub.groupby("time.month").mean('time')
-#  anomSub = dsSub.groupby("time.month") - climSub
-
-
   # calc_anomaly
   if a.timeMethod[0]==3 and a.anomaly==1:
     for ii in range(a.nData):
@@ -2810,10 +2803,27 @@ if cr['services__']       == 1:
 
   #== subsetDownload__
   if a.service=='subsetDownload':
+    #import NC_btang_v4 as NC1
+
+    # save dataFile
     temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
     runF(temp1)
 
-    #sys.exit()
+    
+    # copy globle attr
+    nc1 = Dataset(a.fList[0][0])
+    nc2 = Dataset(dataFile, 'r+')
+    NC1.copy_att(nc1,nc2)
+    nc1.close()
+    nc2.close()
+
+    '''
+                        temp1 += 'ncrename -v lon,longitude -v lat,latitude %s\n'%(fn2)
+                            temp1 += 'ncrename -d longitude,lon -d latitude,lat  %s\n'%(fn2)
+                                temp1 += 'ncrename -v longitude,lon -v latitude,lat %s\n'%(fn2)
+                                '''
+
+    # sys.exit()  # need to plot later in the code
 
   #== mapView__
   if a.service=='mapView':
@@ -4407,8 +4417,9 @@ go multi_yaxis_overlay dens 2 "-" " " @CI"Density" .3 1.5  ",1,,,.13,(1PG10.3)"
   #if a.service in ('plot', 'contour', 'plotContour', 'linear') :
   if a.service in ['plot', 'contour', 'plotContour', 'linear','subsetDownload']:
     #-- save__data
-    temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
-    runF(temp1)
+    if a.service in ['plot', 'contour', 'plotContour', 'linear']: 
+      temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
+      runF(temp1)
 
     if a.plotTitle[0]:
       titleStr = '/title="%s"'%a.plotTitle[0]
