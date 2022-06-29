@@ -2471,6 +2471,12 @@ if cr['check_parameters']       == 1:
   s.nDim = (1,2,3,4)
   services[key1] = s
 
+  key1 = 'downloadOriginal'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (1,2,3,4)
+  services[key1] = s
+
   key1 = 'EOF'
   s = SERVICE()
   s.key = key1
