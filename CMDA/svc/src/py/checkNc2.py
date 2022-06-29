@@ -1,6 +1,8 @@
 '''
 xxxx  -- attention
 
+rsyncec2 /home/btang/projects/cmda1/CMDA/svc/src/py/checkNc2.py $ec21:/home/ubuntu/CMDA0/svc/src/py 
+
 kk src7 
 cd py
 rsync8022 checkNc2.py cmac.py $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/py
@@ -37,8 +39,10 @@ import cfunits as cf1
 import copy
 import glob
 import traceback
-sys.path.insert(0, '/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/py')
-from . import cmac
+myPyDir = '/home/ubuntu/CMDA0/svc/src/py'
+sys.path.insert(0, myPyDir)
+#from . import cmac
+import cmac
 
 vb = 1
 
@@ -584,18 +588,33 @@ return ok1:
 
         a1 = a1[:8]
         a2 = a2[:8]
+        a3 = '1'
 
       else:  # not time
         try:
           d2a = d2[:]
-          a1 = str(d2a.min())
-          a2 = str(d2a.max())      
+          a1 = ('%.2f'%d2a.min()).rstrip('0').rstrip('.')
+          a2 = ('%.2f'%d2a.max()).rstrip('0').rstrip('.')     
+          try:
+            a3 = ('%.2f'%(d2a[1]-d2a[0])).rstrip('0').rstrip('.')
+          except: a3 = '0'
         except:
           a1 = '0'
           a2 = '0'
+          a3 = '0'
+
+        try:
+          if dimWhat=='z':
+            a3 = ''
+            for aa in d2a: 
+                a3 += ('%.2f'%aa).rstrip('0').rstrip('.')+','
+            a3 = a3[:-1]
+        except: a3 = '0'
+
       str1 += '%s: %s to %s (%s)\n'%(dimVar, a1, a2, units1)
       varDict[dimVar]['min'] = a1
       varDict[dimVar]['max'] = a2
+      varDict[dimVar]['res'] = a3
       varDict[dimVar]['units'] = units1
       varDict[dimVar]['what'] = dimWhat
 
