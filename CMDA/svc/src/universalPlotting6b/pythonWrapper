@@ -2732,10 +2732,13 @@ if cr['services__']       == 1:
     else: # tar files 
       dataFile = '%s/data.tar'%(a.outDir)
       temp1 = 'tar -cf %s '%(dataFile)
+      dir9 = os.getcwd()
+      os.chdir(os.path.split(a.fList[0][0])[0])  #zzzz
       for f in a.fList[0]:
-        temp1 = temp1 + f + ' '
+        temp1 = temp1 + os.path.split(f)[1] + ' '
       print(temp1)
       os.system(temp1)
+      os.chdir(dir9)
 
     print('dataFile: %s'%dataFile)
 
