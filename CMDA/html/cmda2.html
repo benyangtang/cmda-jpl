@@ -95,7 +95,7 @@ rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/p
       // filter_by_varLong
       // filter_by_time
       // refresh_filtered_files
-      // filteredTable__
+      // filteredTable__  zzzz
     //changeSearchText__: function() {
     // openNewWindow__
     // changeService__
@@ -854,8 +854,8 @@ Select Datasets and Variables
 <th></th>
 <th></th>
 <th>fileName</th>
-<th>var<br/>Name</th>
-<th>var<br/>longName</th>
+<th>var<br/>name</th>
+<th>var<br/>long name</th>
 <th>units</th>
 <th>lon<br/>start</th>
 <th>lon<br/>end</th>
@@ -863,11 +863,11 @@ Select Datasets and Variables
 <th>lat<br/>start</th>
 <th>lat<br/>end</th>
 <th>lat<br/>res</th>
-<!--<th>ver<br/>levels</th>  -->
-<th>time</th>
-<th>time</th>
+<th>vertical<br/>levels</th>
+<th>time<br/>start</th>
+<th>time<br/>end</th>
 <th></th>
-<th>varList</th>
+<th>var list</th>
 </tr>
 <template v-for="ii in datasetFiltered.length" >
  <tr>
@@ -884,7 +884,10 @@ Select Datasets and Variables
    </td>
 
    <td>
+    {{filteredTable[ii-1].varName}}
+<!--
     {{fileDict[datasetFiltered[ii-1]].varList[0]}}
+-->
    </td>
 
    <td>
@@ -918,6 +921,12 @@ Select Datasets and Variables
 
    <td>
     {{fileDict[datasetFiltered[ii-1]].varDict[ fileDict[datasetFiltered[ii-1]].dimList[1] ].res}}
+   </td>
+
+   <td>
+<!--
+    <a href="#" data-html='true' data-toggle="tooltip" title={{fileDict[datasetFiltered[ii-1]].varDict[ fileDict[datasetFiltered[ii-1]].dimList[3] ].res}}>aa</a>
+-->
    </td>
 
    <td>
@@ -1773,7 +1782,7 @@ var vueApp = new Vue({
         this.datasetFilteredDict[temp2] = {'order':'', 'var':fileDict[temp2].varList[0]};
       }
 
-      // filteredTable__
+      // filteredTable__  zzzz
       this.filteredTable = {};
       var temp11;
       var dict11;
@@ -1814,7 +1823,7 @@ var vueApp = new Vue({
           z11 = dict11.varDict[varD11.dim[index11]];
         }
 
-        this.filteredTable[temp11] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
+        this.filteredTable[ii] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
       }
 
       if (this.var9.length>0) {
