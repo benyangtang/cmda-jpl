@@ -95,6 +95,7 @@ rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/p
       // filter_by_varLong
       // filter_by_time
       // refresh_filtered_files
+      // filteredTable__  zzzz
     //changeSearchText__: function() {
     // openNewWindow__
     // changeService__
@@ -152,7 +153,7 @@ cmac/html/codeStorage.html
 <!-- cmac related -->
 <link rel="stylesheet" href="common.css">
 <script src='js2/varList.js'></script>
-<script>document.write('<script src="js2/fileList.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
+<script>document.write('<script src="js2/fileList_cloud_full8.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 
 <script>document.write('<script src="js2/common-v6c.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 <!-- 
@@ -228,14 +229,14 @@ obj1.title = 'Subset and Download';
 obj1.description = 'Subset and Download';
 services.subsetDownload = jQuery.extend(true, {}, obj1);
 
-//obj1.name = 'Download Original';
-//obj1.nDataset = 1;
-//obj1.nDim = 3;
-//obj1.nPlot = 1;
-//obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
-//obj1.title = 'Download Original';
-//obj1.description = 'Download Original';
-//services.downloadOriginal = jQuery.extend(true, {}, obj1);
+obj1.name = 'Download Original';
+obj1.nDataset = 1;
+obj1.nDim = 3;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Download Original';
+obj1.description = 'Download Original';
+services.downloadOriginal = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'EOF: Empirical Orthogonal Functions';
 obj1.nDataset = 1;
@@ -593,6 +594,16 @@ $(document).ready(function(){
 
   </script>
 
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th {
+  text-align: center;
+}
+</style>
+
 </head>
 
 <body>
@@ -837,27 +848,107 @@ Select Datasets and Variables
 
 
 <!-- select_datasets -->
+<div  v-if="datasetFiltered.length>0">
+<table style="width:100%">
+<tr>
+<th></th>
+<th></th>
+<th>fileName</th>
+<th>var<br/>name</th>
+<th>var<br/>long name</th>
+<th>units</th>
+<th>lon<br/>start</th>
+<th>lon<br/>end</th>
+<th>lon<br/>res</th>
+<th>lat<br/>start</th>
+<th>lat<br/>end</th>
+<th>lat<br/>res</th>
+<th>vertical<br/>levels</th>
+<th>time<br/>start</th>
+<th>time<br/>end</th>
+<th></th>
+<th>var list</th>
+</tr>
 <template v-for="ii in datasetFiltered.length" >
- <div class="row" v-bind:style="{backgroundColor: twoColor[(ii-1)%2]}">
-  <div class="col-sm-8 left1">
-   <input type="text" readonly size=2 v-bind:value="datasetFilteredDict[datasetFiltered[ii-1]].order">
-   <label> 
-   <input type="checkbox" v-model="datasetSelected" v-bind:value="datasetFiltered[ii-1]" v-on:change="changedDatasetSelected()" />{{searchTextFilteredShort[ii-1]}}
-<!--    <input type="checkbox" v-model="datasetSelected" v-bind:value="datasetFiltered[ii-1]"  />{{datasetFiltered[ii-1]}} -->
-   </label>
-  </div> <!-- col 8-->
+ <tr>
+   <td>
+    <input type="text" readonly size=2 v-bind:value="datasetFilteredDict[datasetFiltered[ii-1]].order">
+   </td>
 
-  <!-- select_var -->
-  <div class="col-sm-4 left1">
+   <td>
+    <input type="checkbox" v-model="datasetSelected" v-bind:value="datasetFiltered[ii-1]" v-on:change="changedDatasetSelected()" />
+   </td>
+
+   <td>
+    {{searchTextFilteredShort[ii-1]}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].varName}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].longName}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].varUnits}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.max}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.res}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.max}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.res}}
+   </td>
+
+   <td>
+    <span v-if="filteredTable[ii-1].z.res">
+    <a href="#" data-html='true' data-toggle="tooltip" :title="filteredTable[ii-1].z.res">here</a>
+    </span>
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].time.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].time.max}}
+   </td>
+
+   <td>
+   </td>
+
+   <td>
    <select v-on:change="changedSelected()" v-model="datasetFilteredDict[datasetFiltered[ii-1]].var">
     <option v-for="iii in fileDict[datasetFiltered[ii-1]].varList.length" v-bind:value="fileDict[datasetFiltered[ii-1]].varList[iii-1]">
 {{fileDict[datasetFiltered[ii-1]].varList[iii-1]}}: {{fileDict[datasetFiltered[ii-1]].varListLong[iii-1]}}
     </option>
    </select>
-  </div> <!-- col 4-->
+   </td>
 
- </div> <!-- row -->
+
+ </tr>
 </template>
+</table>
+</div>  <!-- v_if -->
 
 
 <!-- data_subsubsetting -->
@@ -1335,6 +1426,7 @@ var vueApp = new Vue({
     fileDict: fileDict,
     fileList: Object.keys(fileDict),
     datasetFiltered: [],
+    filteredTable: {},
     moreFilter: 0,
 
     searchText: searchText,
@@ -1684,6 +1776,50 @@ var vueApp = new Vue({
       for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
         temp2 = this.datasetFiltered[ii];
         this.datasetFilteredDict[temp2] = {'order':'', 'var':fileDict[temp2].varList[0]};
+      }
+
+      // filteredTable__  zzzz
+      this.filteredTable = {};
+      var temp11;
+      var dict11;
+      var var11;
+      var varD11;
+      var index11;
+      var lon11;
+      var lat11;
+      var time11;
+      var z11;
+      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
+        temp11 = this.datasetFiltered[ii];
+        dict11 = this.fileDict[temp11]; 
+        var11 = dict11.varList[0];
+        varD11 = dict11.varDict[var11];
+
+        index11 = varD11.dim2.indexOf('lon');
+        lon11 = {'min':'', 'max':'', 'res':''};
+        if (index11>-1) {
+          lon11 = dict11.varDict[varD11.dim[index11]];
+        }
+
+        index11 = varD11.dim2.indexOf('lon');
+        lat11 = {'min':'', 'max':'', 'res':''};
+        if (index11>-1) {
+          lat11 = dict11.varDict[varD11.dim[index11]];
+        }
+
+        index11 = varD11.dim2.indexOf('time');
+        time11 = {'min':'', 'max':'', 'res':''};
+        if (index11>-1) {
+          time11 = dict11.varDict[varD11.dim[index11]];
+        }
+
+        index11 = varD11.dim2.indexOf('z');
+        z11 = {'min':'', 'max':'', 'res':''};
+        if (index11>-1) {
+          z11 = dict11.varDict[varD11.dim[index11]];
+        }
+
+        this.filteredTable[ii] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
       }
 
       if (this.var9.length>0) {
