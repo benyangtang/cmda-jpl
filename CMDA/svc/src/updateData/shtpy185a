@@ -42,9 +42,9 @@ cr = {
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
-'extract_info_inside':  0,   # 0  1  0
-'save_json':            0,   # 0  1  0
-'combine_old_new':      0,   # 0  1  0
+'extract_info_inside':  1,   # 0  1  0
+'save_json':            1,   # 0  1  0
+'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
 'facet_list':           1,   # 0  0  1
@@ -150,8 +150,8 @@ nFile = -1 # do all
 readable = True
 #readable = False
 
-saveTo = '0'   # saved to a temp with affix '0'
-#saveTo = '9'   # saved to a more permenant file
+#saveTo = '0'   # saved to a temp with affix '0'
+saveTo = '9'   # saved to a more permenant file
 
 #redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
@@ -537,8 +537,9 @@ if cr['extract_info_inside']       == 1:
 # change_file_list
   elif redoFailData==3:
     d9 = {  
+'https://podaac-opendap.jpl.nasa.gov/opendap/allData/smap/L3/RSS/V4/monthly/SCI/2022/RSS_smap_SSS_L3_monthly_2022_05_FNL_v04.0.nc':1,
 #'https://podaac-opendap.jpl.nasa.gov/opendap/allData/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc':1,
-'/mnt/gateway/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,
+#'/mnt/gateway/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,  # need modify
 #'/mnt/data/data_clean/cmip5/others/sst.wkmean_*-*.nc':1,
 #'/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_uwind_profile_1pt5x1pt5_monthly_*.nc':1,
 #'/mnt/data/data_clean/cmip5/users/era5/era5_high_level_cloud_cover_197901_202107.nc':1,
@@ -837,14 +838,6 @@ if cr['save_json_for_web']       == 1:
      
 # put_to_web
 '''
-#== on my laptop ubuntu 20.04:
-# for old cmda server:
-# do this as user svc:
-<<<<<<< HEAD
-outdir=/home/bytang
-cd /home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html/js2
-rsync -av $outdir/fileList0.js fileList_cloud_full.js
-=======
 outdir=/home/ubuntu
 cd /home/ubuntu/CMDA0/html/js2
 rsync -av $outdir/fileList0.js fileList_cloud_full8.js
