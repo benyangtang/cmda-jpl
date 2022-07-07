@@ -42,13 +42,13 @@ cr = {
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
-'extract_info_inside':  0,   # 0  1  0
-'save_json':            0,   # 0  1  0
-'combine_old_new':      0,   # 0  1  0
+'extract_info_inside':  1,   # 0  1  0
+'save_json':            1,   # 0  1  0
+'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
-'facet_list':           1,   # 0  0  1
-'save_json_for_web':    1,   # 0  0  1
+'facet_list':           0,   # 0  0  1
+'save_json_for_web':    0,   # 0  0  1
 # put_to_web            1
 '':        0,   # 1  1
 '':        0,   # 1  1
@@ -537,7 +537,8 @@ if cr['extract_info_inside']       == 1:
 # change_file_list
   elif redoFailData==3:
     d9 = {  
-'https://podaac-opendap.jpl.nasa.gov/opendap/allData/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc':1,
+#'https://podaac-opendap.jpl.nasa.gov/opendap/allData/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc':1,
+'/mnt/gateway/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,
 #'/mnt/data/data_clean/cmip5/others/sst.wkmean_*-*.nc':1,
 #'/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_uwind_profile_1pt5x1pt5_monthly_*.nc':1,
 #'/mnt/data/data_clean/cmip5/users/era5/era5_high_level_cloud_cover_197901_202107.nc':1,
