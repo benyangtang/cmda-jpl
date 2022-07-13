@@ -838,10 +838,12 @@ if cr['save_json_for_web']       == 1:
      
 # put_to_web
 '''
+#-- copy to be used in the server
 outdir=/home/ubuntu
 cd /home/ubuntu/CMDA0/html/js2
 rsync -av $outdir/fileList0.js fileList_cloud_full8.js
 
+#-- cp to local laptop:
 rsyncec2 $ec21:/home/ubuntu/CMDA0/html/js2/fileList_cloud_full8.js .
 >>>>>>> 644e609043ffd6d67f456a19a0f2ddde010e4bb2
 

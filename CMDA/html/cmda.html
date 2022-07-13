@@ -200,6 +200,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Plot';
 obj1.description = 'Make plots from data';
+obj1.action = 'Analyse Data';
 services.plot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Contour Plot';
@@ -235,6 +236,7 @@ obj1.nDim = 3;
 obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Download Original';
+obj1.action = 'Gather Data';
 obj1.description = 'Download Original';
 services.downloadOriginal = jQuery.extend(true, {}, obj1);
 
@@ -952,6 +954,7 @@ Select Datasets and Variables
 
 
 <!-- data_subsubsetting -->
+<template v-if="service!='downloadOriginal'">
 <div class="color3" v-show="datasetSelected.length>0">
 <div class="row center1 subtitle1" >
 Data Subsetting
@@ -1130,6 +1133,7 @@ Data Subsetting
 
 </div> <!-- color2 -->
 </div> <!-- v-show -->
+</div> <!-- v-show -->
 
 <!-- linearOpt -->
 <div class="color2" v-show="service=='linear'">
@@ -1265,6 +1269,7 @@ Parameters for the correlationMap service
   </div> <!-- col -->
 </div> <!-- row -->
 </div> <!-- color2 -->
+</template> <!-- v-else  downloadOriginal-->
 
 <!-- action_button -->
 <div class="color4">
@@ -1871,6 +1876,7 @@ var vueApp = new Vue({
       this.plotP9 = this.service9.plotP;
       this.whichPlot = "1";
       this.plotP2 = this.plotP9[ Number(this.whichPlot)-1 ];
+      this.getPlotText = this.service9.action;
 
       //this.title = this.service9.title;
       //this.description = this.service9.description;
