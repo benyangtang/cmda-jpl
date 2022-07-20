@@ -36,15 +36,15 @@ cr = {
 # 2 -- collect facets 
 # 3 -- save js for web
 'command_arg':    0, #  1,   # 1  1  1
-'collect_fileList':     1,   # 1  0  0
-'combine_break_files':  1,   # 1  0  0
-'save_list_of_files':   1,   # 1  0  0
+'collect_fileList':     0,   # 1  0  0
+'combine_break_files':  0,   # 1  0  0
+'save_list_of_files':   0,   # 1  0  0
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
-'extract_info_inside':  0,   # 0  1  0
-'save_json':            0,   # 0  1  0
-'combine_old_new':      0,   # 0  1  0
+'extract_info_inside':  1,   # 0  1  0
+'save_json':            1,   # 0  1  0
+'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
 'facet_list':           0,   # 0  0  1
@@ -151,8 +151,8 @@ nFile = -1 # do all
 readable = True
 #readable = False
 
-#saveTo = '0'   # saved to a temp with affix '0'
-saveTo = '9'   # saved to a more permenant file
+saveTo = '0'   # saved to a temp with affix '0'
+#saveTo = '9'   # saved to a more permenant file
 
 #redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
