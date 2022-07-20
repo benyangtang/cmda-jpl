@@ -154,10 +154,10 @@ readable = True
 saveTo = '0'   # saved to a temp with affix '0'
 #saveTo = '9'   # saved to a more permenant file
 
-#redoFailData = 0  # do whole data dir
+redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
 #redoFailData = 2  # not in the database, so including the failed ones and new ones
-redoFailData = 3  # from a list of files
+#redoFailData = 3  # from a list of files
 
 dumpDir = '/home/ubuntu/dumpFiles'
 tempfile.tempdir = dumpDir
