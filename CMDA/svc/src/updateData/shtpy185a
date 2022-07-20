@@ -36,9 +36,9 @@ cr = {
 # 2 -- collect facets 
 # 3 -- save js for web
 'command_arg':    0, #  1,   # 1  1  1
-'collect_fileList':     0,   # 1  0  0
-'combine_break_files':  0,   # 1  0  0
-'save_list_of_files':   0,   # 1  0  0
+'collect_fileList':     1,   # 1  0  0
+'combine_break_files':  1,   # 1  0  0
+'save_list_of_files':   1,   # 1  0  0
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
@@ -47,8 +47,8 @@ cr = {
 'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
-'facet_list':           1,   # 0  0  1
-'save_json_for_web':    1,   # 0  0  1
+'facet_list':           0,   # 0  0  1
+'save_json_for_web':    0,   # 0  0  1
 # put_to_web            1
 '':        0,   # 1  1
 '':        0,   # 1  1
@@ -139,7 +139,8 @@ fileList.js -- for web
 # parameters_
 #mainDir = '/mnt/data_2016/cmip5'
 #mainDir = '/mnt/data/data_2017/cmip5'
-mainDir = '/mnt/data/data_clean/cmip5'
+#mainDir = '/mnt/data/data_clean/cmip5'
+mainDir = '/mnt/gateway/cmip6'
 dataDir = mainDir
 
 outDir = '/home/ubuntu'
