@@ -219,6 +219,7 @@ obj1.nPlot = 2;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Contour Plot Overlaying a Color Plot';
 obj1.description = 'Contour Plot Overlaying a Color Plot';
+obj1.action = 'Analyse Data';
 services.plotContour = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Subset and Download';
@@ -227,8 +228,8 @@ obj1.nDim = 3;
 obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Subset and Download';
-obj1.action = 'Gather Data';
 obj1.description = 'Subset and Download';
+obj1.action = 'Gather Data';
 services.subsetDownload = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Download Original';
@@ -237,8 +238,8 @@ obj1.nDim = 3;
 obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Download Original';
-obj1.action = 'Gather Data';
 obj1.description = 'Download Original';
+obj1.action = 'Gather Data';
 services.downloadOriginal = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'EOF: Empirical Orthogonal Functions';
@@ -248,6 +249,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'EOF';
 obj1.description = 'Empirical Orthogonal Function';
+obj1.action = 'Analyse Data';
 services.EOF = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Random Forest, Feature Importance';
@@ -257,6 +259,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Random Forest';
 obj1.description = 'Random Forest';
+obj1.action = 'Analyse Data';
 services.randomForest = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Linear Combination of Multiple Variables';
@@ -266,6 +269,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Linear Combination';
 obj1.description = 'Linear combination of multiple variables';
+obj1.action = 'Analyse Data';
 services.linear = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Time Series Plots';
@@ -275,6 +279,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = ' ';
 obj1.description = 'Time Series Plots';
+obj1.action = 'Analyse Data';
 services.timeSeries = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Map View of Multiple Variables';
@@ -284,6 +289,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = ' ';
 obj1.description = 'Map View of Multiple Variables';
+obj1.action = 'Analyse Data';
 services.mapView = jQuery.extend(true, {}, obj1);
 
 //obj1.name = 'Anomaly Calculation';
@@ -302,6 +308,7 @@ obj1.nPlot = 3;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Scatter Plot of Two Fields';
 obj1.description = 'Scatter Plot of Two Fields';
+obj1.action = 'Analyse Data';
 services.scatterPlot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Difference of Two Fields';
@@ -311,6 +318,7 @@ obj1.nPlot = 3;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Difference of Two Fields';
 obj1.description = 'Difference of Two Fields';
+obj1.action = 'Analyse Data';
 services.diffPlot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Lagged Correlation of Two Fields';
@@ -320,6 +328,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'lagged correlation of two fields';
 obj1.description = 'lagged correlation of two fields';
+obj1.action = 'Analyse Data';
 services.correlationMap = jQuery.extend(true, {}, obj1);
 
 // subsDef__
