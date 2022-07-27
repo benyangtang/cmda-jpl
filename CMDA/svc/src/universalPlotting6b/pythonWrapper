@@ -2935,9 +2935,42 @@ if cr['services__']       == 1:
     runF(temp1)
 
     #-- save_first_data
-    temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
-    runF(temp1)
+    if 0:
+        temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
+        runF(temp1)
+    if 1:
+      temp1 = 'save/clobber/file="%s/temp1.nc" %s'%(a.outDir, a.var1a[0])
+      runF(temp1)
 
+      nc1 = Dataset("%s/temp1.nc"%a.outDir, 'r')
+      data9 = nc1.variables[a.var1a[0]]
+      dims9 = data9.dimensions
+      timeName = dims9[-1]
+      time9 = nc1.variables[timeName][:]
+      nc1.close()
+
+      missingV = -9999.0
+      for i in range(a.nData):
+        if i==0:
+          NC1.save2nc(
+            a.var1a[0],
+            ncfile=dataFile, 
+            name='DATA%d'%(i+1),
+            newfile=1,
+            format='NETCDF3_CLASSIC',
+            missing_value=missingV,
+            axisorder='t', 
+            axisarray=[time9])
+        else:
+          NC1.save2nc(
+            a.var1a[i],
+            ncfile=dataFile, 
+            name='DATA%d'%(i+1),
+            newfile=0,
+            format='NETCDF3_CLASSIC',
+            missing_value=missingV,
+            axisorder='t', 
+            axisarray=[time9])
     sys.exit()
 
 
