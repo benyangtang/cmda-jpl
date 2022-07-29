@@ -2768,7 +2768,8 @@ if cr['services__']       == 1:
       else: # regrid to the first variable
 
         # no need of regrid for shade+contour
-        if a.service in ('plotContour','mapView','timeSeries'):
+        #if a.service in ('plotContour','mapView','timeSeries'):
+        if a.service in ('plotContour','mapView'):
           temp1 = 'define var/bad=-9999.0 %s=%s[%s d=%d]'\
                 %(a.var1a[ii], a.var1[ii], indexStr, ii+1)
         else:
