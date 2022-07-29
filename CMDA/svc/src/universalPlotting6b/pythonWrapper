@@ -2939,8 +2939,9 @@ if cr['services__']       == 1:
         temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
         runF(temp1)
     if 1:
-      temp1 = 'save/clobber/file="%s/temp1.nc" %s'%(a.outDir, a.var1a[0])
-      runF(temp1)
+      for i in range(a.nData):
+        temp1 = 'save/clobber/file="%s/temp%d.nc" %s'%(a.outDir, i+1, a.var1a[i])
+        runF(temp1)
 
       nc1 = Dataset("%s/temp1.nc"%a.outDir, 'r')
       data9 = nc1.variables[a.var1a[0]]
@@ -2949,8 +2950,16 @@ if cr['services__']       == 1:
       time9 = nc1.variables[timeName][:]
       nc1.close()
 
+    if 0:
       missingV = -9999.0
       for i in range(a.nData):
+        nc1 = Dataset("%s/temp%d.nc"%a.outDir, i+1, 'r')
+        data9 = nc1.variables[a.var1a[i]]
+        dims9 = data9.dimensions
+        timeName = dims9[0]
+        time9 = nc1.variables[timeName][:]
+        nc1.close()
+
         if i==0:
           NC1.save2nc(
             a.var1a[0],
@@ -2971,6 +2980,7 @@ if cr['services__']       == 1:
             missing_value=missingV,
             axisorder='t', 
             axisarray=[time9])
+
     sys.exit()
 
 
