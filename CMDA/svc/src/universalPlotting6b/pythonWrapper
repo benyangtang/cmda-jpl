@@ -2939,6 +2939,7 @@ if cr['services__']       == 1:
     if 0:
         temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
         runF(temp1)
+
     if 1:
       import xarray as xr
       fns9 = []
@@ -2949,7 +2950,7 @@ if cr['services__']       == 1:
         temp1 = 'save/clobber/file="%s" %s'%(fn9, a.var1a[i])
         runF(temp1)
 
-        ds9 = xr.open_dataset(fn9,'r') 
+        ds9 = xr.open_dataset(fn9) 
         da9 = ds9[a.var1a[i]].squeeze()
         fns9.append(fn9)
         dss9.append(ds9)
