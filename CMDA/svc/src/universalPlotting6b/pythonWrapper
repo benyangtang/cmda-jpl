@@ -2940,16 +2940,28 @@ if cr['services__']       == 1:
         temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
         runF(temp1)
     if 1:
+      import xarray as xr
+      fns9 = []
+      dss9 = []
+      das9 = []
       for i in range(a.nData):
-        temp1 = 'save/clobber/file="%s/temp%d.nc" %s'%(a.outDir, i+1, a.var1a[i])
+        fn9 = "%s/temp%d.nc"%(a.outDir, i+1)
+        temp1 = 'save/clobber/file="%s" %s'%(fn9, a.var1a[i])
         runF(temp1)
 
-      nc1 = Dataset("%s/temp1.nc"%a.outDir, 'r')
-      data9 = nc1.variables[a.var1a[0]]
-      dims9 = data9.dimensions
-      timeName = dims9[-1]
-      time9 = nc1.variables[timeName][:]
-      nc1.close()
+        ds9 = xr.open_dataset(fn9,'r') 
+        da9 = ds9[a.var1a[i]].squeeze()
+        fns9.append(fn9)
+        dss9.append(ds9)
+        das9.append(da9)
+
+      da99 = xr.concat(das9,'i')
+      ds99 = da99.to_dataset( name="data")
+      ds99a = ds99.rename({"TIME":"time"})
+      ds99a.to_netcdf(dataFile)
+
+      for i in range(a.nData):
+        dss9[i].close()
 
     if 0:
       missingV = -9999.0
