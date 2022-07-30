@@ -44,7 +44,7 @@ cr = {
 # def_makeDump(fn):     1
 'extract_info_inside':  0,   # 0  1  0
 'save_json':            0,   # 0  1  0
-'combine_old_new':      0,   # 0  1  0
+'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
 'facet_list':           1,   # 0  0  1
@@ -139,8 +139,8 @@ fileList.js -- for web
 # parameters_
 #mainDir = '/mnt/data_2016/cmip5'
 #mainDir = '/mnt/data/data_2017/cmip5'
-#mainDir = '/mnt/data/data_clean/cmip5'
-mainDir = '/mnt/gateway/cmip6'
+mainDir = '/mnt/data/data_clean/cmip5'
+#mainDir = '/mnt/gateway/cmip6'
 dataDir = mainDir
 
 outDir = '/home/ubuntu'
@@ -151,8 +151,8 @@ nFile = -1 # do all
 readable = True
 #readable = False
 
-saveTo = '0'   # saved to a temp with affix '0'
-#saveTo = '9'   # saved to a more permenant file
+#saveTo = '0'   # saved to a temp with affix '0'
+saveTo = '9'   # saved to a more permenant file
 
 redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
@@ -619,7 +619,7 @@ if cr['combine_old_new']       == 1:
   filesGoodNew = yaml.safe_load( open(fn1).read() )
   kNew = list(filesGoodNew.keys())
 
-  fn2 = '%s/filesDict9.js'%outDir
+  fn2 = '%s/filesDict9o.js'%outDir
   if os.path.isfile(fn2):
     filesGoodOld = yaml.safe_load( open(fn2).read() )
 
@@ -638,12 +638,12 @@ if cr['combine_old_new']       == 1:
     fid.close()
 
   else:
-    print('No old filesDict9.js')
+    print('No old filesDict9o.js')
     print(('Number of new:      %5d'%len(kNew)))
 
-    temp1 = 'cp %s %s'%(fn1, fn2)
-    print(temp1)
-    os.system(temp1)
+    #temp1 = 'cp %s %s'%(fn1, fn2)
+    #print(temp1)
+    #os.system(temp1)
 
 # cp_fileDict
   '''
@@ -837,6 +837,27 @@ if cr['save_json_for_web']       == 1:
   fid.write( '\nvarLongL = \n' + json.dumps(varLongL, indent=indent1, separators=separators1)  + ';')
   fid.close()
      
+'''
+  # test  jason file
+import json
+fid = open(fn,'r')
+aa0 = fid.read()
+
+fn = '/home/ubuntu/fileList0c.js'
+with open(fn,'r') as f: aa = json.loads(f.read())
+
+fid = open(fn,'r')
+aa0 = fid.read()
+print(aa0)
+fid.close()
+
+#exec(aa0)
+
+aa = json.loads( aa0 )
+
+aa = eval("{'a':0}") 
+
+  '''
 # put_to_web
 '''
 #-- copy to be used in the server
