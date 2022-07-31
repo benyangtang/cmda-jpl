@@ -1825,10 +1825,12 @@ var vueApp = new Vue({
       var lat11;
       var time11;
       var z11;
+      this.filteredTable [];
       for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
         var key10 = this.datasetFiltered[ii]; 
         var key11 = this.datasetFilteredDict[key10].var;  // no var?
         var key1 = key10 + key11;
+
         if (this.metaTable.hasOwnProperty(key1)) { 
         } else {
           dict11 = this.fileDict[key10]; 
@@ -1860,7 +1862,8 @@ var vueApp = new Vue({
 
           this.metaTable[key1] = {'varName':key11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
         }
-        this.filteredTable[ii] = this.metaTable[key1];
+
+        this.filteredTable.push( this.metaTable[key1] );
       }
     },
 
