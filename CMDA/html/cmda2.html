@@ -95,7 +95,7 @@ rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/p
       // filter_by_varLong
       // filter_by_time
       // refresh_filtered_files
-      // filteredTable__  zzzz
+    //makeMetaTable__: function() {
     //changeSearchText__: function() {
     // openNewWindow__
     // changeService__
@@ -200,6 +200,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Plot';
 obj1.description = 'Make plots from data';
+obj1.action = 'Analyse Data';
 services.plot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Contour Plot';
@@ -218,6 +219,7 @@ obj1.nPlot = 2;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Contour Plot Overlaying a Color Plot';
 obj1.description = 'Contour Plot Overlaying a Color Plot';
+obj1.action = 'Analyse Data';
 services.plotContour = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Subset and Download';
@@ -227,6 +229,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Subset and Download';
 obj1.description = 'Subset and Download';
+obj1.action = 'Gather Data';
 services.subsetDownload = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Download Original';
@@ -236,6 +239,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Download Original';
 obj1.description = 'Download Original';
+obj1.action = 'Gather Data';
 services.downloadOriginal = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'EOF: Empirical Orthogonal Functions';
@@ -245,6 +249,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'EOF';
 obj1.description = 'Empirical Orthogonal Function';
+obj1.action = 'Analyse Data';
 services.EOF = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Random Forest, Feature Importance';
@@ -254,6 +259,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Random Forest';
 obj1.description = 'Random Forest';
+obj1.action = 'Analyse Data';
 services.randomForest = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Linear Combination of Multiple Variables';
@@ -263,6 +269,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Linear Combination';
 obj1.description = 'Linear combination of multiple variables';
+obj1.action = 'Analyse Data';
 services.linear = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Time Series Plots';
@@ -272,6 +279,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = ' ';
 obj1.description = 'Time Series Plots';
+obj1.action = 'Analyse Data';
 services.timeSeries = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Map View of Multiple Variables';
@@ -281,6 +289,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = ' ';
 obj1.description = 'Map View of Multiple Variables';
+obj1.action = 'Analyse Data';
 services.mapView = jQuery.extend(true, {}, obj1);
 
 //obj1.name = 'Anomaly Calculation';
@@ -299,6 +308,7 @@ obj1.nPlot = 3;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Scatter Plot of Two Fields';
 obj1.description = 'Scatter Plot of Two Fields';
+obj1.action = 'Analyse Data';
 services.scatterPlot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Difference of Two Fields';
@@ -308,6 +318,7 @@ obj1.nPlot = 3;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'Difference of Two Fields';
 obj1.description = 'Difference of Two Fields';
+obj1.action = 'Analyse Data';
 services.diffPlot = jQuery.extend(true, {}, obj1);
 
 obj1.name = 'Lagged Correlation of Two Fields';
@@ -317,6 +328,7 @@ obj1.nPlot = 1;
 obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
 obj1.title = 'lagged correlation of two fields';
 obj1.description = 'lagged correlation of two fields';
+obj1.action = 'Analyse Data';
 services.correlationMap = jQuery.extend(true, {}, obj1);
 
 // subsDef__
@@ -936,6 +948,7 @@ Select Datasets and Variables
    <td>
    </td>
 
+     <!-- select_var -->
    <td>
    <select v-on:change="changedSelected()" v-model="datasetFilteredDict[datasetFiltered[ii-1]].var">
     <option v-for="iii in fileDict[datasetFiltered[ii-1]].varList.length" v-bind:value="fileDict[datasetFiltered[ii-1]].varList[iii-1]">
@@ -952,6 +965,7 @@ Select Datasets and Variables
 
 
 <!-- data_subsubsetting -->
+<template v-if="service!='downloadOriginal'">
 <div class="color3" v-show="datasetSelected.length>0">
 <div class="row center1 subtitle1" >
 Data Subsetting
@@ -1130,6 +1144,7 @@ Data Subsetting
 
 </div> <!-- color2 -->
 </div> <!-- v-show -->
+</div> <!-- v-show -->
 
 <!-- linearOpt -->
 <div class="color2" v-show="service=='linear'">
@@ -1265,6 +1280,7 @@ Parameters for the correlationMap service
   </div> <!-- col -->
 </div> <!-- row -->
 </div> <!-- color2 -->
+</template> <!-- v-else  downloadOriginal-->
 
 <!-- action_button -->
 <div class="color4">
@@ -1427,6 +1443,7 @@ var vueApp = new Vue({
     fileList: Object.keys(fileDict),
     datasetFiltered: [],
     filteredTable: {},
+    metaTable: {},
     moreFilter: 0,
 
     searchText: searchText,
@@ -1778,50 +1795,10 @@ var vueApp = new Vue({
         this.datasetFilteredDict[temp2] = {'order':'', 'var':fileDict[temp2].varList[0]};
       }
 
-      // filteredTable__  zzzz
-      this.filteredTable = {};
-      var temp11;
-      var dict11;
-      var var11;
-      var varD11;
-      var index11;
-      var lon11;
-      var lat11;
-      var time11;
-      var z11;
-      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
-        temp11 = this.datasetFiltered[ii];
-        dict11 = this.fileDict[temp11]; 
-        var11 = dict11.varList[0];
-        varD11 = dict11.varDict[var11];
-
-        index11 = varD11.dim2.indexOf('lon');
-        lon11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          lon11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('lon');
-        lat11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          lat11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('time');
-        time11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          time11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('z');
-        z11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          z11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        this.filteredTable[ii] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
-      }
-
+    // not working. chosen ignore v-on
+    //updateProvider: function() {
+    //  this.provider9 = $(".select1").val();
+    //},
       if (this.var9.length>0) {
         for (var ii=0; ii<this.datasetFiltered.length; ii++) {
           temp2 = this.datasetFiltered[ii];
@@ -1834,12 +1811,61 @@ var vueApp = new Vue({
         }
       }
 
+      this.makeMetaTable();
+
     },
 
-    // not working. chosen ignore v-on
-    //updateProvider: function() {
-    //  this.provider9 = $(".select1").val();
-    //},
+    //makeMetaTable__: function() {
+    makeMetaTable: function() {
+      var temp11;
+      var dict11;
+      var var11;
+      var varD11;
+      var index11;
+      var lon11;
+      var lat11;
+      var time11;
+      var z11;
+      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
+        var key10 = this.datasetSelected[ii]; 
+        var key11 = this.datasetFilteredDict[key10].var;
+        var key1 = key10 + key11;
+        if (this.metaTable.hasOwnProperty(key1)) { 
+        } else {
+          temp11 = this.datasetFiltered[ii];
+          dict11 = this.fileDict[temp11]; 
+          var11 = dict11.varList[0];
+          varD11 = dict11.varDict[var11];
+
+          index11 = varD11.dim2.indexOf('lon');
+          lon11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lon11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('lon');
+          lat11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lat11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('time');
+          time11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            time11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('z');
+          z11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            z11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          this.metaTable[key1] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
+        }
+        this.filteredTable[ii] = this.metaTable[key1];
+      }
+    },
 
     //changeSearchText__: function() {
     changeSearchText: function() {
@@ -1871,6 +1897,7 @@ var vueApp = new Vue({
       this.plotP9 = this.service9.plotP;
       this.whichPlot = "1";
       this.plotP2 = this.plotP9[ Number(this.whichPlot)-1 ];
+      this.getPlotText = this.service9.action;
 
       //this.title = this.service9.title;
       //this.description = this.service9.description;
@@ -2113,13 +2140,14 @@ var vueApp = new Vue({
             var timeIndex = var9.dim2.indexOf('time');
             if (timeIndex>-1) {
               this.timeV[key1] = dataset9.varDict[ var9.dim[timeIndex] ];
+              //this.timeV0[key1] = dataset9.varDict[ var9.dim[timeIndex] ];  // xxxx
             } else {
               this.timeV[key1] = ' ';
             }
           }
         }
         // timeV0 to store timeVar so they don't have to be re-calc
-        this.timeV0 = jQuery.extend(true, {}, this.timeV);
+        this.timeV0 = jQuery.extend(true, {}, this.timeV);  // xxxx
 
         this.time4All = true;
         this.timeSLimAll = 10000000;
@@ -2146,6 +2174,8 @@ var vueApp = new Vue({
       }
 
       this.changedBeingSubsetted();
+
+      this.makeMetaTable();
 
       // this is watched
       this.which2Subset = this.which2Subset0;
