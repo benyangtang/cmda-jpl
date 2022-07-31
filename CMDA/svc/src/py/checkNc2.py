@@ -436,6 +436,7 @@ return ok1:
         varList.append(k)
         varListLong.append(varDict[k]['longName'])
 
+  
   if vb==1: print('varList:')
   if vb==1: print(varList)
 
@@ -636,6 +637,14 @@ return ok1:
           dim2.append( 'unknown' )
       varDict[var1]['dim2'] = dim2
 
+  # place the significant var to front
+  if 1:
+    def varDL(e):
+      dim2z = varDict[var1]['dim2']
+      return len(dim2z)
+      
+    varList.sort(reverse=True, key=varDL)
+       
   # construct_global_dim2
   dim22 = []
   for d in dimList:
