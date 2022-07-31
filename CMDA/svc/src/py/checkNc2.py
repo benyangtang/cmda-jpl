@@ -644,6 +644,8 @@ return ok1:
       return len(dim2z)
       
     varList.sort(reverse=True, key=varDL)
+    print("varList:")
+    print(varList)
        
   # construct_global_dim2
   dim22 = []
