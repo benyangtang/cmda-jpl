@@ -640,7 +640,7 @@ return ok1:
   # place the significant var to front
   if 1:
     def varDL(e):
-      dim2z = varDict[var1]['dim2']
+      dim2z = varDict[e]['dim2']
       return len(dim2z)
       
     varList.sort(reverse=True, key=varDL)
