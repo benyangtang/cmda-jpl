@@ -2569,11 +2569,7 @@ if cr['check_parameters']       == 1:
   key1 = 'plotContour'
   s = SERVICE()
   s.key = key1
-  services[key1] = s
-
-  key1 = 'plotContour'
-  s = SERVICE()
-  s.key = key1
+  s.nData = (2,)
   services[key1] = s
 
   #== check_para
