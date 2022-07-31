@@ -154,10 +154,12 @@ readable = True
 #saveTo = '0'   # saved to a temp with affix '0'
 saveTo = '9'   # saved to a more permenant file
 
-#redoFailData = 0  # do whole data dir
+redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
 #redoFailData = 2  # not in the database, so including the failed ones and new ones
-redoFailData = 3  # from a list of files
+#redoFailData = 3  # from a list of files
+
+combineOldNew = 0
 
 dumpDir = '/home/ubuntu/dumpFiles'
 tempfile.tempdir = dumpDir
@@ -621,8 +623,8 @@ if cr['combine_old_new']       == 1:
   filesGoodNew = yaml.safe_load( open(fn1).read() )
   kNew = list(filesGoodNew.keys())
 
-  fn2 = '%s/filesDictExist.js'%outDir
-  if os.path.isfile(fn2):
+  if combineOldNew:
+    fn2 = '%s/filesDictExist.js'%outDir
     filesGoodOld = yaml.safe_load( open(fn2).read() )
 
     kOld = list(filesGoodOld.keys())
@@ -635,17 +637,19 @@ if cr['combine_old_new']       == 1:
     print(('Number of new:      %5d'%len(kNew)))
     print(('Number of combined: %5d'%len(filesGoodOld)))
 
-    fid = open('%s/filesDict%s.js'%(outDir, saveTo),'w')
-    fid.write( json.dumps(filesGoodOld, indent=indent1, separators=separators1) )
-    fid.close()
-
   else:
+    filesGoodOld = filesGoodNew
     print('No old filesDict9o.js')
     print(('Number of new:      %5d'%len(kNew)))
 
     #temp1 = 'cp %s %s'%(fn1, fn2)
     #print(temp1)
     #os.system(temp1)
+
+  fid = open('%s/filesDict%s.js'%(outDir, saveTo),'w')
+  fid.write( json.dumps(filesGoodOld, indent=indent1, separators=separators1) )
+  fid.close()
+
 
 # cp_fileDict
   '''
