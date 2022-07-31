@@ -95,7 +95,7 @@ rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/p
       // filter_by_varLong
       // filter_by_time
       // refresh_filtered_files
-      // filteredTable__  zzzz
+    //makeMetaTable__: function() {
     //changeSearchText__: function() {
     // openNewWindow__
     // changeService__
@@ -948,6 +948,7 @@ Select Datasets and Variables
    <td>
    </td>
 
+     <!-- select_var -->
    <td>
    <select v-on:change="changedSelected()" v-model="datasetFilteredDict[datasetFiltered[ii-1]].var">
     <option v-for="iii in fileDict[datasetFiltered[ii-1]].varList.length" v-bind:value="fileDict[datasetFiltered[ii-1]].varList[iii-1]">
@@ -1442,6 +1443,7 @@ var vueApp = new Vue({
     fileList: Object.keys(fileDict),
     datasetFiltered: [],
     filteredTable: {},
+    metaTable: {},
     moreFilter: 0,
 
     searchText: searchText,
@@ -1793,50 +1795,10 @@ var vueApp = new Vue({
         this.datasetFilteredDict[temp2] = {'order':'', 'var':fileDict[temp2].varList[0]};
       }
 
-      // filteredTable__  zzzz
-      this.filteredTable = {};
-      var temp11;
-      var dict11;
-      var var11;
-      var varD11;
-      var index11;
-      var lon11;
-      var lat11;
-      var time11;
-      var z11;
-      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
-        temp11 = this.datasetFiltered[ii];
-        dict11 = this.fileDict[temp11]; 
-        var11 = dict11.varList[0];
-        varD11 = dict11.varDict[var11];
-
-        index11 = varD11.dim2.indexOf('lon');
-        lon11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          lon11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('lon');
-        lat11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          lat11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('time');
-        time11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          time11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        index11 = varD11.dim2.indexOf('z');
-        z11 = {'min':'', 'max':'', 'res':''};
-        if (index11>-1) {
-          z11 = dict11.varDict[varD11.dim[index11]];
-        }
-
-        this.filteredTable[ii] = {'varName':var11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
-      }
-
+    // not working. chosen ignore v-on
+    //updateProvider: function() {
+    //  this.provider9 = $(".select1").val();
+    //},
       if (this.var9.length>0) {
         for (var ii=0; ii<this.datasetFiltered.length; ii++) {
           temp2 = this.datasetFiltered[ii];
@@ -1849,12 +1811,61 @@ var vueApp = new Vue({
         }
       }
 
+      this.makeMetaTable();
+
     },
 
-    // not working. chosen ignore v-on
-    //updateProvider: function() {
-    //  this.provider9 = $(".select1").val();
-    //},
+    //makeMetaTable__: function() {
+    makeMetaTable: function() {
+      var temp11;
+      var dict11;
+      var varD11;
+      var index11;
+      var lon11;
+      var lat11;
+      var time11;
+      var z11;
+      this.filteredTable = [];
+      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
+        var key10 = this.datasetFiltered[ii]; 
+        var key11 = this.datasetFilteredDict[key10].var;  // no var?
+        var key1 = key10 + key11;
+
+        if (this.metaTable.hasOwnProperty(key1)) { 
+        } else {
+          dict11 = this.fileDict[key10]; 
+          varD11 = dict11.varDict[key11];
+
+          index11 = varD11.dim2.indexOf('lon');
+          lon11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lon11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('lon');
+          lat11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lat11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('time');
+          time11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            time11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('z');
+          z11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            z11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          this.metaTable[key1] = {'varName':key11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
+        }
+
+        this.filteredTable.push( this.metaTable[key1] );
+      }
+    },
 
     //changeSearchText__: function() {
     changeSearchText: function() {
@@ -2129,13 +2140,14 @@ var vueApp = new Vue({
             var timeIndex = var9.dim2.indexOf('time');
             if (timeIndex>-1) {
               this.timeV[key1] = dataset9.varDict[ var9.dim[timeIndex] ];
+              //this.timeV0[key1] = dataset9.varDict[ var9.dim[timeIndex] ];  // xxxx
             } else {
               this.timeV[key1] = ' ';
             }
           }
         }
         // timeV0 to store timeVar so they don't have to be re-calc
-        this.timeV0 = jQuery.extend(true, {}, this.timeV);
+        this.timeV0 = jQuery.extend(true, {}, this.timeV);  // xxxx
 
         this.time4All = true;
         this.timeSLimAll = 10000000;
@@ -2162,6 +2174,8 @@ var vueApp = new Vue({
       }
 
       this.changedBeingSubsetted();
+
+      this.makeMetaTable();
 
       // this is watched
       this.which2Subset = this.which2Subset0;
