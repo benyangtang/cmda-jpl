@@ -538,8 +538,8 @@ if cr['extract_info_inside']       == 1:
 # change_file_list
   elif redoFailData==3:
     d9 = {  
-'/mnt/gateway/data_clean/cmip5/others/argo_temperature.nc':1,
-'/mnt/gateway/data_clean/cmip5/others/argo_salinity.nc':1,
+'/mnt/data/data_clean/cmip5/others/argo_temperature.nc':1,
+'/mnt/data/data_clean/cmip5/others/argo_salinity.nc':1,
 #'https://podaac-opendap.jpl.nasa.gov/opendap/allData/smap/L3/RSS/V4/monthly/SCI/2022/RSS_smap_SSS_L3_monthly_2022_05_FNL_v04.0.nc':1,
 #'https://podaac-opendap.jpl.nasa.gov/opendap/allData/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc':1,
 #'/mnt/gateway/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,  # need modify
