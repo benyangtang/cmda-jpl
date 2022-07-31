@@ -1827,8 +1827,8 @@ var vueApp = new Vue({
       var time11;
       var z11;
       for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
-        var key10 = this.datasetSelected[ii]; 
-        var key11 = this.datasetFilteredDict[key10].var;
+        var key10 = this.datasetFiltered[ii]; 
+        var key11 = this.datasetFilteredDict[key10].var;  // no var?
         var key1 = key10 + key11;
         if (this.metaTable.hasOwnProperty(key1)) { 
         } else {
