@@ -2,8 +2,7 @@
 
 #conda activate FERRET
 
-#/home/ubuntu/miniconda3/envs/FERRET/bin/gunicorn   \
-gunicorn   \
+/home/ubuntu/miniconda3/envs/FERRET/bin/gunicorn   \
 --capture-output \
 --log-level debug \
 --access-logfile access.log \
