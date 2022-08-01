@@ -1,4 +1,7 @@
 #!/bin/bash
+
+conda activate FERRET
+
 /home/ubuntu/miniconda3/envs/FERRET/bin/gunicorn   \
 --capture-output \
 --log-level debug \
