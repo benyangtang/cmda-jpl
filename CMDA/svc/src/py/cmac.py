@@ -18,6 +18,8 @@ rsyncec2 cmac.py $ec20:/home/ubuntu/cmac/cmac_docker1/user
 
 
 import os
+os.environ["PROJ_LIB"] = "/home/ubuntu/miniconda3/envs/FERRET/share/proj"
+
 import traceback
 import numpy as np
 import matplotlib 
