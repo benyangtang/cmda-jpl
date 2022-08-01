@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
 conda activate FERRET
 
 /home/ubuntu/miniconda3/envs/FERRET/bin/gunicorn   \
