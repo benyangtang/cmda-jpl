@@ -162,6 +162,8 @@ if cr['import_']       == 1:
   import NC_btang_v4 as NC1
 
   os.environ["PROJ_LIB"] = "/home/ubuntu/miniconda3/envs/FERRET/share/proj"
+  print('os.environ["FER_PALETTE"]' )
+  print( os.environ["FER_PALETTE"])
 
   if useFerret==0:
     import pca_v4 as pca
