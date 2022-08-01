@@ -1,5 +1,5 @@
 #!/bin/bash
-conda activate FERRET
+#conda activate FERRET
 #/home/svc/install/bin/pythonfe7 ./pythonWrapper $*
 #/home/btang/miniconda3/envs/FERRET/bin/python ./pythonWrapper $*
 #/home/ubuntu/miniconda3/envs/FERRET/bin/python ./pythonWrapper $*
