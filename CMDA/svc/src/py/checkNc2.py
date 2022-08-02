@@ -639,11 +639,27 @@ return ok1:
 
   # place the significant var to front
   if 1:
+    import numpy as np
+    def varDL(e):
+      dim2z = varDict[e]['dim2']
+      return len(dim2z)
+      
+    order1 = [varDL(i) for i in varList]
+    order1Ind = np.argsort(order1)[::-1]
+    varList = [varList[i] for i in order1Ind]
+    varListLong = [varListLong[i] for i in order1Ind]
+
+    print("varList:")
+    print(varList)
+    print(varListLong)
+
+  if 0:  # cannot sort varListLong
     def varDL(e):
       dim2z = varDict[e]['dim2']
       return len(dim2z)
       
     varList.sort(reverse=True, key=varDL)
+    varListLong.sort(reverse=True, key=varDL)
     print("varList:")
     print(varList)
        

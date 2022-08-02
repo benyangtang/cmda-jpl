@@ -30,7 +30,6 @@ cr = {
 # readme__
 #parameters_':  
 #== data_labels
-#parameters__':
 #                              1  2  3  4
 # 1 -- gather list of files
 # 2 -- collect facets 
@@ -331,7 +330,6 @@ for rr in runs:
   runs2[rr] =  '_' + rr.lower() + '_' 
 
 #os.chdir(mainDir)
-# parameters__
 
 fileList2 = None
 
@@ -540,7 +538,14 @@ if cr['extract_info_inside']       == 1:
 # change_file_list
   elif redoFailData==3:
     d9 = {  
-'/mnt/data/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,
+'/mnt/data/data_clean/new_data_2022/GMSL_TPJAOS_5.1_199209_202203.nc':1,
+#'/mnt/data/data_clean/new_data_2022/co2_AIRS_IRMW_200209-201202.nc':1,
+#'/mnt/data/data_clean/new_data_2022/co2_AIRS_IR_201001-201702.nc':1,
+#'/mnt/data/data_clean/new_data_2022/ssh_grids_v1812_199210-201901.nc':1,
+#'/mnt/data/data_clean/cmip5/others/nasa_grace_zo_200204-202105.nc':1,
+#'/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_total_cloud_fraction_pt75xpt75_monthly_all.nc':1,
+#'/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_total_cloud_fraction_pt75xpt75_monthly_*.nc':1,
+#'/mnt/data/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc':1,
 #'/mnt/data/data_clean/cmip5/others/argo_temperature.nc':1,
 #'/mnt/data/data_clean/cmip5/others/argo_salinity.nc':1,
 #'https://podaac-opendap.jpl.nasa.gov/opendap/allData/smap/L3/RSS/V4/monthly/SCI/2022/RSS_smap_SSS_L3_monthly_2022_05_FNL_v04.0.nc':1,
@@ -654,8 +659,12 @@ if cr['combine_old_new']       == 1:
 
 # cp_fileDict
   '''
+# make Exist filesDict
 cd /home/ubuntu
-mv filesDict0.js filesDict9.js
+mv filesDict9.js filesDictExist.js
+
+cd /home/ubuntu
+#mv filesDict0.js filesDict9.js
 
 '''
 

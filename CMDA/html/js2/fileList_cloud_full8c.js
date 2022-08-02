@@ -147798,27 +147798,27 @@ fileDict =
     },
     "varList":[
       "ARGO_SALINITY_ANOMALY",
-      "ARGO_SALINITY_MEAN",
+      "MAPPING_MASK",
       "BATHYMETRY_MASK",
-      "MAPPING_MASK"
+      "ARGO_SALINITY_MEAN"
     ],
     "varListLong":[
-      "ARGO SALINITY MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY",
       "ARGO SALINITY ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY",
+      "MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas ",
       "BATHYMETRY MASK",
-      "MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas "
+      "ARGO SALINITY MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY"
     ],
     "dimList":[
       "lat",
       "lon",
-      "pressure",
-      "time"
+      "time",
+      "pressure"
     ],
     "dim2":[
       "lat",
       "lon",
-      "z",
-      "time"
+      "time",
+      "z"
     ],
     "title":"",
     "summary":"Fri Aug 13 23:24:55 2021: ncap2 -O -s time=round(time) RG_ArgoClim_Salinity_2019a.nc RG_ArgoClim_Salinity_2019aa.nc\nFri Aug 13 23:19:53 2021: ncap2 -O -s time*=30.4375 RG_ArgoClim_Salinity_2019.nc RG_ArgoClim_Salinity_2019a.nc\nFri Aug 13 23:07:42 2021: ncatted -O -a units,time,m,c,days since 2004-01-01 00:00:00 RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 23:06:53 2021: ncatted -O -a units,time,c,c,days since 2004-01-01 00:00:00 RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 23:06:30 2021: ncrename -v PRESSURE,pressure -d PRESSURE,pressure RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 22:59:34 2021: ncatted -O -a units,time,c,c,days since 2004-01-01 00:00:00 -a time_origin,time,c,c,2004-01-01 00:00:00 RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 22:40:36 2021: ncrename -v TIME,time -d TIME,time RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 22:39:50 2021: ncrename -v LATITUDE,lat -d LATITUDE,lat RG_ArgoClim_Salinity_2019.nc\nFri Aug 13 22:37:46 2021: ncrename -v LONGITUDE,lon -d LONGITUDE,lon RG_ArgoClim_Salinity_2019.nc",
@@ -147938,27 +147938,27 @@ fileDict =
     },
     "varList":[
       "ARGO_TEMPERATURE_ANOMALY",
-      "ARGO_TEMPERATURE_MEAN",
+      "MAPPING_MASK",
       "BATHYMETRY_MASK",
-      "MAPPING_MASK"
+      "ARGO_TEMPERATURE_MEAN"
     ],
     "varListLong":[
-      "ARGO TEMPERATURE MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY",
       "ARGO TEMPERATURE ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY",
+      "MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas ",
       "BATHYMETRY MASK",
-      "MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas "
+      "ARGO TEMPERATURE MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY"
     ],
     "dimList":[
       "lat",
       "lon",
-      "pressure",
-      "time"
+      "time",
+      "pressure"
     ],
     "dim2":[
       "lat",
       "lon",
-      "z",
-      "time"
+      "time",
+      "z"
     ],
     "title":"",
     "summary":"Fri Aug 13 23:43:24 2021: ncap2 -O -s time=round(time) RG_ArgoClim_Temperature_2019a.nc RG_ArgoClim_Temperature_2019aa.nc\nFri Aug 13 23:42:50 2021: ncap2 -O -s time*=30.4375 RG_ArgoClim_Temperature_2019.nc RG_ArgoClim_Temperature_2019a.nc\nFri Aug 13 23:38:32 2021: ncatted -O -a units,time,m,c,days since 2004-01-01 00:00:00 -a time_origin,time,c,c,2004-01-01 00:00:00 RG_ArgoClim_Temperature_2019.nc\nFri Aug 13 23:36:45 2021: ncrename -v PRESSURE,pressure -d PRESSURE,pressure -v LONGITUDE,lon -d LONGITUDE,lon -v LATITUDE,lat -d LATITUDE,lat -v TIME,time -d TIME,time RG_ArgoClim_Temperature_2019.nc",
@@ -148039,6 +148039,83 @@ fileDict =
     ],
     "title":"",
     "summary":"Sat Aug 14 22:16:13 2021: ncks -C -O -x -v expver /mnt/gateway/data_clean/cmip5/others/tos_era5.nc /home/ubuntu/tmp1/temp1.nc",
+    "frequency":"",
+    "ok":0
+  },
+  "/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_total_cloud_fraction_pt75xpt75_monthly_all.nc":{
+    "nFile":1,
+    "source":"staged",
+    "provider":"_",
+    "model":"_",
+    "experiment":"_",
+    "run":"_",
+    "varDict":{
+      "longitude":{
+        "dim":[
+          "longitude"
+        ],
+        "units":"degrees_east",
+        "longName":"longitude",
+        "min":"0",
+        "max":"359.25",
+        "res":"0.75",
+        "what":"lon"
+      },
+      "latitude":{
+        "dim":[
+          "latitude"
+        ],
+        "units":"degrees_north",
+        "longName":"latitude",
+        "min":"-90",
+        "max":"90",
+        "res":"-0.75",
+        "what":"lat"
+      },
+      "time":{
+        "dim":[
+          "time"
+        ],
+        "units":"days since 1979-01-01 00:00:00",
+        "longName":"time",
+        "min":"19790101",
+        "max":"20190501",
+        "res":"1",
+        "what":"time"
+      },
+      "tcc":{
+        "dim":[
+          "time",
+          "latitude",
+          "longitude"
+        ],
+        "units":"(0 - 1)",
+        "longName":"Total cloud cover",
+        "dim2":[
+          "time",
+          "lat",
+          "lon"
+        ]
+      }
+    },
+    "varList":[
+      "tcc"
+    ],
+    "varListLong":[
+      "Total cloud cover"
+    ],
+    "dimList":[
+      "latitude",
+      "time",
+      "longitude"
+    ],
+    "dim2":[
+      "lat",
+      "time",
+      "lon"
+    ],
+    "title":"",
+    "summary":"",
     "frequency":"",
     "ok":0
   },
@@ -149483,9 +149560,10 @@ fileDict =
   "others/levitus_climatology.cdf: v=TEMP_SALT v-long=TEMPERATURE__SALINITY t=":"/mnt/data/data_clean/cmip5/others/levitus_climatology.cdf",
   "others/monthly_navy_winds.cdf: v=UWND_VWND v-long=ZONAL WIND__MERIDIONAL WIND t=":"/mnt/data/data_clean/cmip5/others/monthly_navy_winds.cdf",
   "others/ocean_atlas_subset.nc: v=TEMP v-long=Temperature t=":"/mnt/data/data_clean/cmip5/others/ocean_atlas_subset.nc",
-  "others/argo_salinity.nc: v=ARGO_SALINITY_ANOMALY_ARGO_SALINITY_MEAN_BATHYMETRY_MASK_MAPPING_MASK v-long=ARGO SALINITY MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__ARGO SALINITY ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__BATHYMETRY MASK__MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas  t=":"/mnt/data/data_clean/cmip5/others/argo_salinity.nc",
-  "others/argo_temperature.nc: v=ARGO_TEMPERATURE_ANOMALY_ARGO_TEMPERATURE_MEAN_BATHYMETRY_MASK_MAPPING_MASK v-long=ARGO TEMPERATURE MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__ARGO TEMPERATURE ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__BATHYMETRY MASK__MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas  t=":"/mnt/data/data_clean/cmip5/others/argo_temperature.nc",
+  "others/argo_salinity.nc: v=ARGO_SALINITY_ANOMALY_MAPPING_MASK_BATHYMETRY_MASK_ARGO_SALINITY_MEAN v-long=ARGO SALINITY ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas __BATHYMETRY MASK__ARGO SALINITY MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY t=":"/mnt/data/data_clean/cmip5/others/argo_salinity.nc",
+  "others/argo_temperature.nc: v=ARGO_TEMPERATURE_ANOMALY_MAPPING_MASK_BATHYMETRY_MASK_ARGO_TEMPERATURE_MEAN v-long=ARGO TEMPERATURE ANOMALY defined by Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY__MAPPING MASK: pressure limits of mapping can be shallower than 2000dbar in marginal seas __BATHYMETRY MASK__ARGO TEMPERATURE MEAN Jan 2004 - Dec 2018 (15.0 year) RG CLIMATOLOGY t=":"/mnt/data/data_clean/cmip5/others/argo_temperature.nc",
   "others/tos_era5.nc: v=sst v-long=Sea surface temperature t=":"/mnt/data/data_clean/cmip5/others/tos_era5.nc",
+  "users/tkubar/ecmwf_interim_total_cloud_fraction_pt75xpt75_monthly_all.nc: v=tcc v-long=Total cloud cover t=":"/mnt/data/data_clean/cmip5/users/tkubar/ecmwf_interim_total_cloud_fraction_pt75xpt75_monthly_all.nc",
   "nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc: v=mrsos v-long=Top layer soil moisture (0-5 cm) t=":"/mnt/data/data_clean/cmip5/nasa/smap/SMAP_L4_SM_201503-202105_reg_grid_v2.nc"
 };
 sourceL = 
@@ -149751,6 +149829,7 @@ varL =
   "taulday",
   "tauu",
   "tauv",
+  "tcc",
   "TEMP",
   "th",
   "thick_cf_misr_total_reocrd",
