@@ -848,7 +848,7 @@ Filter Datasets
   <button v-on:click="filterFile()">Filter Files</button>
  </div>
  <div class="col-sm-8 left1">
-  {{ datasetFiltered.length }} filtered datasets are listed below<span v-if="nDatasetFiltered0>500">, <br>downsampled from {{nDatasetFiltered0}} datasets (too many to list) passing through the filters. </span>
+  {{ datasetFiltered.length }} filtered datasets are listed below<span v-if="nDatasetFiltered0>500">, <br>downsampled from the {{nDatasetFiltered0}} datasets (too many to list) passing through the filters. </span>
  </div> <!-- col -->
 </div> <!-- row -->
 </div> <!-- color3 -->
@@ -1449,7 +1449,7 @@ var vueApp = new Vue({
     fileList: Object.keys(fileDict),
     datasetFiltered: [],
     nDatasetFiltered0: 0,
-    nDatasetFilteredMax: 200,
+    nDatasetFilteredMax: 100,
     filteredTable: {},
     metaTable: {},
     moreFilter: 0,
