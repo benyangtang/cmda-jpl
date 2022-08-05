@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+<!-- 
+/home/btang/projects/cmac/git2/CMDA0/JPL_CMDA/frontend/public/html/universalPlotting6c.html
+
+python universalPlotting6c.py
+
+kk web7
+rsync8022 \
+api_subset.html \
+api_anomaly.html \
+api_climatology.html \
+api_masking.html \
+api_masking.html \
+api_timeMean.html \
+$cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html
+
+== storage__  
+-->
+<!-- src_js__ -->
+<!--
+// plotP__
+// services__
+// subsDef__
+// subs0__
+// apis__
+// function_doUpload2() {
+
+// onload__
+// ready__
+  // selectp__
+  // action1_click
+  // onlineFileCheck_click
+
+  // filePicker_change
+  // uploadButton2_click. call doUpload
+  // download_data_click
+-->
+
+<!-- pick_service -->
+<!-- open_upload_file -->
+<!-- upload_file -->
+<!-- online_file -->
+
+<!-- chose_filename -->
+<!-- chose_time_range -->
+<!-- chose_source -->
+<!-- chose_providers -->
+<!-- chose_model -->
+<!-- chose_var -->
+<!-- chose_var_long -->
+<!-- select_datasets -->
+     <!-- select_var -->
+
+<!-- data_subsubsetting -->
+<!-- which2Subset-->
+<!-- lonWidget_ -->
+<!-- latWidget_ -->
+<!-- presWidget_ -->
+<!-- timeWidget_ -->
+
+<!-- oceanMaskOpt -->
+<!-- correlationMapOpt -->
+<!-- display_opt -->
+<!-- ferret_level_ -->
+<!-- v_show_end2 -->
+<!-- purpose__ -->
+  
+<!-- 
+// vue__
+    // vue_data_para
+    // for_chosen__
+    // other_data
+    // workflow_relatted
+    // list_of_basins
+  // methods__
+    //reverseSearchText__: function() {
+    // filterFile__
+      // filter_by_fn
+      // filter_by_source
+      // filter_by_provider
+      // filter_by_model
+      // filter_by_experiment
+      // filter_by_run
+      // filter_by_var
+      // filter_by_varLong
+      // filter_by_time
+      // refresh_filtered_files
+    //makeMetaTable__: function() {
+    //changeSearchText__: function() {
+    // openNewWindow__
+    // changeService__
+    // makeServiceUrlV__
+    // makeBrowserUrlV__
+    // copyBrowserUrlV__
+    // moveFerretLevel__
+    // setTimeFullRangeV__
+    // timeDashV__
+    // which2SubsetClick__ 
+    // changedDatasetSelected__ : function() {
+    // setSubs2__
+    // timeMethodChange__
+    // syncSubsetting__
+    // updateCoeff__
+    // changedBeingSubsetted__
+    // changedSelected__: function() {
+    // checkApi__
+  // watch__
+    // watch_whichPlot
+    // watch_changed2, changed when the var being subsetted changes. to make var2Subset, etc
+    // watch_changed2a, changed when dataset and var being subsetted, to make dim2, subs2, 
+  // computed__
+  // created__
+// inputs__
+// inputs__corrMap
+// inputs__linear
+// mappting__
+-->
+
+<!-- storage__ -->
+<!-- 
+cmac/html/codeStorage.html
+-->
+
+<!-- src_js__ -->
+<!-- for Bootstrap -->
+<META HTTP-EQUIV="EXPIRES" CONTENT="0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="shortcut icon" type="image/x-icon" href="cmda1.ico">
+<link rel="stylesheet" href="js2/bootstrap.min.css">
+<link rel="stylesheet" href="js2/chosen/chosen.css">
+<link rel="stylesheet" href="js2/mychosen.css">
+<script src="js2/jquery.min.js"></script>
+<script src="js2/chosen/chosen.jquery.js"></script>
+<script src="js2/jq-ajax-progress.js"></script>
+<script src="js2/bootstrap.min.js"></script>
+<script src='js2/js.cookie-2.1.3.min.js'></script>
+<script src='js2/vue.js'></script>
+<script src="js2/lodash.min.js"></script>
+
+<link rel="stylesheet" href="js2/style_uploadr.css">
+
+<!-- cmac related -->
+<link rel="stylesheet" href="common.css">
+<script src='js2/varList.js'></script>
+<script>document.write('<script src="js2/fileList_cloud_full8.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
+
+<script>document.write('<script src="js2/common-v6c.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
+<!-- 
+xxxx
+<script src='js2/fileList.js?dev='></script>
+<script src='js2/common-v6c.js?22111'></script>  
+<script src='js2/common-cmda1.js?22111'></script>  
+
+<script>document.write('<script src="js2/common-cmda1.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
+-->
+
+<title>Universal Analysis Service</title>
+
+<script>
+
+// plotP__
+var plotP = {};
+plotP.ferretLevel = '10';
+plotP.colorMap = 'rainbow';
+plotP.plotTitle = '';
+
+function repeatPlotP(plotP, n) {
+  var t1 = [];
+  for (var i=0; i<n; i++) {
+    t1.push(jQuery.extend(true, {}, plotP));
+  }
+  return t1;
+}
+
+// for generating queryStr. not used?
+var plotP0 = {};
+plotP0.ferretLevel = 'ferretLevel=';
+plotP0.colorMap = 'colorMap=';
+plotP0.plotTitle = 'plotTitle=';
+
+// services__
+var services = {};
+var obj1 = {};
+
+obj1.name = 'Color Plot';
+obj1.nDataset = 1;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Plot';
+obj1.description = 'Make plots from data';
+obj1.action = 'Analyse Data';
+services.plot = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Contour Plot';
+obj1.nDataset = 1;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Contour Plot';
+obj1.description = 'Contour Plot';
+services.contour = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Contour Plot Overlaying a Color Plot';
+obj1.nDataset = 2;
+obj1.nDim = 2;
+obj1.nPlot = 2;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Contour Plot Overlaying a Color Plot';
+obj1.description = 'Contour Plot Overlaying a Color Plot';
+obj1.action = 'Analyse Data';
+services.plotContour = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Subset and Download';
+obj1.nDataset = 1;
+obj1.nDim = 3;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Subset and Download';
+obj1.description = 'Subset and Download';
+obj1.action = 'Gather Data';
+services.subsetDownload = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Download Original';
+obj1.nDataset = 1;
+obj1.nDim = 3;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Download Original';
+obj1.description = 'Download Original';
+obj1.action = 'Gather Data';
+services.downloadOriginal = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'EOF: Empirical Orthogonal Functions';
+obj1.nDataset = 1;
+obj1.nDim = 3;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'EOF';
+obj1.description = 'Empirical Orthogonal Function';
+obj1.action = 'Analyse Data';
+services.EOF = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Random Forest, Feature Importance';
+obj1.nDataset = 11;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Random Forest';
+obj1.description = 'Random Forest';
+obj1.action = 'Analyse Data';
+services.randomForest = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Linear Combination of Multiple Variables';
+obj1.nDataset = 10;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Linear Combination';
+obj1.description = 'Linear combination of multiple variables';
+obj1.action = 'Analyse Data';
+services.linear = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Time Series Plots';
+obj1.nDataset = 6;
+obj1.nDim = 1;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = ' ';
+obj1.description = 'Time Series Plots';
+obj1.action = 'Analyse Data';
+services.timeSeries = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Map View of Multiple Variables';
+obj1.nDataset = 10;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = ' ';
+obj1.description = 'Map View of Multiple Variables';
+obj1.action = 'Analyse Data';
+services.mapView = jQuery.extend(true, {}, obj1);
+
+//obj1.name = 'Anomaly Calculation';
+//obj1.nDataset = 1;
+//obj1.nDim = 3;
+//obj1.nPlot = 1;
+//obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+//obj1.title = 'Anomaly Calculation';
+//obj1.description = 'Anomaly Calculation';
+//services.anomaly = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Scatter Plot of Two Fields';
+obj1.nDataset = 2;
+obj1.nDim = 2;
+obj1.nPlot = 3;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Scatter Plot of Two Fields';
+obj1.description = 'Scatter Plot of Two Fields';
+obj1.action = 'Analyse Data';
+services.scatterPlot = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Difference of Two Fields';
+obj1.nDataset = 2;
+obj1.nDim = 2;
+obj1.nPlot = 3;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'Difference of Two Fields';
+obj1.description = 'Difference of Two Fields';
+obj1.action = 'Analyse Data';
+services.diffPlot = jQuery.extend(true, {}, obj1);
+
+obj1.name = 'Lagged Correlation of Two Fields';
+obj1.nDataset = 2;
+obj1.nDim = 2;
+obj1.nPlot = 1;
+obj1.plotP = repeatPlotP(plotP,obj1.nPlot);
+obj1.title = 'lagged correlation of two fields';
+obj1.description = 'lagged correlation of two fields';
+obj1.action = 'Analyse Data';
+services.correlationMap = jQuery.extend(true, {}, obj1);
+
+// subsDef__
+var subsDef = { };
+subsDef.lonMethod = '3';
+subsDef.lonS1= '100';
+subsDef.lonS23= '0';
+subsDef.lonE= '360';
+
+subsDef.latMethod = '3';
+subsDef.latS1= '0';
+subsDef.latS23= '-90';
+subsDef.latE= '90';
+
+subsDef.presMethod = '1';
+subsDef.presS1= '500';
+subsDef.presS23= '200';
+subsDef.presE= '800';
+
+subsDef.timeMethod = '1';
+subsDef.timeS1= '2000-01-15';
+subsDef.timeS23= '2000-01-15';
+subsDef.timeE= '2000-12-15';
+
+subsDef.zFactor= 1.0;
+subsDef.zUnits= '';
+subsDef.zUnits2= '';
+
+// subs0__
+subs0 = {};
+subs0.lonMethod = 'lonMethod=';
+subs0.lonS= 'lonS=';
+subs0.lonE= 'lonE=';
+
+subs0.latMethod = 'latMethod=';
+subs0.latS= 'latS=';
+subs0.latE= 'latE=';
+
+subs0.presMethod = 'presMethod=';
+subs0.presS= 'presS=';
+subs0.presE= 'presE=';
+
+subs0.timeMethod = 'timeMethod=';
+subs0.timeS= 'timeS=';
+subs0.timeE= 'timeE=';
+
+// apis__
+var apis = {};
+var obj0 = {};
+
+obj0.service0 = 'subsetDownload';
+//obj0.timeMethod = 3;
+obj0.title = '';
+obj0.description = '';
+
+obj0.hideService = 1;
+obj0.hideAnomaly = true;
+obj0.anomaly0 = false;
+obj0.hideBasin = true;
+//obj0.basin = '';
+obj0.hideTimeMean = true;
+//obj0.timeMean = '';
+obj0.hideTrend = true;
+obj0.hideDisplayOpt = true;
+
+obj1 = jQuery.extend(true, {}, obj0);
+obj1.title = 'Aggregate and Subset';
+apis.subset = jQuery.extend(true, {}, obj1);
+
+obj1 = jQuery.extend(true, {}, obj0);
+obj1.hideAnomaly = false;
+obj1.anomaly0 = true;
+obj1.title = 'Calculate Anomaly';
+apis.anomaly = jQuery.extend(true, {}, obj1);
+
+obj1 = jQuery.extend(true, {}, obj0);
+obj1.hideAnomaly = false;
+obj1.anomaly0 = true;
+obj1.title = 'Calculate Climatology';
+apis.climatology = jQuery.extend(true, {}, obj1);
+
+obj1 = jQuery.extend(true, {}, obj0);
+obj1.hideBasin = false;
+obj1.title = 'Mask Basin';
+apis.masking = jQuery.extend(true, {}, obj1);
+
+obj1 = jQuery.extend(true, {}, obj0);
+obj1.hideTimeMean = false;
+obj1.title = 'Calculate Time Mean';
+apis.timeMean = jQuery.extend(true, {}, obj1);
+
+apis.trend = jQuery.extend(true, {}, obj1);
+
+// function_doUpload2() {
+function doUpload2() {
+    console.log('in doUpload2');
+    // Gray out the form.
+    //$("#uploadForm :input").attr("disabled", "disabled");
+
+    // Initialize the progress bar.
+    //$progressBar.css({"width": "0%"});
+
+    // Collect the form data.
+    fd = collectFormData();
+
+    vueApp.uploadProgressVal = "... uploading";
+    // Attach the files.
+    for (var i = 0, ie = PENDING_FILES.length; i < ie; i++) {
+        // Collect the other form data.
+        fd.append("file", PENDING_FILES[i]);
+    }
+
+    // Inform the back-end that we're doing this over ajax.
+    //fd.append("__ajax", "true");
+
+    //var xhr = $.ajax({
+    $.ajax({
+        type: "POST",
+        url: "http://" + window.location.hostname + ":" + window.location.port + "/fileUpload2a",
+        data: fd,
+        contentType: false,
+        cache: false,
+        processData: false,
+        //async: false,
+        success: function(data) {
+         postCheck(data, 'uploadProgressVal')
+        },
+    });  // ajax
+}  // upload()
+
+function postCheck(data, progress1) {
+  //alert(data.message + '\n' + data.check);
+  //console.log(data.success);
+  if (data.success==true) {
+    vueApp[progress1] = "Upload finished.\n" 
+      + data.message + '\n' 
+      + data.check + '\n' 
+      + data.warning;
+  
+    //console.log(data);
+    delete data.message;
+    delete data.check;
+    delete data.warning;
+
+    vueApp.fileDict[ data.fileName ] = data;
+    if (vueApp.fileList.indexOf(data.fileName)==-1) {
+      vueApp.fileList.push( data.fileName );
+    } 
+
+    for (var i3=0; i3<data.varList.length; i3++) {
+      if (vueApp.varL.indexOf(data.varList[i3])==-1) {
+        vueApp.varL.push( data.varList[i3] );
+      }
+    } 
+
+  } else {
+    vueApp[progress1] 
+     = data.message + '\n'
+       + data.check;
+    vueApp.onlineFileShow = false;
+  }
+    //$progressBar.css({"width": "100%"});
+    //data = JSON.parse(data);
+}
+
+// onload__
+window.onload = function() {
+$('.selects').chosen({search_contains: true});
+$('.selectp').chosen({search_contains: true});
+$('.selectm').chosen({search_contains: true});
+$('.selecte').chosen({search_contains: true});
+$('.selectr').chosen({search_contains: true});
+$('.selectv').chosen({search_contains: true});
+$('.selectl').chosen({search_contains: true});
+$('.selectd').chosen({search_contains: true});
+
+processQS5();
+
+}  // onload = function()
+
+// ready__
+$(document).ready(function(){
+
+  //vueApp.checkApi();
+  // selectp__
+  $(".selects").change(function() {
+    vueApp.source9 = $(".selects").val();
+    if (vueApp.source9===null) { vueApp.source9 = [] }
+  });
+
+  $(".selectp").change(function() {
+    vueApp.provider9 = $(".selectp").val();
+    if (vueApp.provider9===null) { vueApp.provider9 = [] }
+  });
+
+  $(".selectm").change(function() {
+    vueApp.model9 = $(".selectm").val();
+    if (vueApp.model9===null) { vueApp.model9 = [] }
+  });
+
+  $(".selecte").change(function() {
+    vueApp.experiment9 = $(".selecte").val();
+    if (vueApp.experiment9===null) { vueApp.experiment9 = [] }
+  });
+
+  $(".selectr").change(function() {
+    vueApp.run9 = $(".selectr").val();
+    if (vueApp.run9===null) { vueApp.run9 = [] }
+  });
+
+  $(".selectl").change(function() {
+    vueApp.varLong9 = $(".selectl").val();
+    if (vueApp.varLong9===null) { vueApp.varLong9 = [] }
+    //for (var ii=0; ii<vueApp.varLong9.length; ii++) { }
+  });
+
+  $(".selectv").change(function() {
+    vueApp.var9 = $(".selectv").val();
+    if (vueApp.var9===null) { vueApp.var9 = [] }
+  });
+
+  // action1_click
+  $("#action1").click(function(event) {
+    ajaxCall(vueApp.backEngin);
+  });
+
+  // onlineFileCheck_click
+  $("#onlineFileCheck").click(function(event) {
+    vueApp.onlineProgressVal = 'checking...'; 
+    $.ajax({
+      type: 'GET',
+      url: "http://" + window.location.hostname + ":" + window.location.port + "/fileCheck?file="+escape(vueApp.onlineFile),
+      data: null,
+      dataType: "json",
+      contentType: false,
+      cache: false,
+      processData: false,
+      async: false,
+      success: function(data) {
+       postCheck(data, 'onlineProgressVal')
+      },
+    }); // ajax
+  }); // onlineFileCheck click
+
+
+  // Set up the drag/drop zone.
+  //initDropbox();
+
+  // filePicker_change
+  // Set up the handler for the file input box.
+  $("#filePicker").on("change", function() {
+      handleFiles(this.files);
+  });
+
+  // uploadButton2_click. call doUpload
+  $("#uploadButton2").on("click", function(e) {
+      // If the user has JS disabled, none of this code is running but the
+      // file multi-upload input box should still work. In this case they'll
+      // just POST to the upload endpoint directly. However, with JS we'll do
+      // the POST using ajax and then redirect them ourself when done.
+      e.preventDefault();
+      doUpload2();
+      //doUpload();
+  })
+
+  // download_data_click
+      $("#downloadData").click(function(event) {
+        window.location.assign(vueApp.dataUrl);
+      });
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+  });  // ready(function())
+
+  </script>
+
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th {
+  text-align: center;
+}
+</style>
+
+</head>
+
+<body>
+<div class="container-fluid">
+<div id='vueId'>
+<div class="row center1">
+<div class="col-sm-8 col-sm-offset-2 col-xs-12 color-head">
+<h3>{{title}}</h3>
+{{description}}
+</div> <!-- col-sm -->
+<div class="col-sm-offset-2">
+</div> <!-- col-sm -->
+</div> <!-- row center1 -->
+
+<!-- pick_service -->
+<div class="color2" v-show="!service0">
+<br>
+<div class="row">
+  <div class="col-sm-12 center1 subtitle1">
+    Select Analysis:
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-4 right1">
+  </div>
+  <div class="col-sm-8 left1">
+<font size="+1">
+<select v-model="service" v-on:change="changeService()">
+    <option v-for="(value, key) in services" v-bind:value="key">
+     {{ value.name }}    
+    </option>
+</select>
+</font>
+     Number of datasets: {{nDataset}} . Number of dimensions: {{nDim}}
+  </div>
+</div> <!-- row -->
+
+<br>
+</div> <!-- color3 -->
+
+
+<!-- open_upload_file -->
+<div class="row" v-show="1==0">
+ <div class="col-sm-4 right1">
+ </div>
+  <div class="col-sm-8 left1">
+    <label><input type="checkbox" v-model="uploadOpen" >Upload Files</label>
+    <label><input type="checkbox" v-model="onlineOpen" >Online Data</label>
+  </div>
+</div> <!-- row -->
+
+<!-- upload_file -->
+<div class="color3" v-show="uploadOpen">
+<div class="row center1 subtitle1" >
+Upload Files
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 right1">
+ Select files to upload:
+ </div> <!-- col-sm-6 -->
+ <div class="col-sm-8 left1">
+  <form id="uploadForm" 
+        method = "POST" 
+        enctype = "multipart/form-data">
+
+    <input id="filePicker" type="file" name="file" 
+      accept=".nc,.cdf" multiple>
+    <p>
+    <button  id="uploadButton2">Upload</button>
+<br>
+
+  </form>
+
+  <input id="uploadDataFilename" type="hidden" value='' /> 
+ </div> <!-- col-sm -->
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 right1">
+  Upload Progress:
+ </div>
+ 
+ <div class="col-sm-8 left1">
+  <textarea>
+   {{uploadProgressVal}}
+  </textarea>
+ </div>
+
+</div> <!-- row -->
+
+</div> <!-- uploadSection -->
+
+<!-- online_file -->
+<div v-show="onlineOpen">
+<div class="row center1 subtitle1" >
+Online File
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 right1">
+   Online Data File:
+  </div> <!-- col-sm-6 -->
+  <div class="col-sm-8 left1">
+    <input v-model="onlineFile" size=100>
+    <p>
+    <input id="onlineFileCheck" type="button" value='Check File'>
+  </div> <!-- col-sm-6 level2-->
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 right1">
+  Check Progress:
+ </div>
+ 
+ <div class="col-sm-8 left1">
+  <textarea>
+   {{onlineProgressVal}}
+  </textarea>
+ </div>
+
+</div> <!-- row -->
+
+
+</div> <!-- inputSection -->
+
+<div class="row center1 subtitle1" >
+Select Datasets and Variables
+</div> <!-- row -->
+
+<!-- chose_filename -->
+<div class="row">
+ <div class="col-sm-4 right1" >
+ Filter by Filename: <a href="#" data-html='true' data-toggle="tooltip" data-placement="bottom" title="The match is case insensitive. Multiple words are separated by commas. The list of words can be divided by the word 'or'. A word can be preceded by the word 'not'. <br>Here is an example: The search string 'gldas,mrso3,or,coads,or,not,zo,grace' produces a list of datasets that contain both 'gldas' and 'mrso3', or contain 'coads', or contain 'grace' but not 'zo'.">(info)</a>
+ </div>
+ <div class="col-sm-8 left1">
+  <!-- <input type='checkbox' v-model='fnStr9Ch'>  -->
+  <input type='text' v-model="fnStr9" v-on:keyup.enter="filterFile" class="selectf">
+ </div>
+</div> <!-- row -->
+
+<!-- chose_time_range -->
+<div class="row" v-if="moreFilter==1">
+ <div class="col-sm-4 right1">
+ Filter by Time Range:
+ </div>
+ <div class="col-sm-8 left1">
+  <input type='checkbox' v-model='timeSE99Ch'> <input type='text' v-model="timeS99" v-on:keyup.enter="filterFile" size=7>
+  <input type='text' v-model="timeE99" v-on:keyup.enter="filterFile" size=7>
+ </div>
+</div> <!-- row -->
+
+<!-- chose_source -->
+<div class="row" v-if="moreFilter==1">
+ <div class="col-sm-4 right1">
+ Filter by Data Sources:
+ </div>
+ <div class="col-sm-8 left1">
+  <select data-placeholder="Select Sources" class="selects" multiple v-on:keyup.enter="filterFile" >
+    <option v-for="key in sourceL" v-bind:value="key">
+     {{ key }}
+    </option>
+  </select>
+ </div>
+</div> <!-- row -->
+
+<!-- chose_providers -->
+<div class="row" v-if="moreFilter==1">
+ <div class="col-sm-4 right1">
+ Filter by Data Providers:
+ </div>
+ <div class="col-sm-8 left1">
+  <select data-placeholder="Select providers" class="selectp" multiple v-on:keyup.enter="filterFile" >
+    <option v-for="key in providerL" v-bind:value="key">
+     {{ key }}
+    </option>
+  </select>
+ </div>
+</div> <!-- row -->
+
+<!-- chose_model -->
+<div class="row" v-if="moreFilter==1">
+ <div class="col-sm-4 right1">
+ Filter by Model/Instrument Names:
+ </div>
+ <div class="col-sm-8 left1">
+  <select data-placeholder="Select Variables" class="selectm" multiple v-on:keyup.enter="filterFile" >
+    <option v-for="key in modelL" v-bind:value="key">
+     {{ key }}
+    </option>
+  </select>
+ </div>
+</div> <!-- row -->
+
+<!-- chose_var -->
+<div class="row">
+ <div class="col-sm-4 right1">
+ Filter by Variables Short Names:
+ </div>
+ <div class="col-sm-8 left1">
+  <select data-placeholder="Select Variables" class="selectv" multiple height="100px" v-on:keyup.enter="filterFile" >
+    <option v-for="key in varL" v-bind:value="key">
+     {{ key }}
+    </option>
+  </select>
+ </div>
+</div> <!-- row -->
+
+<!-- chose_var_long -->
+<div class="row">
+ <div class="col-sm-4 right1">
+ Filter by Variables Longname:
+ </div>
+ <div class="col-sm-8 left1">
+  <select data-placeholder="Select Variables by Longname" class="selectl" multiple v-on:keyup.enter="filterFile" >
+    <option v-for="key in varLongL" v-bind:value="key">
+     {{ key }}
+    </option>
+  </select>
+ </div>
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 right1">
+  <button v-on:click="filterFile()">Filter Files</button>
+ </div>
+ <div class="col-sm-8 left1">
+  There are {{ datasetFiltered.length }} filtered datasets.
+ </div> <!-- col -->
+</div> <!-- row -->
+
+<div class="row">
+ <div class="col-sm-4 left1">
+  Select Datasets: 
+ </div>
+ <div class="col-sm-8 left1">
+  Number of selected datasets:<input type="text" v-bind:value="datasetSelected.length" readonly size=3> 
+ </div> <!-- col -->
+</div> <!-- row -->
+
+
+<!-- select_datasets -->
+<div  v-if="datasetFiltered.length>0">
+<table style="width:100%">
+<tr>
+<th></th>
+<th></th>
+<th>fileName</th>
+<th>var<br/>name</th>
+<th>var<br/>long name</th>
+<th>units</th>
+<th>lon<br/>start</th>
+<th>lon<br/>end</th>
+<th>lon<br/>res</th>
+<th>lat<br/>start</th>
+<th>lat<br/>end</th>
+<th>lat<br/>res</th>
+<th>vertical<br/>levels</th>
+<th>time<br/>start</th>
+<th>time<br/>end</th>
+<th></th>
+<th>var list<br>if number of vars > 1</th>
+</tr>
+<template v-for="ii in datasetFiltered.length" >
+ <tr>
+   <td>
+    <input type="text" readonly size=2 v-bind:value="datasetFilteredDict[datasetFiltered[ii-1]].order">
+   </td>
+
+   <td>
+    <input type="checkbox" v-model="datasetSelected" v-bind:value="datasetFiltered[ii-1]" v-on:change="changedDatasetSelected()" />
+   </td>
+
+   <td>
+    {{searchTextFilteredShort[ii-1]}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].varName}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].longName}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].varUnits}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.max}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lon.res}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.max}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].lat.res}}
+   </td>
+
+   <td>
+    <span v-if="filteredTable[ii-1].z.res">
+    <a href="#" data-html='true' data-toggle="tooltip" :title="filteredTable[ii-1].z.res">mouse hover</a>
+    </span>
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].time.min}}
+   </td>
+
+   <td>
+    {{filteredTable[ii-1].time.max}}
+   </td>
+
+   <td>
+   </td>
+
+     <!-- select_var -->
+   <td>
+   <span v-if="fileDict[datasetFiltered[ii-1]].varList.length>1">
+   <select v-on:change="changedSelected()" v-model="datasetFilteredDict[datasetFiltered[ii-1]].var">
+    <option v-for="iii in fileDict[datasetFiltered[ii-1]].varList.length" v-bind:value="fileDict[datasetFiltered[ii-1]].varList[iii-1]">
+{{fileDict[datasetFiltered[ii-1]].varList[iii-1]}}: {{fileDict[datasetFiltered[ii-1]].varListLong[iii-1]}}
+    </option>
+   </select>
+   </span>
+   </td>
+
+
+ </tr>
+</template>
+</table>
+</div>  <!-- v_if -->
+
+
+<!-- data_subsubsetting -->
+<template v-if="service!='downloadOriginal'">
+<div class="color3" v-show="datasetSelected.length>0">
+<div class="row center1 subtitle1" >
+Data Subsetting
+</div> <!-- row -->
+
+<!-- which2Subset-->
+<div class="row" v-show="datasetSelected.length>1">
+  <div class="col-sm-4 right1">
+    The dataset to subset:
+  </div>
+
+  <div class="col-sm-8 left1">
+   <template v-for="ii in datasetSelected.length" >
+    <label class="input-online">
+      <!-- <input type="radio" name="whichDataset" v-model="which2Subset" v-bind:value='ii' v-on:click="which2SubsetClick()" /> -->
+      <input type="radio" name="whichDataset" v-model="which2Subset" v-bind:value='ii' />
+      {{ii}}
+    </label>
+   </template> 
+   &nbsp &nbsp <button v-on:click="syncSubsetting()">Sync</button>
+  </div>
+</div> <!-- row -->
+
+<!-- lonWidget_ -->
+<div class="row" v-if="dim2.indexOf('lon')>-1">
+  <div class="col-sm-4 right1">
+    longitude (deg):
+  </div>
+
+  <div class="col-sm-4 left1">
+<select v-model="subs2.lonMethod">
+    <option value="1">pick a value</option>
+    <option value="2">average over</option>
+    <option value="4">sum over</option>
+    <option value="3">form an axis</option>
+</select>
+      <input v-show="subs2.lonMethod=='1'" v-model="subs2.lonS1" size=10>
+      <input v-show="subs2.lonMethod!='1'" v-model="subs2.lonS23" size=10>
+      <input v-show="subs2.lonMethod!='1'" v-model="subs2.lonE" size=10>
+  </div>
+</div> <!-- row -->
+
+<!-- latWidget_ -->
+<div class="row" v-if="dim2.indexOf('lat')>-1">
+  <div class="col-sm-4 right1">
+    latitude (deg):
+  </div>
+
+  <div class="col-sm-4 left1">
+<select v-model="subs2.latMethod">
+    <option value="1">pick a value</option>
+    <option value="2">average over</option>
+    <option value="4">sum over</option>
+    <option value="3">form an axis</option>
+</select>
+      <input v-show="subs2.latMethod=='1'" v-model="subs2.latS1" size=10>
+      <input v-show="subs2.latMethod!='1'" v-model="subs2.latS23" size=10>
+      <input v-show="subs2.latMethod!='1'" v-model="subs2.latE" size=10>
+  </div>
+</div> <!-- row -->
+
+<!-- presWidget_ -->
+<div class="row" v-if="dim2.indexOf('z')>-1">
+  <div class="col-sm-4 right1">
+    vertial ({{subs2.zUnits}}):
+  </div>
+
+  <div class="col-sm-4 left1">
+<select v-model="subs2.presMethod">
+    <option value="1">pick a value</option>
+    <option value="2">average over</option>
+    <option value="4">sum over</option>
+    <option value="3">form an axis</option>
+</select>
+      <input v-show="subs2.presMethod=='1'" v-model="subs2.presS1" size=10>
+      <input v-show="subs2.presMethod!='1'" v-model="subs2.presS23" size=10>
+      <input v-show="subs2.presMethod!='1'" v-model="subs2.presE" size=10>
+      <span>Z Range: {{zVar.min + ' to ' + zVar.max}} </span>
+  </div>
+</div> <!-- row -->
+
+<!-- timeWidget_ -->
+<div v-if="dim2.indexOf('time')>-1">
+<div class="row">
+  <div class="col-sm-4 right1">
+    Time (year-month-day):
+  </div>
+
+  <div class="col-sm-8 left1">
+<select v-model="subs2.timeMethod" v-on:change="timeMethodChange()">
+    <option value="1">pick a value</option>
+    <option value="2">average over</option>
+    <option value="4">sum over</option>
+    <option value="3">form an axis</option>
+    <!-- <option value="3" v-bind:disabled="!time4All && nDataset>1">form an axis</option> -->
+</select>
+      <input v-show="subs2.timeMethod=='1'" v-model="subs2.timeS1" size=10>
+      <input v-show="subs2.timeMethod!='1'" v-model="subs2.timeS23" size=10>
+      <input v-show="subs2.timeMethod!='1'" v-model="subs2.timeE" size=10>
+      <span v-show="subs2.timeMethod=='3'">
+      </span>
+  </div>
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-4 right1">
+    Preset Time Range:
+  </div>
+  <div class="col-sm-8 left1">
+    <div v-show="subs2.timeMethod!='1'">
+    <button class="btn btn-default"  v-on:click="yN=1;yNFix=0; yNChange+=1">One Year</button> 
+    <button class="btn btn-default"  v-on:click="yN+=1;yNFix=1; yNChange+=1">Add 1 Year</button> 
+    <button class="btn btn-default"  v-on:click="yN-=1;yNFix=1; yNChange+=1">Reduce 1 Year</button> 
+    <button class="btn btn-default"  v-on:click="yN=-1;yNFix=0; yNChange+=1">Full Range</button> 
+    </div>
+
+    <div v-show="subs2.timeMethod=='1'">
+    <button class="btn btn-default"  v-on:click="yM=0;yMGo=0; yMChange+=1">At Beginning</button> 
+    <button class="btn btn-default"  v-on:click="yMGo=1; yMChange+=1">+1 year</button> 
+    <button class="btn btn-default"  v-on:click="yMGo=-1; yMChange+=1">-1 year</button> 
+    <button class="btn btn-default"  v-on:click="yM=10;yMGo=0; yMChange+=1">At End</button> 
+    </div>
+  </div>
+</div> <!-- row -->
+
+<div v-show="!api9.hideTimeMean">
+<div class="row" v-if="subs2.timeMethod!='1'" >
+  <div class="col-sm-4 right1">
+    Time Procession:
+  </div>
+  <div class="col-sm-8 left1">
+
+      <span v-show="!api9.hideAnomaly">
+      <label class="checkbox-inline"><input type="checkbox" v-model="anomaly0" unchecked >Use Anomaly</label>
+      </span>
+
+<!-- should not use on:click. it was too early to fire -->
+    <label class="checkbox-inline"><input type="checkbox" v-model="yearMean" v-on:change="yearMeanClick" unchecked >Yearly Mean</label>
+    <label class="checkbox-inline"><input type="checkbox" v-model="quarterMean" v-on:change="quarterMeanClick()" unchecked >Quarterly Mean</label>
+
+  </div>
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-4 right1">
+    Dataset Time Range:
+  </div>
+      <span><b>{{timeDashV(this.timeSLimAll) + ' to ' + timeDashV(this.timeELimAll)}}</b> </span>
+  <div class="col-sm-8 left1">
+  </div>
+</div> <!-- row -->
+
+</div> <!-- v-show -->
+
+</div> <!-- if time -->
+
+</div> <!-- color3 -->
+
+<!-- oceanMaskOpt -->
+<div v-show="!api9.hideBasin" >
+<div class="color2" >
+<div class="row">
+  <div class="col-sm-4 right1">
+    Pick a basin:
+  </div>
+
+  <div class="col-sm-8 left1">
+    <select id="basin" v-model="basin">
+    <option v-for="key in basinList" > {{ key }} </option>
+    </select>
+  </div>
+</div>
+
+</div> <!-- color2 -->
+</div> <!-- v-show -->
+
+<!-- linearOpt -->
+<div class="color2" v-show="service=='linear'">
+<div class="row center1 subtitle1" >
+Parameters for the linear combination service
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-4 right1">
+    coefficients (up to 10):
+  </div>
+  <div class="col-sm-8 left1">
+  <label class="input-online">
+    add a constant:<input type="text"  v-model="coeff[0]" v-on:input="updateCoeff(0)" size=7 />
+  </label>
+   <template v-for="ii in datasetSelected.length" >
+    <label class="input-online">
+      &nbsp coeff[{{ii}}]:<input type="text"  v-model="coeff[ii]" v-on:input="updateCoeff(ii)" size=7 />
+    </label>
+   </template> 
+  </div>
+</div>
+</div>  <!-- v-show linear -->
+
+<!-- correlationMapOpt -->
+<div class="color2" v-show="service=='correlationMap'">
+<div class="row center1 subtitle1" >
+Parameters for the correlationMap service
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-4 right1">
+    Time Lag in Months (Variable 1 is lagged behind Variable 2):
+  </div>
+  <div class="col-sm-8 left1">
+    <input v-model="laggedTime" value="0" size=7>  
+  </div>
+</div>
+
+</div> <!-- correlationMap -->
+
+<div v-show="!api9.hideDisplayOpt">
+<!-- display_opt -->
+<div class="color0">
+<div class="row">
+  <div class="col-sm-12 center1 subtitle1">
+    Display Options:
+  </div>
+</div>
+
+<div class="row" v-show="service9.nPlot>1">
+  <div class="col-sm-4 right1">
+    Pick the plot to customize:
+  </div>
+
+  <div class="col-sm-8 left1">
+   <template v-for="ii in service9.nPlot" >
+    <label class="input-online">
+      <input type="radio" name="PlotNum" v-model="whichPlot" v-bind:value='ii' />
+      {{ii}}
+    </label>
+   </template> 
+  </div>
+</div> <!-- row -->
+</div> <!-- v-show -->
+
+
+<!-- ferret_level_ -->
+<div class="row">
+<!--  <div class="col-sm-2 left1">
+  </div> -->
+  <div class="col-sm-4 right1">
+    Color Level Type (just an example)<a href="#" data-html='true' data-toggle="tooltip" title="Select a way to specify the color levels, then modify the color level string in the next box.">(info)</a>:
+  </div>
+  <div class="col-sm-8 left1">
+<select v-model="ferretLevel0" v-on:change="moveFerretLevel()">
+    <option value="10">10 levels</option>
+    <option value="10V">10 levels, variance-based</option>
+    <option value="10C">10 levels, zero-centered</option>
+    <option value="10H">10 levels, histogram-based</option>
+    <option value="0.5D">interval=0.5</option>
+    <option value="(-inf)(0,35,1)(inf)">vmin=0, vmax=35, interval=1, open-ended</option>
+    <option value="(0,35,1)">vmin=0, vmax=35, interval=1; outside values cropped</option>
+    <option value="(0,35,1)(25,28,0.5)">vmin=0, vmax=35, interval=1; within (25,28), interval=0.5</option>
+</select>
+
+&nbsp&nbsp Modify It: <input type="text" v-model="plotP2.ferretLevel" style="width: 200px; border: none;"/>
+  </div>
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-4 right1">
+    Specify Colormap:
+  </div> <!-- col-sm-4 level2-->
+  <div class="col-sm-8 left1" >
+    <select id="colorMap" v-model="plotP2.colorMap">
+    <option value="rainbow">rainbow</option>
+    <option value="centered">centered</option>
+    <option value="bright_centered">bright_centered</option>
+    <option value="white_centered">white_centered</option>
+    <option value="grayscale">grayscale</option>
+    <option value="inverse_grayscale">inverse_grayscale</option>
+    <option value="red_blue_centered">red_blue_centered</option>
+    <option value="topo">topo</option>
+    <option value="ocean_temp">ocean_temp</option>
+    <option value="yellow_orange_brown">yellow_orange_brown</option>
+    <option value="brown_orange_yellow">brown_orange_yellow</option>
+    <option value="warm_cmyk">warm_cmyk</option>
+    <option value="terrestrial">terrestrial</option>
+    </select>
+  </div> <!-- col -->
+</div> <!-- row -->
+
+<div class="row"> 
+  <div class="col-sm-4 right1">
+    Plot Title:
+  </div>
+  <div class="col-sm-8 left1">
+    <input v-model="plotP2.plotTitle" >  
+  </div>
+</div> <!-- row -->
+
+</div> <!-- color0 -->
+
+<!-- purpose__ -->
+<div class="color2">
+<div class="row">
+  <div class="col-sm-4 right1">
+    Analysis Details:
+  </div> <!-- col -->
+  <div class="col-sm-8 left1">
+    <textarea v-model="purpose" value="" spellcheck=false rows="2" cols="50"> </textarea>
+  </div> <!-- col -->
+</div> <!-- row -->
+</div> <!-- color2 -->
+</template> <!-- v-else  downloadOriginal-->
+
+<!-- action_button -->
+<div class="color4">
+<div class="row">
+  <div class="col-sm-6 center1">
+    <input type="submit" id="action1" v-bind:disabled="action1Disabled" v-bind:value="getPlotText" class="btn btn-primary" />
+  </div>
+  <div class="col-sm-6 center1">
+    <button id="downloadData" v-bind:disabled="downloadDataDisabled" class="btn btn-primary">Download Data</button>
+  </div>
+</div> <!-- row -->
+</div> <!-- color4 -->
+
+<div class="row">
+  <div class="col-sm-6 right1 subtitle1">
+    <span class="subtitle1">Browser URL:</span>  
+  </div>
+
+  <div class="col-sm-6 right1">
+    <button v-on:click="makeServiceUrlV(backEngin)" class="btn btn-default">Service URL</button>  
+    <button v-on:click="makeBrowserUrlV()" class="btn btn-default">Browser URL</button>  
+    <button class="btn btn-default" v-on:click="openNewWindow()">Open a page with the browserUrl</button> 
+
+    <!-- <a class="btn btn-default" v-bind:href="browserUrl" target="_blank">Open a page with the browserUrl</a>  -->
+    <!-- <button v-on:click="copyBrowserUrlV()" class="btn btn-default">Copy to clipboard</button>  -->
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-sm-12 center1">
+    <textarea id="browserUrl" v-model="browserUrl" spellcheck=false rows=5>{{browserUrl}}</textarea>
+  </div>
+</div>
+
+<!-- image__ -->
+<div class="row" id="Image0" center1>
+  <div class="col-sm-12 center1">
+    <div id="image" class="borderedText"></div>
+  </div>
+</div> <!-- row -->
+ 
+<div class="row">
+  <div class="col-sm-12 center1 subtitle1">
+    Data File URL:
+  </div>
+</div>
+<div class="row" >
+  <div class="col-sm-12 center1">
+    <textarea readonly cols="150" rows="2">{{dataUrl}}</textarea>
+  </div>
+</div> <!-- row -->
+
+<div class="row">
+  <div class="col-sm-12 center1 subtitle1">
+    Service Response Text:
+  </div>
+</div>
+<div class="row" >
+  <div class="col-sm-12" v-html="responseHtml" style="border: 1px;">
+  </div>
+</div> <!-- row -->
+
+</div> <!-- vueId-->
+</div> <!-- container -->
+
+<script>
+// vue__
+var vueApp = new Vue({
+  el: "#vueId",
+  data: {
+
+    // vue_data_para
+    //backEngin: 'cmda1',
+    backEngin: 'universalPlotting6b',
+    datasets: '',
+    vars: '',
+    //
+    var1: 'cl',
+    model1: 'GFDL/ESM2G',
+    //
+    lonMethod: '3',
+    latMethod: '3',
+    presMethod: '1',
+    timeMethod: '1',
+    presS: '500',
+    presE: '800',
+    timeS: '2000-01-15',
+    timeE: '2001-12-15',
+    lonS: '0',
+    lonE: '360',
+    latS: '-90',
+    latE: '90',
+    basin: '',
+    anomaly0: false,
+
+    timeMean: '',
+    yearMean: false,
+    quarterMean: false,
+
+    timeFullRange: false,  // not used.
+
+    ferretLevel0: '10',
+    ferretLevel: '10',
+    colorMap: 'rainbow',
+    plotTitle: '',
+    
+    title: 'CMDA Universal Analysis Service',
+    description: 'This is a tool that includes several services (plotting, EOF, random forest importance, difference of two fields, lagged correlation). Datasets can be searched by file name and variable name.',
+
+    laggedTime: '0',
+    nDataset: 1,
+    nDim: 1,
+
+    service0: '',
+    //service0: 'diffPlot',
+    //service0: 'anomaly',
+    //service0: 'correlationMap',
+    //service0: 'plot',
+    //service0: 'subsetDownload',
+
+    service: 'plot',
+    services: services,
+    service9: {},
+    
+    api0: '',  // make single service
+    //api0: 'anomaly',
+    //api0: 'masking',
+    //api0: 'timeMean',
+    apis: apis,
+    api9: {},
+    timeMethod0: '',
+
+    whichPlot: "1",
+    plotP2: {},  // used in current plot setting
+    plotP9: {},
+
+    aaa1: '',  // to store temp object for debugging
+    aaa2: '', 
+    aaa3: '', 
+    aaa4: '', 
+    aaa5: '', 
+
+    //onlineFile: '/home/svc/upload/coads_climatology.cdf',
+    //onlineFile: 'http://www.esrl.noaa.gov/psd/thredds/dodsC/Datasets/cmap/enh/precip.mon.mean.nc',
+    onlineFile: "http://opendap.jpl.nasa.gov:80/opendap/SeaSurfaceTopography/aviso/L4/dynamic_topo_1deg_1mo/zos_AVISO_L4_199210-201012.nc",
+
+    uploadFile: '',
+    uploadServerFile: '',
+
+    purpose: '',
+    serviceId: '',
+    userId: '',
+
+    responseHtml: '',
+    dataUrl: '',
+    plotUrl: '',
+
+    // for_chosen__
+    fileDict: fileDict,
+    fileList: Object.keys(fileDict),
+    datasetFiltered: [],
+    filteredTable: {},
+    metaTable: {},
+    moreFilter: 0,
+
+    searchText: searchText,
+    searchTextList: Object.keys(searchText),
+    searchTextR: [],   // the initial value should be an empty array, for searchTextR.length
+    searchTextFiltered: [],
+    searchTextFilteredShort: [],
+
+    datasetFilteredDict: {},
+    datasetSelected: [],
+    datasetSelected0: [],
+    varSelected: [],
+
+    which2Subset0: "1",  // not watched
+    which2Subset: "1",   // watched
+    dim2: [],
+    subs2: {},
+
+    timeV0: {},
+    timeV: {},
+    time4All: true,
+    timeSLim: 20000115,
+    timeELim: 20001215,
+    timeSLimAll: 20000115,
+    timeELimAll: 20001215,
+    yN: 0,  // number of years in time range
+    yNChange: 0,  // triger for yN
+    yNFix: 0,  // whether to fix the endtime
+    yM: 0,  // where to pick a time
+    yMGo: 0,  // 
+    yMChange: 0,  // triger for yN
+
+
+    dataset2Subset: '',
+    var2Subset: '',
+
+    twoColor: ['#E8E8E8', 'white'],
+
+    timeSE99Ch: false,
+    timeS99: '2000-01',
+    timeE99: '2000-12',
+
+    fnStr9Ch: false,
+    fnStr9: '',
+
+    sourceL: sourceL,
+    source9: [],
+
+    providerL: providerL,
+    provider9: [],
+
+    modelL: modelL,
+    model9: [],
+
+    experimentL: experimentL,
+    experiment9: [],
+
+    runL: runL,
+    run9: [],
+
+    varL: varL,
+    var9: [],
+    varSelectedDict: [],
+
+    varLongL: varLongL,
+    varLong9: [],
+
+    // other_data
+    //varList: varList,
+
+    onlineOpen: false,
+    onlineProgressVal: '',
+
+    uploadOpen: false,
+    uploadProgressVal: '',
+
+    action1Disabled: false,
+    downloadDataDisabled: false,
+
+    timeSLim: false,
+    timeELim: false,
+    browserUrl: '',
+    coeff: ['0.0', '1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0','1.0'],
+    //coeff: [],
+    coeff99: 1.0,
+    zFactor: 1.0,
+    imageHtml: '',
+
+    // workflow_relatted
+    getPlotText: 'Analyze Data',
+    getPlotText0: 'Analyze Data',
+    userId1: '0',
+    wfId: '0',
+    versionId: '0',
+    clientId: '0',
+    dataInput: false,
+    // list_of_basins
+    basinList:
+[
+'Global',
+'Atlantic Ocean',
+'Pacific Ocean',
+'Indian Ocean',
+'Mediterranean Sea',
+'Baltic Sea',
+'Black Sea',
+'Red Sea',
+'Persian Gulf',
+'Hudson Bay',
+'Southern Ocean',
+'Arctic Ocean',
+'Sea of Japan',
+'Kara Sea',
+'Sulu Sea',
+'Baffin Bay',
+'East Mediterranean',
+'West Mediterranean',
+'Sea of Okhotsk',
+'Banda Sea',
+'Caribbean Sea',
+'Andaman Basin',
+'North Caribbean',
+'Gulf of Mexico',
+'Beaufort Sea',
+'South China Sea',
+],
+  },
+
+  // methods__
+  methods: {
+    //reverseSearchText__: function() {
+    reverseSearchText: function() {
+			var t1;
+			this.searchTextR = {};
+			for (var i=0; i<this.searchTextList.length; i++) { //>
+				t1 = this.searchTextList[i]; 
+				this.searchTextR[ this.searchText[t1] ] = t1;
+			}
+    },
+        
+    // filterFile__
+    filterFile: function() {
+      var list1 = this.fileList;
+      var list2;
+      var this2;
+      var change1 = 0;
+      //console.log(list1.length);
+
+      if (this.searchTextR.length==0) {
+				this.reverseSearchText();
+      }
+
+      // filter_by_time
+      var timeS99a, timeE99a;
+      if (this.timeSE99Ch) {
+        timeS99a = Number( this.timeS99.split("-").join("") );
+        timeE99a = Number( this.timeE99.split("-").join("") );
+        if (timeS99a<900000) timeS99a = timeS99a * 100;
+        if (timeE99a<900000) timeE99a = timeE99a * 100;
+        
+        change1 = 1;
+        this2  = this;
+        var file11,index11,var11;
+        list2 = list1.filter(function(member) {
+          file11 = this2.fileDict[member];
+          index11 = file11.dim2.indexOf('time');
+          if (index11>-1) {
+            var11 = file11.dimList[index11]; 
+            var11 = file11.varDict[var11];
+            return  Number( var11.min ) <= timeS99a && Number( var11.max ) >= timeE99a;
+          } else {
+            return false;
+          }
+        }); 
+        list1 = list2;
+      }
+
+      // filter_by_fn
+      var words0 = this.fnStr9.split(',');
+      //if (words0.length>0 && this.fnStr9Ch) {
+      if (words0.length>0 ) {
+        change1 = 1;
+
+        var text1 = [];
+        for (var i=0; i<list1.length; i++) { //>
+          text1.push( this.searchTextR[ list1[i] ] );
+        }
+
+        var or1 = [];
+        for (var i2=0; i2<words0.length; i2++) { //>
+          words0[i2] = words0[i2].trim().toLowerCase();
+          if (words0[i2]=='or') {
+            or1.push(i2);
+          }
+        }
+        or1.push(words0.length);
+        
+        var wordLists = [];
+        wordLists.push(words0.slice(0,or1[0]));
+        if (or1.length>1) {
+          for (var i3=0; i3<or1.length-1; i3++) { //>
+            wordLists.push( words0.slice( or1[i3]+1, or1[i3+1]) ); 
+          }
+        }
+
+        // loop over list of lists
+        var list1s = [];
+        var list1i, t1, wordList, word9;
+        for (var i4=0; i4<wordLists.length; i4++) { //>
+          wordList = wordLists[i4];
+          console.log(wordList);
+      
+          if (wordList.length>0) {
+            //list1i = list1.slice();
+            // fresh search for each wordList
+            list1i = text1.slice();
+            var searchNot=0; 
+            for (var i2=0; i2<wordList.length; i2++) { //>
+              word9 = wordList[i2];
+              if (word9.length>0) {
+                t1 = new RegExp(word9, "i")
+
+                // not to do search for this i2. wait for the next i2
+                if (word9=='not') { 
+                  searchNot=1; 
+                  continue;
+
+                } else { 
+                  if (searchNot==0) { 
+                    list2 = list1i.filter(function(member) {
+                      return member.search(t1)>-1; });
+
+                  // search for not there
+                  } else {
+                    list2 = list1i.filter(function(member) {
+                      return member.search(t1)==-1; });
+                    searchNot=0; 
+                  }
+                }
+                list1i = list2;
+              }
+            }
+            list1s.push(list1i);
+          }
+        }
+        text1a = combineLists(list1s);
+        list1 = [];
+        for (var i=0; i<text1a.length; i++) { //>
+          list1.push( this.searchText[ text1a[i] ] );
+        } 
+      }
+
+      // filter_by_source
+      if (this.source9.length>0) {
+        change1 = 1;
+        this2  = this;
+        list2 = list1.filter(function(member) {
+          //console.log(this2.fileDict[member]);
+          //console.log(member);
+          return this2.source9.indexOf( this2.fileDict[member].source )>-1;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_provider
+      if (this.provider9.length>0) {
+        change1 = 1;
+        this2  = this;
+        list2 = list1.filter(function(member) {
+          return this2.provider9.indexOf( this2.fileDict[member]['provider'] )>-1;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_model
+      if (this.model9.length>0) {
+        change1 = 1;
+        this2 = this;
+        list2 = list1.filter(function(member) {
+          return this2.model9.indexOf( this2.fileDict[member]['model'] )>-1;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_experiment
+      if (this.experiment9.length>0) {
+        change1 = 1;
+        this2 = this;
+        list2 = list1.filter(function(member) {
+          return this2.experiment9.indexOf( this.fileDict[member]['experiment'] )>-1;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_run
+      if (this.run9.length>0) {
+        change1 = 1;
+        this2 = this;
+        list2 = list1.filter(function(member) {
+        return this2.run9.indexOf( this.fileDict[member]['run'] )>-1;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_var
+      if (this.var9.length>0) {
+        change1 = 1;
+        this2 = this;
+        var temp1;
+        list2 = list1.filter(function(member) {
+          temp1 = this2.var9.filter(function(mm) { 
+            return this2.fileDict[member]['varList'].indexOf(mm) > -1;
+          });
+          return temp1.length>0;
+        });
+        list1 = list2;
+      }
+
+      // filter_by_varLong
+      if (this.varLong9.length>0) {
+        change1 = 1;
+        this2 = this;
+        var temp1;
+        list2 = list1.filter(function(member) {
+          temp1 = this2.varLong9.filter(function(mm) { 
+            return this2.fileDict[member].varListLong.indexOf(mm) > -1;
+          });
+          return temp1.length>0;
+        });
+        list1 = list2;
+      }
+
+      // refresh_filtered_files
+      if (change1==0) list1 = [];
+      this.datasetFiltered = list1;
+
+      this.datasetSelected = [];
+      this.datasetSelected0 = [];
+
+      this.changeSearchText();
+
+      // datasetfilteredDict
+      this.datasetFilteredDict = {};
+      var temp2;
+      this2 = this;
+      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
+        temp2 = this.datasetFiltered[ii];
+        this.datasetFilteredDict[temp2] = {'order':'', 'var':fileDict[temp2].varList[0]};
+      }
+
+    // not working. chosen ignore v-on
+    //updateProvider: function() {
+    //  this.provider9 = $(".select1").val();
+    //},
+      if (this.var9.length>0) {
+        for (var ii=0; ii<this.datasetFiltered.length; ii++) {
+          temp2 = this.datasetFiltered[ii];
+          temp1 = this2.var9.filter(function(mm) { 
+            return this2.fileDict[temp2].varList.indexOf(mm) > -1;
+          });
+          this.datasetFilteredDict[temp2].var = temp1.length>0? temp1[0] : fileDict[temp2].varList[0];
+          //console.log(temp1);
+          //console.log(this.datasetFilteredDict[temp2].var);
+        }
+      }
+
+      this.makeMetaTable();
+
+    },
+
+    //makeMetaTable__: function() {
+    makeMetaTable: function() {
+      var temp11;
+      var dict11;
+      var varD11;
+      var index11;
+      var lon11;
+      var lat11;
+      var time11;
+      var z11;
+      this.filteredTable = [];
+      for (var ii=0; ii<this.datasetFiltered.length; ii++) { // >
+        var key10 = this.datasetFiltered[ii]; 
+        var key11 = this.datasetFilteredDict[key10].var;  // no var?
+        var key1 = key10 + key11;
+
+        if (this.metaTable.hasOwnProperty(key1)) { 
+        } else {
+          dict11 = this.fileDict[key10]; 
+          varD11 = dict11.varDict[key11];
+
+          index11 = varD11.dim2.indexOf('lon');
+          lon11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lon11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('lon');
+          lat11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            lat11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('time');
+          time11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            time11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          index11 = varD11.dim2.indexOf('z');
+          z11 = {'min':'', 'max':'', 'res':''};
+          if (index11>-1) {
+            z11 = dict11.varDict[varD11.dim[index11]];
+          }
+
+          this.metaTable[key1] = {'varName':key11, 'longName':varD11.longName, 'varUnits':varD11.units, 'lon':lon11, 'lat':lat11, 'time':time11, 'z':z11};
+        }
+
+        this.filteredTable.push( this.metaTable[key1] );
+      }
+    },
+
+    //changeSearchText__: function() {
+    changeSearchText: function() {
+      // display text for datasetSelected
+      this.searchTextFilteredShort = [];
+      var t2, t2i;
+      var list1 = this.datasetFiltered;
+      for (var ii=0; ii<list1.length; ii++) { // >
+        t2 = this.searchTextR[ list1[ii] ];
+        t2i = t2.search( 'v=');
+        this.searchTextFilteredShort.push( t2.slice(0, t2i ) );
+      }
+    },
+
+    // openNewWindow__
+    openNewWindow: function() {
+      this.makeBrowserUrlV(); 
+      window.open(this.browserUrl);
+    },
+
+    // changeService__
+    changeService: function() {
+      this.service9 = this.services[this.service];
+      try {
+        this.nDataset = this.service9.nDataset;
+        this.nDim = this.service9.nDim;
+      } catch(err) {
+        this.nDataset = 1;
+        this.nDim = 1;
+      }
+      this.plotP9 = this.service9.plotP;
+      this.whichPlot = "1";
+      this.plotP2 = this.plotP9[ Number(this.whichPlot)-1 ];
+      this.getPlotText = this.service9.action;
+
+      //this.title = this.service9.title;
+      //this.description = this.service9.description;
+    },
+
+    // makeServiceUrlV__
+    makeServiceUrlV: function(backEngin) {
+      makeServiceUrl(backEngin);
+    },
+
+    // makeBrowserUrlV__
+    makeBrowserUrlV: function() {
+      makeBrowserUrl();
+    },
+
+    // copyBrowserUrlV__
+    copyBrowserUrlV: function() {
+      copyBrowserUrl();
+    },
+
+    insertImage: function() {
+      if (this.plotUrl.length>0) {
+        $("#image").html( "<img src='" + this.plotUrl + "?" + new Date().getTime() + "'>");
+      } else {
+        $("#image").html("Image will appear here.");
+      }
+    },
+
+    // moveFerretLevel__
+    moveFerretLevel: function() {
+      this.plotP2.ferretLevel = this.ferretLevel0;
+    },
+
+    // setTimeFullRangeV__
+    setTimeFullRangeV: function() {
+      setTimeFullRange();
+    },
+
+    setTimePickV: function() {
+      setTimePick();
+    },
+
+    // timeDashV__
+    timeDashV: function(t1){
+      return timeDash(t1);
+    },
+
+    // datasetSelectedChange__
+    // changedDatasetSelected__ : function() {
+    changedDatasetSelected: function() {
+    //datasetSelectedChange: function() {
+      var temp1;
+      var this2 = this;
+
+      // remove old orders
+      for (var i=0; i<this.datasetSelected0.length; i++){
+        temp1 = this.datasetSelected0[i];
+        this.datasetFilteredDict[temp1].order = "";
+      }
+
+      var diff1 = this.datasetSelected.length - this.nDataset;
+      if (diff1>0){
+        this.datasetSelected.splice(0,diff1);
+      }
+
+      // new orders
+      for (var i=0; i<this.datasetSelected.length; i++){  //>
+        temp1 = this.datasetSelected[i];
+        this.datasetFilteredDict[temp1].order = (i+1).toString();
+      }
+      this.datasetSelected0 = this.datasetSelected.slice();
+      this.datasets = this.datasetSelected.join();
+
+
+      // figure out which2Subset0, but only assign to which2Subset later
+      if (this.datasetSelected.length>0) {
+        if (this.datasetSelected.length==1 || this.which2Subset=='0') {
+          this.which2Subset0 = '1';
+        } else if (Number(this.which2Subset)>this.datasetSelected.length) {
+          this.which2Subset0 = (this.datasetSelected.length).toString();
+        } 
+        //console.log(this.which2Subset0);
+      }
+
+      this.changedSelected();
+    },
+
+    // setSubs2__
+    setSubs2: function(dataset9, var9) {
+      var9.subs2 = jQuery.extend(true, {}, subsDef);
+
+      try {
+        var zIndex = var9.dim2.indexOf('z');
+      } catch(err) {
+        var zIndex = -1;
+      }
+
+      if (zIndex>-1) {
+        // get z units
+        var zVar = dataset9.varDict[ var9.dim[zIndex] ];
+        if ( typeof zVar.units !== 'undefined') {
+          var9.subs2.zUnits = zVar.units;
+        } else {
+          var9.subs2.zUnits = '?';
+        }
+
+        // if units is Pa
+        if (var9.subs2.zUnits=='Pa') {
+          var9.subs2.zFactor = 100.0;
+          var9.subs2.zUnits2 = 'hPa';
+        } else {
+          var9.subs2.zUnits2 = var9.subs2.zUnits;
+          var9.subs2.zFactor = 1.0;
+        }
+      } 
+    },
+ 
+    // timeMethodChange__
+    timeMethodChange: function() {
+      if (this.subs2.timeMethod=='3') {
+        this.timeSLim = this.timeSLimAll;
+        this.timeELim = this.timeELimAll;
+      } else {
+        this.timeSLim = this.timeVar.min;
+        this.timeELim = this.timeVar.max;
+      }
+    },
+
+    // syncSubsetting__
+    syncSubsetting: function() {
+      //var dataset9 = this.fileDict[this.dataset2Subset];
+      //var var9 = dataset9.varDict[this.var2Subset];
+      var i0 = Number(this.which2Subset)-1;
+      //var dataset8, var8;
+      for (var i=0; i<this.datasetSelected.length; i++){  //>
+        if (i!==i0) {
+          this.varSelectedDict[i].subs2 = jQuery.extend(true, {}, this.subs2);
+          //dataset8 = this.fileDict[this.datasetSelected[i]];
+          //var8 = dataset8.varDict[this.varSelected[i]];
+          //var8.subs2 = jQuery.extend(true, {}, var9.subs2);
+        }
+      }
+    },
+
+    // updateCoeff__
+    updateCoeff: function(ii) {
+      console.log("updateCoeff: "+ii);
+      //this.coeff[ii] = this.coeff99;
+    },
+
+    // watch_changed2a which changes with dataset and var being subsetted, to make dim2, subs2, 
+    // changedBeingSubsetted__
+    changedBeingSubsetted: function() {
+      //console.log(this.dataset2Subset);
+      //console.log(this.var2Subset);
+      //console.log(this.fileDict[this.dataset2Subset].varDict[this.var2Subset]);
+
+      if (this.datasetSelected.length > 0 ) {
+        console.log('in changedBeingSubsetted');
+        //console.log('which2Subset: ' + this.which2Subset);
+        //console.log('this.datasetSelected: ' + this.datasetSelected.length);
+        this.dataset2Subset = this.datasetSelected[Number(this.which2Subset)-1];
+        this.var2Subset = this.varSelected[Number(this.which2Subset)-1];
+
+        var dataset9 = this.fileDict[this.dataset2Subset];
+        var var8 = dataset9.varDict;
+        var var9 = dataset9.varDict[this.var2Subset];
+
+        // get dim2
+        this.dim2 = var9.dim2;
+        if (typeof this.dim2 === 'undefined') {
+          this.dim2 = [];
+        }
+        
+        // get zVar
+        var zIndex = this.dim2.indexOf('z');
+        if (zIndex>-1) {
+          this.zVar = dataset9.varDict[ var9.dim[zIndex] ];
+        }
+
+        // get timeVar
+        var timeIndex = this.dim2.indexOf('time');
+        if (timeIndex>-1) {
+          this.timeVar = dataset9.varDict[ var9.dim[timeIndex] ];
+
+          if (this.nDataset==1) {
+            this.time4All = true;
+            this.timeSLimAll = this.timeVar.min;
+            this.timeELimAll = this.timeVar.max;
+          }
+        }
+
+        this.subs2 = var9.subs2;
+        if (this.timeMethod0) {
+          this.subs2.timeMethod = this.timeMethod0;
+        }
+
+        // I spent 3 hours debugging this. I was using try. Somehow, even a failed statement can still assign something.
+
+        // ?
+        this.timeMethodChange();
+      }
+    },
+
+    // changed when var changes. to make timeSLimAll
+    //changedSelected__: function() {
+    changedSelected: function() {
+
+      // change this.vars
+      this.varSelected = [];
+      var temp1;
+      for (var i=0; i<this.datasetSelected.length; i++) {  // >
+        temp1 = this.datasetSelected[i];
+        this.varSelected.push(this.datasetFilteredDict[temp1].var);
+      }
+      this.vars = this.varSelected.join();
+      //console.log(this.vars);
+
+      // make sure subs2 is there
+      var dataset9, var9 ;
+      this.varSelectedDict = [];
+      for (var i=0; i<this.datasetSelected.length; i++){  //>
+        dataset9 = this.fileDict[this.datasetSelected[i]];
+        var9 = dataset9.varDict[this.varSelected[i]];
+        if (typeof var9.subs2 ==='undefined') this.setSubs2(dataset9, var9);
+        this.varSelectedDict.push(var9);
+      }
+
+      // calc time range
+      if (this.nDataset>1) { 
+        var key1; 
+        this.timeV = {};
+        for (var i=0; i<this.datasetSelected.length; i++){ //>
+          key1 = this.datasetSelected[i] + this.varSelected[i];
+          if (this.timeV0.hasOwnProperty(key1)) { 
+            this.timeV[key1] = this.timeV0[key1];
+          } else {
+            var dataset9 = this.fileDict[this.datasetSelected[i]];
+            var var9 = dataset9.varDict[this.varSelected[i]];
+            var timeIndex = var9.dim2.indexOf('time');
+            if (timeIndex>-1) {
+              this.timeV[key1] = dataset9.varDict[ var9.dim[timeIndex] ];
+              //this.timeV0[key1] = dataset9.varDict[ var9.dim[timeIndex] ];  // xxxx
+            } else {
+              this.timeV[key1] = ' ';
+            }
+          }
+        }
+        // timeV0 to store timeVar so they don't have to be re-calc
+        this.timeV0 = jQuery.extend(true, {}, this.timeV);  // xxxx
+
+        this.time4All = true;
+        this.timeSLimAll = 10000000;
+        this.timeELimAll = 90000000;
+        var this2 = this;  // .each has its own this.
+        var min1 = '';
+        var max1 = '';
+        $.each(this2.timeV, function(k,v) {
+          if (v=== ' ') {
+            this2.time4All = false;
+            return false;
+          } else {
+            min1 = v.min;
+            max1 = v.max;
+            if (max1.slice(0,4) === '0000') { max1 = '9999' + min1.slice(4) }
+            if (min1.length==6) { min1 = min1 + '15' }
+            if (max1.length==6) { max1 = max1 + '15' }
+            this2.timeSLimAll = Math.max( Number(min1), this2.timeSLimAll );
+            this2.timeELimAll = Math.min( Number(max1), this2.timeELimAll );
+          }
+          //console.log('max1: ' + v.max);
+          //console.log('timeELimAll ' + this2.timeELimAll);
+        });
+      }
+
+      this.changedBeingSubsetted();
+
+      this.makeMetaTable();
+
+      // this is watched
+      this.which2Subset = this.which2Subset0;
+    },
+
+    yearMeanClick: function() {
+      this.timeMean = '';
+      if (this.yearMean) {
+        this.quarterMean = false; 
+        this.timeMean = 'y';
+      }
+    },
+
+    quarterMeanClick: function() {
+      if (this.quarterMean) {
+        this.yearMean = false; 
+        this.timeMean = 'q';
+      }
+    },
+
+    // checkApi__
+    checkApi: function() {
+      if (this.api0) {
+        this.api9 = this.apis[this.api0];
+        this.timeMethod0 = '3';
+        this.service0 = this.api9.service0;
+        this.service = this.service0;
+        this.changeService();
+
+        this.anomaly0 = this.api9.anomaly0;
+        this.title = this.api9.title;
+        this.description = this.api9.description;
+
+      }
+    },
+
+  }, // methods
+    
+  // watch__
+  watch: {
+    which2Subset: function() {
+      this.changedBeingSubsetted();
+    },
+
+    // watch_whichPlot
+    whichPlot: function() {
+      //console.log('in whichPlotClick. ' + this.whichPlot);
+      this.plotP2 = this.plotP9[ Number(this.whichPlot)-1 ];
+    },
+
+    plotUrl: function() {
+      this.insertImage();
+    },
+
+    yNChange: function() {
+      //console.log('yN: ' + this.yN);
+      //console.log('yNChange: ' + this.yNChange);
+      this.setTimeFullRangeV();
+    },
+
+    yMChange: function() {
+      console.log('yM: ' + this.yM);
+      console.log('yMChange: ' + this.yMChange);
+      this.setTimePickV();
+    },
+
+    yearMean: function() {
+      console.log('yearMean: ' + this.yearMean);
+      if (this.yearMean) {
+        this.quarterMean = false; 
+        this.timeMean = 'y';
+      } else {
+        this.timeMean = '';
+      }
+    },
+
+    quarterMean: function() {
+      console.log('quarterMean: ' + this.quarterMean);
+      if (this.quarterMean) {
+        this.yearMean = false; 
+        this.timeMean = 'q';
+      } else {
+        this.timeMean = '';
+      }
+    },
+
+  },
+
+
+  // computed__
+  computed: {
+    anomaly: function() {
+      return this.anomaly0? "1":"0";
+    },
+
+    // not used yet
+    nAxis: function() {
+      var aa = this.lonMethod + this.latMethod + this.timeMethod +  this.presMethod;
+      return (aa.match(/3/g)||[]).length;
+    },
+
+  }, // computed
+
+  // created__
+  //beforeMount: function() { }
+  //beforeCreate: function() { }
+  created: function() {
+    this.dataset2Subset = this.fileList[0];
+    this.var2Subset = this.fileDict[this.dataset2Subset].varList[0];
+    this.dim2 = [];
+    //this.subs2 = subsDef;
+    this.subs2 = jQuery.extend(true, {}, subsDef);
+    this.checkApi();
+    this.changeService();
+		if (this.searchTextR.length==0) {
+			this.reverseSearchText();
+		}
+  },
+
+})  // vue
+
+// inputs__
+// format: RestFulName: [htmlId, functionName, additionalParams]
+var inputAll = {};
+
+inputAll['base'] = {
+'vars': ['vars', 'urlVars'],
+'datasets': ['datasets', 'urlDatasets'],
+//
+'subs': ['', 'urlSubs'],
+'plotP': ['', 'urlPlotP'],
+'anomaly': ['anomaly', 'urlDirect'],
+'climatology': ['climatology', 'urlDirect'],
+'timeMean': ['timeMean', 'urlTimeMean'],
+//
+//
+'purpose': ['purpose', 'url2escape'],
+'service': ['service', 'urlDirect'],
+'basin': ['basin', 'url2escape'],
+//
+'userId': ['userId', 'urlDirect'],
+'serviceId': ['serviceId', 'urlDirect'],
+'dataUrl': ['dataUrl', 'url2escape'],
+'plotUrl': ['plotUrl', 'url2escape'],
+//
+};
+
+// inputs__corrMap
+inputAll['correlationMap'] = {
+'laggedTime': ['laggedTime', 'urlDirect'],
+};
+
+inputAll['diffPlot'] = {
+};
+
+inputAll['EOF'] = {
+};
+
+// inputs__linear
+inputAll['linear'] = {
+'coeff': ['coeff', 'urlList'],
+};
+
+// mappting__  mapping inputs
+var mappingAll = {};
+var key99;
+var arg99;
+for (var k in inputAll) {
+  mappingAll[k] = {};
+  for (var k2 in inputAll[k]) {
+    key99 = k2;
+    arg99 = inputAll[k][k2];
+    mappingAll[k][k2] = eval('new ' + inputAll[k][k2][1] + '()');
+  }
+}
+
+</script>
+  <script src='js2/uploadr.js'></script>
+
+</body>
+</html>

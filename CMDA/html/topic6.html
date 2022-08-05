@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Topic 6</title>
+ <meta charset="utf-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+ <link rel="stylesheet" href="/assets/stylesheets/materialize.css">
+ <link rel="stylesheet" href="/assets/stylesheets/custom.css">
+ <link rel="stylesheet" media="screen" href="/assets/stylesheets/main.css">
+ <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png">
+ <link href="/assets/stylesheets/style.css" rel="stylesheet">
+ <link rel="stylesheet" href="/assets/stylesheets/livefitler.css">
+ <link rel="stylesheet" href="/assets/stylesheets/custom_recommend.css">
+ <link rel="stylesheet" href="/assets/stylesheets/detail.css">
+ <link rel="stylesheet" href="/assets/stylesheets/chatbox-materialize.css">
+    <style>
+        tr {
+            border-bottom: none;
+        }
+
+        td {
+            text-align: center;
+        }
+        p {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        li {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+ <header>
+ <div>
+ <nav style='background: url("/assets/images/starfield-banner-blue.jpg") repeat;
+ margin-bottom: 20px;'>
+ <h4 style='box-sizing: inherit; font-weight: 400; line-height: 37.62px; font-size: 2.28rem; margin: 1.52rem 0px 0.912rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif; text-align: left;'>NASA Summer School Topic 6: </h4>
+ <h4 style='box-sizing: inherit; font-weight: 400; line-height: 27.62px; font-size: 2rem; margin: 1.52rem 0px 0.912rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif; text-align: left;'>Added Values of High-Resolution Datasets
+</h4>
+ <div>
+ <div>
+ <h5 style='box-sizing: inherit; font-weight: 400; line-height: 18.975px; font-size: 1.15rem; margin: 0.766667rem 0px 0.46rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif;'>Goal: Investigate the added values of high-resolution downscaling (regional climate models)</h5>
+ </div>
+ </div>
+ <div>
+ <div>
+ <h5 style='box-sizing: inherit; font-weight: 400; line-height: 18.975px; font-size: 1.15rem; margin: 0.766667rem 0px 0.46rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif;'></h5><img width="80%" src="topic6.png">
+ <div>
+ <div>
+ <p>
+ </div>
+ </div><a class="btn waves-effect waves-light blue darken-3" href="topic6.pdf" target="_blank" style="box-sizing: inherit; background-color: rgb(21, 101, 192) !important; color: rgb(255, 255, 255); text-decoration: none; -webkit-tap-highlight-color: transparent; box-shadow: rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 3px 1px -2px, rgba(0, 0, 0, 0.2) 0px 1px 5px 0px; border: none; border-radius: 2px; display: inline-block; height: 36px; line-height: 36px; padding: 0px 16px; text-transform: uppercase; vertical-align: middle; font-size: 14px; outline: 0px; text-align: center; letter-spacing: 0.5px; transition: all 0.3s ease-out 0s; cursor: pointer; position: relative; overflow: hidden; user-select: none; z-index: 1;">DOWNLOAD PROJECT PDF</a>
+ <p>
+ </div>
+ </div>
+ <p>
+ <div>
+ <div>
+ <h5 style='box-sizing: inherit; font-weight: 400; line-height: 18.975px; font-size: 1.15rem; margin: 0.766667rem 0px 0.46rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif; color: rgba(0, 0, 0, 0.87); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'>Project Description</h5>
+ <p><strong>Topic: Added Values of High Resolution Datasets: Regional Climate Models</strong></p>
+ <p><strong>Introduction: </strong>The Coordinated Regional Climate Downscaling Experiment (CORDEX) provides higher-resolution Reginal Climate Model (RCM) simulations for 14 domains around the world. In this project, we will first investigate added value of dynamical downscaling by evaluating CORDEX RCMs and EC-Earth GCM against obs4mips observations. We will use the Regional Climate Model Evaluation System (RCMES) which provides a framework for facilitating systematic evaluations of regional climate simulations using satellite observations. Then we will learn about decomposing spatial variability in observed temperature trends at high spatial resolution of 5 km across multiple spatial scales. 
+ </p>
+ <p><strong>Datasets</strong>: <ul>
+   <li>Obs4MIPs observations (e.g. precipitation from TRMM, cloud fraction from MODIS, and OLR & Surface downwelling shortwave radiation from CERES)</li>
+   <li>CORDEX historical simulations and future projections (RCP 8.5) forced by the EC-Earth GCM</li>
+   </ul>
+ </p>
+ <p><strong>Questions:</strong><ol>
+   <li>Do RCMs simulate more realistic precipitation than GCMs? </li> <ul>
+    <li>Select one of the CORDEX domains (Africa, Europe, or North America) and run RCMES to evaluate simulated precipitation from the EC-Earth GCM and RCMs against GPCP and TRMM observations</li></ul>
+   <li>Do the CORDEX RCMs reproduce observed annual cycles in OLR at TOA and surface downwelling shortwave radiation from CERES? </li><ul>
+      <li>How can we explain these biases? Based on the biases, can we expect any substantial differences in other variables (e.g. cloud top heights and cloud fraction) between obs4mips and the RCMs?</li></ul>
+   <li>Can we use persistent homology (PH), one of the Topological Data Analysis (TDA) tools, to compress two-dimensional maps from satellite observations and climate models and evaluate simulated spatial patterns?<ul>
+     <li>Using the climatological maps of precipitation, OLR, and shortwave flux downward at the surface at their original spatial resolution, carry out the TDA: summarize key spatial patterns of the maps and calculate distances between persistence diagrams.</li>
+     <li>Is Wasserstein distance between persistence diagrams consistent with a root mean square error?</li>
+     </ul></li>
+</ol></p>
+ <p><strong>Contact Scientist:&nbsp;</strong><strong>Dr. Huikyo Lee (</strong><a href="mailto:huikyo.lee@jpl.nasa.gov" target="_blank"><strong>huikyo.lee@jpl.nasa.gov</strong></a><strong>)</strong></p>
+ <p>
+ <p><strong>Data Access and Analysis Server:&nbsp;</strong><a href="https://jpl-cmda.org/" target="_blank"><strong>https://jpl-cmda.org</strong></a></p>
+ <div>
+ <div contenteditable="false" data-gramm="false">
+ </div>
+ </div>
+ </div>
+ </nav>
+ </div>
+ </header>
+ <div style='box-sizing: inherit; margin-left: -0.75rem; margin-right: -0.75rem; margin-bottom: 20px; color: rgba(0, 0, 0, 0.87); font-family: AmazonEmberLight, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 15px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;'>
+ <div>
+ </div>
+</body>
+</html>

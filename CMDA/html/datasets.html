@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CMDA Datasets</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/assets/stylesheets/materialize.css">
+    <link rel="stylesheet" href="/assets/stylesheets/custom.css">
+    <link rel="stylesheet" media="screen" href="/assets/stylesheets/main.css">
+    <link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png">
+    <link href="/assets/stylesheets/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/stylesheets/livefitler.css">
+    <link rel="stylesheet" href="/assets/stylesheets/custom_recommend.css">
+    <link rel="stylesheet" href="/assets/stylesheets/detail.css">
+    <link rel="stylesheet" href="/assets/stylesheets/chatbox-materialize.css">
+    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/4rwLQsl5N_ccppoTAwwwMrEN/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-o1nfdUm9cV7Sx6HxXDsnady1EGmCBTwza/JTA6OSowyOK+wq0YF0+F9jejHVacaR"></script>
+    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/4rwLQsl5N_ccppoTAwwwMrEN/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-o1nfdUm9cV7Sx6HxXDsnady1EGmCBTwza/JTA6OSowyOK+wq0YF0+F9jejHVacaR"></script>
+    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/4rwLQsl5N_ccppoTAwwwMrEN/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-o1nfdUm9cV7Sx6HxXDsnady1EGmCBTwza/JTA6OSowyOK+wq0YF0+F9jejHVacaR"></script>
+    <script type="text/javascript" async="" src="https://www.gstatic.com/recaptcha/releases/4rwLQsl5N_ccppoTAwwwMrEN/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-o1nfdUm9cV7Sx6HxXDsnady1EGmCBTwza/JTA6OSowyOK+wq0YF0+F9jejHVacaR"></script>
+    <script type="text/javascript" src="/assets/javascripts/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/materialize.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/parameter.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/tablesort.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/forum.js"></script>
+    <script type="text/javascript" src="/assets/javascripts/init.js"></script>
+    <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
+    <style>
+        tr {
+            border-bottom: none;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        p {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        li {
+            font-size: 22px;
+        }
+    </style>
+</head>
+
+<body style="display: flex; flex-direction: column;">
+    <header>
+        <!-- Header -->
+        <div class="navbar-fixed" style="z-index: 9999;">
+            <nav class="blue darken-4" style='background: url("/assets/images/starfield-banner-blue.jpg") repeat;
+        margin-bottom: 20px;'>
+                <h4 align="center" class="center form-signin-heading" style='box-sizing: inherit; font-weight: 400; line-height: 37.62px; font-size: 2.28rem; margin: 1.52rem 0px 0.912rem; font-family: AmazonEmberBold, "Helvetica Neue Bold", "Helvetica Neue", Helvetica, Arial, sans-serif; text-align: left;'>CMDA Datasets</h4>
+                <div class="row" style="box-sizing: inherit; margin-left: -0.75rem; margin-right: -0.75rem; margin-bottom: 20px;">
+                    <div class=" col s12" style="box-sizing: border-box; float: left; padding: 0px 0.75rem; min-height: 1px; width: 1062px; margin-left: 20px; left: auto; right: auto;">
+                        <p><strong>Data Structure</strong>: monthly, latitude-longitude-pressure gridded data </p>
+                        <p><strong>Temporal Resolution</strong>: monthly </p>
+                        <p><strong>Temporal Range</strong>: various (10-50 years) </p>
+                        <p><strong>Spatial Resolution</strong>: various (1, 0.5, 0.25 degrees) </p>
+                        <p><strong>Geographic Range</strong>: global </p>
+                        <p><strong>Dimensions</strong>: time, latitude, longitude, pressure </p>
+                        <p><strong>File Format</strong>: NetCDF </p>
+                        <p><strong>Types</strong>: model outputs, reanalysis datasets, observational datasets</p>
+                        <ul>
+                          <li><p><strong>Model Outputs</strong>: 
+                          <ul>
+                            <li>CMIP5 historical runs (20+ models), CMIP5 AMIP runs, CMIP5 projection runs </li>
+                            <li>CMIP6 historical runs (20+ models)</li>
+                            <li>WRF runs</p></li>
+                          </ul>
+                          <li><p><strong>Reanalysis Datasets</strong>: ECMWF, GLDAS
+                          <li><p><strong>Observational Datasets</strong>: 
+                          <ul>
+                            <li>In-Situ Data: ARGO, World Ocean Database </li>
+                            <li>Satellite Data: AIRS, SMAP, QuikSCAT, CERES, GRACE, TES, MODIS, MISR, CALIPSO, GPCP, MLS, CloudSat, AMSR-E, TRMM, GPM, ISCCP, AVISO </li>
+                          </ul>
+                        </ul>
+                        <p><strong>Variables</strong>: various ocean, atmosphere, and land variables </p>
+                        <p><strong>Number of Datasets</strong>: 2,145 sets </p>
+                        <p><strong>Total Data Volume</strong>: 2.15 TB </p>
+                        <p><strong>How to Search and Access</strong>: use <a href="https://jpl-cmda.org/cmda.html" target="_blank">the CMDA service</a> and type keywords (e.g. AIRS) in the Search Filename/varNames/title section. It will show the list of datasets that meet the search criterion. 
+                        <p><strong>Contact Scientist:&nbsp;</strong><strong>Dr. Seungwon Lee (</strong><a href="mailto:seungwon.lee@jpl.nasa.gov" target="_blank"><strong>seungwon.lee@jpl.nasa.gov</strong></a><strong>)</strong></p>
+                        <p><strong>Data Access and Analysis Server:&nbsp;</strong><a href="https://jpl-cmda.org/" target="_blank"><strong>https://jpl-cmda.org</strong></a></p>
+                    </div>
+                </div>
+</body>
+</html>
