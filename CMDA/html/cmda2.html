@@ -6,9 +6,6 @@
 <!-- 
 /home/btang/projects/cmac/git2/CMDA0/JPL_CMDA/frontend/public/html/universalPlotting6c.html
 
-kk web7
-rsync8022 universalPlotting6c.html $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html
-
 python universalPlotting6c.py
 
 kk web7
@@ -20,9 +17,6 @@ api_masking.html \
 api_masking.html \
 api_timeMean.html \
 $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html
-
-kk web7
-rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/public/html/js2
 
 == storage__  
 -->
@@ -46,6 +40,7 @@ rsync8022 js2/common-v6c.js $cmda4:/home/svc/new_github/CMDA/JPL_CMDA/frontend/p
   // download_data_click
 -->
 
+<!-- title_description -->
 <!-- pick_service -->
 <!-- open_upload_file -->
 <!-- upload_file -->
@@ -506,7 +501,6 @@ $('.selectl').chosen({search_contains: true});
 $('.selectd').chosen({search_contains: true});
 
 processQS5();
-//assignWF();
 
 }  // onload = function()
 
@@ -618,6 +612,7 @@ th {
 
 </head>
 
+<!-- title_description -->
 <body>
 <div class="container-fluid">
 <div id='vueId'>
@@ -626,17 +621,20 @@ th {
 <h3>{{title}}</h3>
 {{description}}
 </div> <!-- col-sm -->
-<div class="col-sm-offset-2">
+<div class="col-sm-2">
+<font size="+1">
+<br><a href="cmda_user_manual.pdf" target="_blank">User Manual</a>
+<br><a href="https://youtu.be/eudBnjFMlSw" target="_blank">Video Tutorial</a>
+</font>
 </div> <!-- col-sm -->
 </div> <!-- row center1 -->
 
-<div v-show="WF<1">
 <!-- pick_service -->
 <div class="color2" v-show="!service0">
 <br>
 <div class="row">
   <div class="col-sm-12 center1 subtitle1">
-    Select Service:
+    Select Tool:
   </div>
 </div>
 
@@ -651,7 +649,7 @@ th {
     </option>
 </select>
 </font>
-     Number of datasets: {{nDataset}} 
+     Number of datasets: {{nDataset}} . Number of dimensions: {{nDim}}
   </div>
 </div> <!-- row -->
 
@@ -751,7 +749,7 @@ Select Datasets and Variables
 <!-- chose_filename -->
 <div class="row">
  <div class="col-sm-4 right1" >
- Search Filename/varNames/title: <a href="#" data-html='true' data-toggle="tooltip" data-placement="bottom" title="The match is case insensitive. Multiple words are separated by commas. The list of words can be divided by the word 'or'. A word can be preceded by the word 'not'. <br>Here is an example: The search string 'gldas,mrso3,or,coads,or,not,zo,grace' produces a list of datasets that contain both 'gldas' and 'mrso3', or contain 'coads', or contain 'grace' but not 'zo'.">(info)</a>
+ Filter by Filename: <a href="#" data-html='true' data-toggle="tooltip" data-placement="bottom" title="The match is case insensitive. Multiple words are separated by commas. The list of words can be divided by the word 'or'. A word can be preceded by the word 'not'. <br>Here is an example: The search string 'gldas,mrso3,or,coads,or,not,zo,grace' produces a list of datasets that contain both 'gldas' and 'mrso3', or contain 'coads', or contain 'grace' but not 'zo'.">(info)</a>
  </div>
  <div class="col-sm-8 left1">
   <!-- <input type='checkbox' v-model='fnStr9Ch'>  -->
@@ -815,7 +813,7 @@ Select Datasets and Variables
 <!-- chose_var -->
 <div class="row">
  <div class="col-sm-4 right1">
- Filter by Variables Short Names:
+ Filter by Variable Short Name:
  </div>
  <div class="col-sm-8 left1">
   <select data-placeholder="Select Variables" class="selectv" multiple height="100px" v-on:keyup.enter="filterFile" >
@@ -829,7 +827,7 @@ Select Datasets and Variables
 <!-- chose_var_long -->
 <div class="row">
  <div class="col-sm-4 right1">
- Filter by Variables Longname:
+ Filter by Variable Long Name:
  </div>
  <div class="col-sm-8 left1">
   <select data-placeholder="Select Variables by Longname" class="selectl" multiple v-on:keyup.enter="filterFile" >
@@ -879,7 +877,7 @@ Select Datasets and Variables
 <th>time<br/>start</th>
 <th>time<br/>end</th>
 <th></th>
-<th>var list</th>
+<th>var list<br>if number of vars > 1</th>
 </tr>
 <template v-for="ii in datasetFiltered.length" >
  <tr>
@@ -933,7 +931,7 @@ Select Datasets and Variables
 
    <td>
     <span v-if="filteredTable[ii-1].z.res">
-    <a href="#" data-html='true' data-toggle="tooltip" :title="filteredTable[ii-1].z.res">here</a>
+    <a href="#" data-html='true' data-toggle="tooltip" :title="filteredTable[ii-1].z.res">mouse hover</a>
     </span>
    </td>
 
@@ -950,11 +948,13 @@ Select Datasets and Variables
 
      <!-- select_var -->
    <td>
+   <span v-if="fileDict[datasetFiltered[ii-1]].varList.length>1">
    <select v-on:change="changedSelected()" v-model="datasetFilteredDict[datasetFiltered[ii-1]].var">
     <option v-for="iii in fileDict[datasetFiltered[ii-1]].varList.length" v-bind:value="fileDict[datasetFiltered[ii-1]].varList[iii-1]">
 {{fileDict[datasetFiltered[ii-1]].varList[iii-1]}}: {{fileDict[datasetFiltered[ii-1]].varListLong[iii-1]}}
     </option>
    </select>
+   </span>
    </td>
 
 
@@ -1123,9 +1123,6 @@ Data Subsetting
 </div> <!-- if time -->
 
 </div> <!-- color3 -->
-</div> <!-- WF<1 -->
-
-<div v-show="WF>0 || WF==-1">
 
 <!-- oceanMaskOpt -->
 <div v-show="!api9.hideBasin" >
@@ -1143,7 +1140,6 @@ Data Subsetting
 </div>
 
 </div> <!-- color2 -->
-</div> <!-- v-show -->
 </div> <!-- v-show -->
 
 <!-- linearOpt -->
@@ -1273,7 +1269,7 @@ Parameters for the correlationMap service
 <div class="color2">
 <div class="row">
   <div class="col-sm-4 right1">
-    Analysis Purpose:
+    Analysis Details:
   </div> <!-- col -->
   <div class="col-sm-8 left1">
     <textarea v-model="purpose" value="" spellcheck=false rows="2" cols="50"> </textarea>
@@ -1388,11 +1384,12 @@ var vueApp = new Vue({
     colorMap: 'rainbow',
     plotTitle: '',
     
-    title: 'Universal Analysis Service',
-    description: 'This is a tool that includes several services (plotting, EOF, random forest importance, difference of two fields, lagged correlation). Datasets can be searched by time range, by name, by provider, by variable name, etc. NetCDF files can also be uploaded, and online files served by OPeNDAP can also be used in the analysis.',
+    title: 'CMDA Universal Analysis Service',
+    description: 'This is a tool that includes several services (plotting, EOF, random forest importance, difference of two fields, lagged correlation). Datasets can be searched by file name and variable name.',
 
     laggedTime: '0',
     nDataset: 1,
+    nDim: 1,
 
     service0: '',
     //service0: 'diffPlot',
@@ -1405,7 +1402,7 @@ var vueApp = new Vue({
     services: services,
     service9: {},
     
-    api0: '',
+    api0: '',  // make single service
     //api0: 'anomaly',
     //api0: 'masking',
     //api0: 'timeMean',
@@ -1535,7 +1532,6 @@ var vueApp = new Vue({
     // workflow_relatted
     getPlotText: 'Analyze Data',
     getPlotText0: 'Analyze Data',
-    WF: -1,
     userId1: '0',
     wfId: '0',
     versionId: '0',
@@ -1891,8 +1887,10 @@ var vueApp = new Vue({
       this.service9 = this.services[this.service];
       try {
         this.nDataset = this.service9.nDataset;
+        this.nDim = this.service9.nDim;
       } catch(err) {
         this.nDataset = 1;
+        this.nDim = 1;
       }
       this.plotP9 = this.service9.plotP;
       this.whichPlot = "1";

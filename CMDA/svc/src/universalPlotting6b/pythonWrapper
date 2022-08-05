@@ -2436,10 +2436,10 @@ class SERVICE():
     self.nDim = (2,)
     self.nPlot = (1,)
     self.sync = 1
-    self.tMethod = '1234'
+    self.tMethod = '01234'
     self.zMethod = '01234'
-    self.yMethod = '1234'
-    self.xMethod = '1234'
+    self.yMethod = '01234'
+    self.xMethod = '01234'
 
 '''
   s.key = 'plot'
@@ -2466,12 +2466,21 @@ if cr['check_parameters']       == 1:
   key1 = 'contour'
   s = SERVICE()
   s.key = key1
+  s.nDim = (2,)
+  s.tMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
   services[key1] = s
 
   key1 = 'plotContour'
   s = SERVICE()
   s.key = key1
   s.nData = (2,)
+  s.nDim = (2,)
+  s.tMethod = '0124'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
   services[key1] = s
 
   key1 = 'subsetDownload'
@@ -2491,6 +2500,10 @@ if cr['check_parameters']       == 1:
   s.key = key1
   s.nDim = (3,)
   s.tMethod = '3'
+  s.tMethod = '3'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
   services[key1] = s
 
   key1 = 'randomForest'
@@ -2498,6 +2511,10 @@ if cr['check_parameters']       == 1:
   s.key = key1
   s.nData = list(range(2,12))
   s.nDim = (1,2,3,4)
+  s.tMethod = '3'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
   services[key1] = s
 
   key1 = 'timeSeries'
@@ -2508,8 +2525,8 @@ if cr['check_parameters']       == 1:
   s.sync = 0
   s.tMethod = '3'
   s.zMethod = '0124'
-  s.yMethod = '124'
-  s.xMethod = '124'
+  s.yMethod = '0124'
+  s.xMethod = '0124'
   services[key1] = s
 
   key1 = 'mapView'
@@ -2569,16 +2586,10 @@ if cr['check_parameters']       == 1:
   s.key = key1
   s.nData = (2,)
   s.nDim = (3,)
-  s.tMethod = '01234'
+  s.tMethod = '3'
   s.zMethod = '0124'
   s.yMethod = '3'
   s.xMethod = '3'
-  services[key1] = s
-
-  key1 = 'plotContour'
-  s = SERVICE()
-  s.key = key1
-  s.nData = (2,)
   services[key1] = s
 
   #== check_para
@@ -2639,7 +2650,7 @@ if cr['check_parameters']       == 1:
   if len(checkMsg)<50:
     print('checkMsg: ', checkMsg)
   else:
-    checkMsg1 = '<h3 style="background-color:Orange;">WARNING: Parameter Checking Failed<h3>' + checkMsg.replace('\n', '<br>') + '<br><br>'
+    checkMsg1 = '<h3 style="background-color:Orange;">WARNING: Parameter Check Failed<h3>' + checkMsg.replace('\n', '<br>') + '<br><br>'
     print('failedCheck: ', checkMsg1)
     sys.exit(0)
 

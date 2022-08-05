@@ -35,9 +35,9 @@ cr = {
 # 2 -- collect facets 
 # 3 -- save js for web
 'command_arg':    0, #  1,   # 1  1  1
-'collect_fileList':     0,   # 1  0  0
-'combine_break_files':  0,   # 1  0  0
-'save_list_of_files':   0,   # 1  0  0
+'collect_fileList':     1,   # 1  0  0
+'combine_break_files':  1,   # 1  0  0
+'save_list_of_files':   1,   # 1  0  0
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
@@ -136,15 +136,13 @@ fileList.js -- for web
 '''
 
 # parameters_
-#mainDir = '/mnt/data_2016/cmip5'
-#mainDir = '/mnt/data/data_2017/cmip5'
-mainDir = '/mnt/data/data_clean/cmip5'
+mainDir = '/mnt/data/data_clean'
 #mainDir = '/mnt/gateway/cmip6'
 dataDir = mainDir
 
 outDir = '/home/ubuntu'
 
-#nFile = 100
+#nFile = 10
 nFile = -1 # do all
 
 readable = True
@@ -153,10 +151,10 @@ readable = True
 #saveTo = '0'   # saved to a temp with affix '0'
 saveTo = '9'   # saved to a more permenant file
 
-#redoFailData = 0  # do whole data dir
+redoFailData = 0  # do whole data dir
 #redoFailData = 1  # read from filesFailed9.js
 #redoFailData = 2  # not in the database, so including the failed ones and new ones
-redoFailData = 3  # from a list of files
+#redoFailData = 3  # from a list of files
 
 combineOldNew = 1
 
@@ -538,7 +536,8 @@ if cr['extract_info_inside']       == 1:
 # change_file_list
   elif redoFailData==3:
     d9 = {  
-'/mnt/data/data_clean/new_data_2022/GMSL_TPJAOS_5.1_199209_202203.nc':1,
+'/mnt/data/data_clean/cmip5/csiro/mk3.6/rcp45/cl_Amon_CSIRO-Mk3-6-0_rcp45_r1i1p1.nc':1,
+#'/mnt/data/data_clean/new_data_2022/GMSL_TPJAOS_5.1_199209_202203.nc':1,
 #'/mnt/data/data_clean/new_data_2022/co2_AIRS_IRMW_200209-201202.nc':1,
 #'/mnt/data/data_clean/new_data_2022/co2_AIRS_IR_201001-201702.nc':1,
 #'/mnt/data/data_clean/new_data_2022/ssh_grids_v1812_199210-201901.nc':1,
@@ -645,7 +644,7 @@ if cr['combine_old_new']       == 1:
 
   else:
     filesGoodOld = filesGoodNew
-    print('No old filesDict9o.js')
+    print('No old filesDictExist.js')
     print(('Number of new:      %5d'%len(kNew)))
 
     #temp1 = 'cp %s %s'%(fn1, fn2)
@@ -687,6 +686,7 @@ if cr['facet_list']       == 1:
   searchText = {}
 # delList__ datasets to exclude  
   delList = [
+'/mnt/data/data_clean/cmip5/csiro/mk3.6/rcp45/cl_Amon_CSIRO-Mk3-6-0_rcp45_r1i1p1_*-*.nc',
 '/mnt/data/data_clean/cmip5/tkubar/low-cloud-study/mse_ratio_lower_ECMWF-INTERIM_200207-200512.nc',
 #"/mnt/data/data_clean/cmip5/nasa/gldas/ncep_gldas_mrso1_*-*.nc",
 #"/mnt/data/data_clean/cmip5/nasa/gldas/ncep_gldas_mrso1_1981-1989.nc",
@@ -697,7 +697,8 @@ if cr['facet_list']       == 1:
 #"/mnt/data/data_clean/cmip5/nasa/gldas/ncep_gldas_mrso3_201807-201906.nc",
 ]
 
-  root1 = '/mnt/data/data_clean/cmip5/'
+  #root1 = '/mnt/data/data_clean/cmip5/'
+  root1 = '/mnt/'
   nRoot1 = len(root1)
   keys2 = list(dict2.keys())
   print('len(dict2), before')
