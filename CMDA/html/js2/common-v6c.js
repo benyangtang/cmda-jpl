@@ -314,7 +314,9 @@ function makeServiceUrl(backEngin) {
 
 // makeBrowserUrl__
 function makeBrowserUrl() {
-  vueApp.browserUrl = document.location.href.split('?')[0] + "?" + makeQueryStr();
+  var url = document.location.href.split('?')[0];
+  url = url.split('html')[0];
+  vueApp.browserUrl = url + "html?" + makeQueryStr();
 }
 
 // copyBrowserUrl__
@@ -1082,27 +1084,33 @@ function urlDatasets() {
   this.key1 = arg99[0];
   this.key2 = arg99[2];
   this.fromHtml = function(){
-    return this.key0 + '=' + vueApp[this.key1];
+    if (this.key1) {
+      return this.key0 + '=' + vueApp[this.key1];
+    } else {
+      return "";
+    }
   }
   this.toHtml = function(vq){
-    vueApp.datasets = vq;
-    vueApp.datasetFiltered = vq.split(',');
-    vueApp.datasetSelected = vq.split(',');
-    vueApp.datasetSelected0 = vq.split(',');
-
-    vueApp.changeSearchText();
-    //vueApp.changedDatasetSelected();
-    //vueApp.changedBeingSubsetted();
-
-    //console.log(which2Subset);
-    vueApp.which2Subset0 = '1';
-    vueApp.which2Subset = '1';
-
-    for (var ii=0; ii<vueApp.datasetSelected.length; ii++) {
-      var temp2 = vueApp.datasetFiltered[ii];
-      //console.log(temp2)
-      vueApp.datasetFilteredDict[temp2] = {'order':(ii+1).toString(), 'var':vueApp.fileDict[temp2].varList[0]};
-      //vueApp.datasetFilteredDict[temp2] = {'order':(ii+1).toString(), 'var':''};
+    if (vq) {
+      vueApp.datasets = vq;
+      vueApp.datasetFiltered = vq.split(',');
+      vueApp.datasetSelected = vq.split(',');
+      vueApp.datasetSelected0 = vq.split(',');
+  
+      vueApp.changeSearchText();
+      //vueApp.changedDatasetSelected();
+      //vueApp.changedBeingSubsetted();
+  
+      //console.log(which2Subset);
+      vueApp.which2Subset0 = '1';
+      vueApp.which2Subset = '1';
+  
+      for (var ii=0; ii<vueApp.datasetSelected.length; ii++) {
+        var temp2 = vueApp.datasetFiltered[ii];
+        //console.log(temp2)
+        vueApp.datasetFilteredDict[temp2] = {'order':(ii+1).toString(), 'var':vueApp.fileDict[temp2].varList[0]};
+        //vueApp.datasetFilteredDict[temp2] = {'order':(ii+1).toString(), 'var':''};
+      }
     }
   }
 }

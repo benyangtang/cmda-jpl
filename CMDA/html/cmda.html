@@ -6,6 +6,10 @@
 <!-- 
 /home/btang/projects/cmac/git2/CMDA0/JPL_CMDA/frontend/public/html/universalPlotting6c.html
 
+rsync -a cmda2.html cmda.html
+rsync -a js2/common-v6c2.js js2/common-v6c.js 
+
+
 python universalPlotting6c.py
 
 kk web7
@@ -150,9 +154,8 @@ cmac/html/codeStorage.html
 <script src='js2/varList.js'></script>
 <script>document.write('<script src="js2/fileList_cloud_full8.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 
-<script>document.write('<script src="js2/common-v6c.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
+<script>document.write('<script src="js2/common-v6c2.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 <!-- 
-xxxx
 <script src='js2/fileList.js?dev='></script>
 <script src='js2/common-v6c.js?22111'></script>  
 <script src='js2/common-cmda1.js?22111'></script>  
@@ -654,7 +657,7 @@ th {
 </div> <!-- row -->
 
 <br>
-</div> <!-- color3 -->
+</div> <!-- color2 -->
 
 
 <!-- open_upload_file -->
@@ -742,8 +745,10 @@ Online File
 
 </div> <!-- inputSection -->
 
+<div class="color3">
+<br>
 <div class="row center1 subtitle1" >
-Select Datasets and Variables
+Filter Datasets
 </div> <!-- row -->
 
 <!-- chose_filename -->
@@ -843,22 +848,26 @@ Select Datasets and Variables
   <button v-on:click="filterFile()">Filter Files</button>
  </div>
  <div class="col-sm-8 left1">
-  There are {{ datasetFiltered.length }} filtered datasets.
+  {{ datasetFiltered.length }} filtered datasets are listed below<span v-if="nDatasetFiltered0>500">, <br>downsampled from {{nDatasetFiltered0}} datasets (too many to list) passing through the filters. </span>
  </div> <!-- col -->
 </div> <!-- row -->
+</div> <!-- color3 -->
 
+<div  v-if="datasetFiltered.length>0">
+<br>
 <div class="row">
  <div class="col-sm-4 left1">
-  Select Datasets: 
- </div>
- <div class="col-sm-8 left1">
   Number of selected datasets:<input type="text" v-bind:value="datasetSelected.length" readonly size=3> 
  </div> <!-- col -->
+
+ <div class="col-sm-4 center1 subtitle1" >
+Select Datasets and Variables
+ </div>
+
 </div> <!-- row -->
 
 
 <!-- select_datasets -->
-<div  v-if="datasetFiltered.length>0">
 <table style="width:100%">
 <tr>
 <th></th>
@@ -967,6 +976,7 @@ Select Datasets and Variables
 <!-- data_subsubsetting -->
 <template v-if="service!='downloadOriginal'">
 <div class="color3" v-show="datasetSelected.length>0">
+<br>
 <div class="row center1 subtitle1" >
 Data Subsetting
 </div> <!-- row -->
@@ -1113,8 +1123,8 @@ Data Subsetting
   <div class="col-sm-4 right1">
     Dataset Time Range:
   </div>
-      <span><b>{{timeDashV(this.timeSLimAll) + ' to ' + timeDashV(this.timeELimAll)}}</b> </span>
   <div class="col-sm-8 left1">
+      <span><b>{{timeDashV(this.timeSLimAll) + ' to ' + timeDashV(this.timeELimAll)}}</b> </span>
   </div>
 </div> <!-- row -->
 
@@ -1122,11 +1132,9 @@ Data Subsetting
 
 </div> <!-- if time -->
 
-</div> <!-- color3 -->
 
 <!-- oceanMaskOpt -->
 <div v-show="!api9.hideBasin" >
-<div class="color2" >
 <div class="row">
   <div class="col-sm-4 right1">
     Pick a basin:
@@ -1138,8 +1146,8 @@ Data Subsetting
     </select>
   </div>
 </div>
+</div> <!-- color3 -->
 
-</div> <!-- color2 -->
 </div> <!-- v-show -->
 
 <!-- linearOpt -->
@@ -1185,6 +1193,7 @@ Parameters for the correlationMap service
 <div v-show="!api9.hideDisplayOpt">
 <!-- display_opt -->
 <div class="color0">
+<br>
 <div class="row">
   <div class="col-sm-12 center1 subtitle1">
     Display Options:
@@ -1439,6 +1448,8 @@ var vueApp = new Vue({
     fileDict: fileDict,
     fileList: Object.keys(fileDict),
     datasetFiltered: [],
+    nDatasetFiltered0: 0,
+    nDatasetFilteredMax: 200,
     filteredTable: {},
     metaTable: {},
     moreFilter: 0,
@@ -1775,6 +1786,13 @@ var vueApp = new Vue({
 
       // refresh_filtered_files
       if (change1==0) list1 = [];
+
+      this.nDatasetFiltered0 = list1.length;
+      if (list1.length>this.nDatasetFilteredMax) {
+        list1 = list1.sort(() => 0.5 - Math.random());
+        list1 = list1.slice(0, this.nDatasetFilteredMax);
+      }
+
       this.datasetFiltered = list1;
 
       this.datasetSelected = [];
