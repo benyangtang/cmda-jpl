@@ -1,6 +1,7 @@
 #== html__
 #== js2__
 #== src_universalPlotting6b
+#== src_universalPlotting6c
 #== src_cmda1
 #== src_py
 #== src_universalPlotting
@@ -114,12 +115,14 @@ svc/src/universalPlotting/wrapper
 
 #== src_universalPlotting6b
 svc/src/universalPlotting6b/pythonWrapper   ####
-svc/src/universalPlotting6b
 svc/src/universalPlotting6b/__init__.py
-svc/src/universalPlotting6b/call_universalPlotting6b.py
-svc/src/universalPlotting6b/call_universalPlotting6b.py.bak0
-svc/src/universalPlotting6b/pythonWrapper.bak0
+svc/src/universalPlotting6b/call_universalPlotting6b.py  # not used
 svc/src/universalPlotting6b/wrapper
+
+#== src_universalPlotting6c
+svc/src/universalPlotting6c/pythonWrapper   ####
+svc/src/universalPlotting6c/wrapper
+
 
 #== src_cmda1    only used by cmda1.html
 svc/src/cmda1/pythonWrapper   ####
