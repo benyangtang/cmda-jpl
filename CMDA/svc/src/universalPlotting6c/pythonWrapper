@@ -3547,7 +3547,7 @@ go multi_yaxis_overlay dens 2 "-" " " @CI"Density" .3 1.5  ",1,,,.13,(1PG10.3)"
     nLat = len(lat1)
 
     # EOF_anomaly__
-    if a.anomaly==1:
+    if a.anomaly==1 and a.timeMean!='y':
       m1 = 12
       if a.timeMean=='q': m1 = 4
       anom = np.ones( (m1, nLat, nLon), dtype=np.float32 )

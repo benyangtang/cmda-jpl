@@ -107,6 +107,7 @@ cr = {
     # RF_plot
   #== eof__
     # subset__
+    # EOF_anomaly__
     # import__
     # remove_seasonal_cycle, too simple
     # calc_PCA
@@ -2898,13 +2899,14 @@ if cr['services__']       == 1:
 
   # calc_anomaly
   if a.timeMethod[0]==3 and a.anomaly==1:
-    for ii in range(a.nData):
-      indexStr4 = a.getSubsetIndex4(ii)
-      var1aa = a.var1a[ii] + '_A'
-      affix1 = '%d'%(ii+1)
-      #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
-      ferretAnomaly(runF, indexStr4, affix1, a.var1a[ii], var1aa)
-      a.var1a[ii] = var1aa
+    if a.service != 'EOF':
+      for ii in range(a.nData):
+        indexStr4 = a.getSubsetIndex4(ii)
+        var1aa = a.var1a[ii] + '_A'
+        affix1 = '%d'%(ii+1)
+        #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
+        ferretAnomaly(runF, indexStr4, affix1, a.var1a[ii], var1aa)
+        a.var1a[ii] = var1aa
 
   # calc_time mean
   if a.timeMethod[0]==3 and len(a.timeMean)>0:
@@ -3545,8 +3547,13 @@ go multi_yaxis_overlay dens 2 "-" " " @CI"Density" .3 1.5  ",1,,,.13,(1PG10.3)"
     nLat = len(lat1)
 
     # EOF_anomaly__
-    if a.anomaly==1:
-      anom = np.ones( (12, nLon*nLat), dtype=np.float32 )
+    if a.anomaly==1 and a.timeMean!='y':
+      m1 = 12
+      if a.timeMean=='q': m1 = 4
+      anom = np.ones( (m1, nLat, nLon), dtype=np.float32 )
+      for i in range(m1):
+        anom[i] = data1[i::m1].mean(axis=0)
+        data1[i::m1] -= anom[i][np.newaxis, :]
 
     # import__
     cwd2 = os.getcwd()

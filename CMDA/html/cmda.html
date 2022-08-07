@@ -6,9 +6,15 @@
 <!-- 
 /home/btang/projects/cmac/git2/CMDA0/JPL_CMDA/frontend/public/html/universalPlotting6c.html
 
+qqqq search for change
+
+kk web
 rsync -a cmda2.html cmda.html
+
 rsync -a js2/common-v6c2.js js2/common-v6c.js 
 
+kk src
+rsync -a universalPlotting6c/pythonWrapper universalPlotting6b/pythonWrapper
 
 python universalPlotting6c.py
 
@@ -154,6 +160,7 @@ cmac/html/codeStorage.html
 <script src='js2/varList.js'></script>
 <script>document.write('<script src="js2/fileList_cloud_full8.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 
+<!-- qqqq -->
 <script>document.write('<script src="js2/common-v6c.js?dev=' + Math.floor(Math.random()*100) + '"\><\/script>');</script>
 <!-- 
 <script src='js2/fileList.js?dev='></script>
@@ -1366,6 +1373,7 @@ var vueApp = new Vue({
     // vue_data_para
     //backEngin: 'cmda1',
     backEngin: 'universalPlotting6b',
+    //backEngin: 'universalPlotting6c',  //qqqq
     datasets: '',
     vars: '',
     //
@@ -2328,7 +2336,7 @@ inputAll['base'] = {
 //
 'subs': ['', 'urlSubs'],
 'plotP': ['', 'urlPlotP'],
-'anomaly': ['anomaly', 'urlDirect'],
+'anomaly': ['anomaly', 'urlAnomaly'],
 'climatology': ['climatology', 'urlDirect'],
 'timeMean': ['timeMean', 'urlTimeMean'],
 //

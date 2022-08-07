@@ -1037,6 +1037,24 @@ function urlPlotP() {
   }
 }
 
+// urlAnomaly___
+function urlAnomaly() {
+  this.key0 = key99;
+  this.key1 = arg99[0];
+  this.key2 = arg99[2];
+  this.fromHtml = function(){
+    return this.key0 + '=' + vueApp[this.key1];
+  }
+  this.toHtml = function(vq){
+    vueApp[this.key1] = vq;
+    if (vq=='1') {
+      vueApp.anomaly0 = true;
+    } else {
+      vueApp.anomaly0 = false;
+    }
+  }
+}
+
 // urlTimeMean___
 function urlTimeMean() {
   this.key0 = key99;
