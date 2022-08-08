@@ -11,6 +11,7 @@
 #== universalPlotting3b__   for universalPlotting
 #== universalPlotting6b__   
 #== universalPlotting6c__   
+#== universalPlotting6c2__   
 #== cmda1__   
 #== static_html
 
@@ -445,6 +446,12 @@ def displayUniversalPlotting6b():
 #@crossdomain(origin='*')
 def displayUniversalPlotting6c():
     return serviceFunc('universalPlotting6c')
+
+#== universalPlotting6c2__   
+@app.route('/svc/universalPlotting6c2', methods=["GET"])
+#@crossdomain(origin='*')
+def displayUniversalPlotting6c2():
+    return serviceFunc('universalPlotting6c2')
 
 
 #== cmda1__   

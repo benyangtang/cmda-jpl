@@ -1,7 +1,7 @@
 #== html__
 #== js2__
-#== src_universalPlotting6b
 #== src_universalPlotting6c
+#== src_universalPlotting6c2
 #== src_cmda1
 #== src_py
 #== src_universalPlotting
@@ -114,7 +114,7 @@ svc/src/universalPlotting/dataList2.js
 svc/src/universalPlotting/wrapper
 
 #== src_universalPlotting6b
-svc/src/universalPlotting6b/pythonWrapper   ####
+svc/src/universalPlotting6b/pythonWrapper  
 svc/src/universalPlotting6b/__init__.py
 svc/src/universalPlotting6b/call_universalPlotting6b.py  # not used
 svc/src/universalPlotting6b/wrapper
@@ -122,6 +122,10 @@ svc/src/universalPlotting6b/wrapper
 #== src_universalPlotting6c
 svc/src/universalPlotting6c/pythonWrapper   ####
 svc/src/universalPlotting6c/wrapper
+
+#== src_universalPlotting6c2
+svc/src/universalPlotting6c2/pythonWrapper   ####
+svc/src/universalPlotting6c2/wrapper
 
 
 #== src_cmda1    only used by cmda1.html
