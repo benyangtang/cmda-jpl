@@ -1,0 +1,4757 @@
+#!/home/svc/install/epd/bin/python
+#xxxx
+'''
+execfile('/home/bytang/projects/cmac/trunk/services/svc/svc/src/randomForest/pythonWrapper')
+
+rsync -a universalPlotting6c/pythonWrapper universalPlotting6b/pythonWrapper
+
+rsync -a universalPlotting6b/pythonWrapper universalPlotting6c/pythonWrapper
+
+Questsions:
+    # aaaa1   why timeFull=0 ?
+
+rsync8022 /home/btang/projects/cmac/git2/CMDA0/JPL_CMDA/services/svc/svc/src/universalPlotting6b/pythonWrapper_ $cmda1:/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/src/universalPlotting6b/pythonWrapper
+
+zzzz  questions
+
+ fn2 = '%s/filesDict9.js'%outDir
+  dict2 = yaml.safe_load( open(fn2).read() )
+
+
+'''
+HOME='/home/svc'
+
+cr = {
+#                              1  2   3  4
+'import_':              1,   # 0  1   1  0
+# parameters_
+# def_change_labels:     # not working
+# def_convertTime(time0, units):
+# def_clipEnd(x, w, percL, percR):
+# def_plotTser
+#== def_plotPattern
+# def_runF(temp1):
+# def_combineImage(files, outFile):
+# def_combineImage2(files, nCol, outFile):  for now only works for nCol=2
+# def_time2YearMonth(time1):
+# basin_list
+# basin_list2
+#== def_ferretAve  not used
+#== def_ferretBasin
+#== def_ferretBasin2  may not needed. for debugging
+#== def_ferretAnomaly
+#== def_ferretAnomaly2
+#== def_ferretAnomaly3
+#== def_ferretAnomaly4(runF, indexStr, varName, d, varNameOut):
+#== def_ferretMean(runF, a):
+
+# class_SUBSET_REGION():
+  # def_noDataExit()
+  # def_getFileName2
+  # def_getFileName
+  # def_getUnits(self):
+  # def_checkTime   not used
+  # def_getOpenDatasetStr(self);
+    #-- get_file_list
+    #-- load_str
+  # def_getAxis3D(self, i):
+  # def_getSubsetIndex2(self):  # set region, for axismethod=3.  will not use
+  # def_getSubsetIndex2a(self):  # set region, include axisMethod=2,4
+  # def_getSubsetIndex3a(self):  # include those axisMethod==3. no good. should use this on
+  # def_getSubsetIndex3(self):  # used in 'define var'. Was overwriten, and not used.
+  # def_getSubsetIndex4(self):  # for time only, used in anaomaly
+  # def_getSubsetIndex5(self):  # for ave and sum
+  # def_corr2 #  being used
+  # def_corr #
+  # def_scatterPlot3 # being used
+  # def_diffPlot4   # being used
+  # def_getFromNc(self):  not used
+  # def_setAspect__(self):
+    #-- set_viewport
+'init_class':           1,   # 1  1
+'command_arg':          1,   # 1  1
+'figure_out_dim':       1,
+# def_checkSync
+# class_SERVICE():
+'check_parameters':     1,   # 1
+  #== services_configure
+  #== check_para
+'services__':           1,   # 1  1  # use agg data set
+  # plotType__
+  #== download_original
+  #== open_files
+  #-- init_ferret
+  # fig_data_filenames
+  # set_region_  not used
+  # open_data and regrid to the first dataset
+  # calc_time mean
+  # calc_anomaly
+  # mask_basin
+  # average_Or_Sum
+  # name_fig_data_files
+
+  #=== this is for individual services
+  #== subsetDownload__
+  #== mapView__
+  #== timeSeries__
+  #== linear__
+  #== scatter__
+  #== anomaly__  not used
+  #== basinMask__  not needed
+  #== randomForest__
+    # RF_import
+    # load_data
+    # combine__
+    # filter_out_invalid
+    # initiate_RFR
+    # train_RFR
+    # RF_plot
+  #== eof__
+    # subset__
+    # EOF_anomaly__
+    # import__
+    # remove_seasonal_cycle, too simple
+    # calc_PCA
+    #== calc_min_max, before putting in lat/lon grid
+    #== plot_variance
+    #== save_eof
+    #== plot_tser_ferret  # not used
+    #== plot_tser_ferret2  # using multi_view
+    #== plot_tser_python  # not used
+    #== plot_patterns_python
+    #== plot_patterns_ferret
+    #== concatenate_plots
+  #== eof__2  in development
+  #== diffPlot__
+    #-- plot_data1
+    #-- plot_data2
+    #-- plot_diff
+    #-- save_diff
+  #== corrMap__
+    # plot_using_ferret
+  #== shade_plot_contour_
+    #-- shade___
+      #-- shade_contour__
+    #-- aspect_ratio
+    #-- set_pallette
+    #-- set_level
+    #-- issue_2d_plot
+  #-- go_land__
+    #-- line_plot__
+  #-- save_plot
+
+
+'':        0,   # 1  1
+}
+
+#if cr['']       == 1:
+
+# 1 -- 
+# 
+
+if cr['import_']       == 1:
+  useFerret = 1
+  import os, sys,  time
+  import tempfile
+  #import math
+  import glob
+  import re
+  import pickle
+  import string
+  import traceback
+
+  import numpy as np      
+  sys.path.insert(0, '../py')
+  import cmac
+
+  from netCDF4 import Dataset
+  import netCDF4 as nC4
+  sys.path.insert(0, '../py')
+  import NC_btang_v4 as NC1
+
+  os.environ["PROJ_LIB"] = "/home/ubuntu/miniconda3/envs/FERRET/share/proj"
+
+
+  import os
+  kk = os.environ.keys()
+  for k in kk: print(k)
+
+  print('os.environ["FER_PALETTE"]' )
+  print( os.environ["FER_PALETTE"])
+
+  if useFerret==0:
+    import pca_v4 as pca
+
+    import matplotlib 
+    matplotlib.use('Agg')  
+    import matplotlib.pylab as Mat
+    Mat.ioff()
+    #from mpl_toolkits.basemap import NetCDFFile
+    from mpl_toolkits.basemap import Basemap
+
+    import matplotlib as mpl
+    mpl.rcParams['image.cmap'] = 'gist_rainbow'
+
+t00 = time.time()
+
+# parameters_
+num2month = {
+1: 'JAN',
+2: 'FEB',
+3: 'MAR',
+4: 'APR',
+5: 'MAY',
+6: 'JUN',
+7: 'JUL',
+8: 'AUG',
+9: 'SEP',
+10: 'OCT',
+11: 'NOV',
+12: 'DEC',
+}
+
+modelCenter = [
+'cccma',
+'csiro',
+'gfdl',
+'giss',
+'ipsl',
+'miroc',
+'ncar',
+'ncc',
+'ukmo',
+]
+
+obsCenter = [
+'nasa',
+'noaa',
+'argo',
+]
+
+oceanVar = [
+'ot',
+'os',
+]
+
+var3d = [
+'ta',
+'hus',
+'clw',
+'cli',
+'ot',
+'os',
+]
+
+regridVar = [
+'cli',
+'clw',
+]
+
+# def_change_labels(ax):
+def change_labels(ax):
+  x1 = Mat.getp(ax, 'xticklabels')
+  #x1 = Mat.getp(ax.xaxis, 'ticklabels') # not working
+  x1New = []
+  for i in range(len(x1)):
+    t1 = Mat.getp(x1[i], 'text')
+    print(t1)
+    if not t1: 
+      t2 = ''
+    elif t1[0]=='\u2212':
+      t2 = str(t1[1:]) + 'W'
+    elif t1[0]=='0':
+      t2 = str(t1)
+    else:
+      t2 = str(t1) + 'E'
+    x1New.append(t2)
+  #
+  x1 = Mat.getp(ax, 'yticklabels')
+
+  y1New = []
+  for i in range(len(x1)):
+    t1 = Mat.getp(x1[i], 'text')
+    if not t1: 
+      t2 = ''
+    elif t1[0]=='\u2212':
+      t2 = str(t1[1:]) + 'S'
+    elif t1[0]=='0':
+      t2 = str(t1)
+    else:
+      t2 = str(t1) + 'N'
+    y1New.append(t2)
+  Mat.setp(ax, xticklabels=x1New, yticklabels=y1New)
+  return x1New, y1New
+
+# def_convertTime(time0, units):
+def convertTime(time0, units):
+  import matplotlib.dates as DA
+  import calendar
+  import string
+
+  # convert time
+  time9 = time0.copy()
+  print('time9.shape: ', end=' ')
+  print(time9.shape)
+  print(units)
+
+  temp1 = string.split(units, 'since')
+  if len(temp1)==2:
+    unit1a = string.lower(string.strip( temp1[0] ))
+    unit1b = string.strip( temp1[1] )
+  
+    # convert time9 to day
+    if string.find(unit1a, 'year')!=-1:
+      time9 *= (365.25)
+    elif string.find(unit1a, 'month')!=-1:
+      time9 *= (365.25/12)
+    elif string.find(unit1a, 'hour')!=-1:
+      time9 *= (1./24.)
+    elif string.find(unit1a, 'minute')!=-1:
+      time9 *= (1./24./60.)
+    elif string.find(unit1a, 'second')!=-1:
+      time9 *= (1./24./3600.)
+
+    # convert time9 to days since year 0001
+    temp4 = string.split(unit1b)
+    temp3 = string.split(temp4[0], '-')
+    year0 = int( temp3[0] )
+    month0 = int( temp3[1] )
+    day0 = int( temp3[2] )
+
+    temp5 = (year0, month0, day0, 0,0,0, 0,0,0)
+    t0 = calendar.timegm(temp5) - calendar.timegm((1,1,1, 0,0,0, 0,0,0))
+    t0 = t0/(3600.*24)
+
+    time9 += t0
+    return time9
+
+# def_clipEnd(x, w, percL, percR):
+def clipEnd(x, w, percL, percR):
+  indS = np.argsort(x)
+  x1 = x[indS]
+  w1 = w[indS]
+  sum1 = np.cumsum(w1)
+  threshL = sum1[-1]*percL
+  threshR = sum1[-1]*(1.0 - percR)
+  indL = max( np.searchsorted(sum1, threshL) - 1, 0 )
+  indR = min( np.searchsorted(sum1, threshR) + 1, len(x) )
+ 
+  return x1[indL], x1[indR]
+
+# def_plotTser
+def plotTser(tser,i1,i2,max1):
+  ii = 0
+  for i in range(i1,i2+1):
+    time9 = np.arange( len(tser[0,:]))
+    print(time9.shape, tser[i,:].shape)
+    #Mat.plot_date(time9, tser[i,:], '-')
+    Mat.plot(time9, tser[i,:], '-')
+    #Mat.hold('on')
+    ii += 1
+  #Mat.hold('off')
+  Mat.xlim(time9[0], time9[-1])
+  Mat.ylim(-max1, max1)
+
+  labels = ax.get_xticklabels()
+  #Mat.setp(labels, rotation=20, fontsize=8)
+  Mat.setp(labels, rotation=0, fontsize=8)
+
+  Mat.grid()
+  if i1==i2:
+    Mat.title('EOF %d'%(i1+1))
+  else:
+    Mat.title('EOFs %d-%d'%(i1+1, i2+1))
+
+# def_plotTser2
+def plotTser2(time9, tser,i1,i2,max1):
+  ii = 0
+  for i in range(i1,i2+1):
+    print(time9.shape, tser[i,:].shape)
+    Mat.plot_date(time9, tser[i,:], '-')
+    #Mat.hold('on')
+    ii += 1
+  #Mat.hold('off')
+  Mat.xlim(time9[0], time9[-1])
+  Mat.ylim(-max1, max1)
+
+  ax = Mat.gca()
+  nTime = len(time9)
+  if nTime<30:
+    major1 = matplotlib.dates.MonthLocator(list(range(1,13)))
+  else:
+    major1 = matplotlib.dates.YearLocator()
+  ax.xaxis.set_major_locator(major1)
+
+  monthsFmt = matplotlib.dates.DateFormatter("%b '%y")
+  ax.xaxis.set_major_formatter(monthsFmt)
+
+  labels = ax.get_xticklabels()
+  #Mat.setp(labels, rotation=20, fontsize=8)
+  Mat.setp(labels, rotation=90, fontsize=7)
+
+  Mat.grid()
+  if i1==i2:
+    Mat.title('EOF %d'%(i1+1))
+  else:
+    Mat.title('EOFs %d-%d'%(i1+1, i2+1))
+
+#== def_find_bound(x):
+# for used in matplotlib
+def find_bound(x):
+  '''
+Modify x so it becomes the end points.
+'''
+  temp1 = np.zeros((len(x)+1,), dtype=x.dtype)
+  temp1[1:-1] = (x[1:,]+x[:-1])/2.
+  temp1[0] = x[0] - (temp1[1]-x[0])
+  temp1[-1] = x[-1] + (x[-1] - temp1[-2])
+
+  return temp1
+
+#== def_plotPattern
+def plotPattern(i, min1, max1):
+
+  #if patternDim==1:
+  #  varAxis2 = np.array(varAxis)
+  #  pl = Mat.plot(varAxis2, pattern2[i,:])
+  #  Mat.xlim(varAxis2[0], varAxis2[-1])
+  #  Mat.ylim(-max1, max1)
+  #  Mat.grid()
+  #  Mat.xlabel(xlabel1)
+
+  #if patternDim==2:
+
+  #im = m.pcolor(xx2, yy2, pattern2[i, ::-1, :], vmin=min2, vmax=max2, \
+  #      norm=matplotlib.colors.normalize(), shading='flat')
+
+  im = m.pcolor(lon2, lat2, pattern1[i, ::-1, :], vmin=min2, vmax=max2, shading='flat')
+  m.drawcoastlines(color=(.7,.7,.7))
+  Mat.title('EOF %d'%(i+1))
+
+  if i==nKeep-1:
+    hc = Mat.colorbar()
+
+    #labels = hc.get_yticklabels()
+    #hay = hc.get_yaxis()
+    #hfmt = hay.get_major_formatter()
+    #hfmt.fmt = '%g'
+    #hay.set_major_formatter(hfmt)
+
+  #m.drawmeridians(x32,linestyle='--', dashes=[1,4],labels=[1,0,0,1]) 
+  #m.drawparallels(y32,linestyle='--', dashes=[1,4],labels=[1,0,0,1]) 
+  #m.drawmeridians(x32) 
+  #m.drawparallels(y32) 
+
+# def_runF(temp1):
+#def runF(temp1):
+#  temp1a = str(temp1)
+#  print temp1a
+#  pf.run(temp1a)
+
+def runF(temp1):
+  temp1a = str(temp1)
+  print(temp1a)
+  v1,m1 = pf.run(temp1a)
+  if v1!=3:
+    print(('%d,  %s'%(v1,m1)), flush=True)
+    #raise NameError('FerretError')
+    #raise Exception('FerretError')
+    raise ValueError
+  return v1
+
+# def_combineImage(files, outFile):
+def combineImage(files, outFile):
+      from PIL import Image
+
+      images = list(map(Image.open, files))
+      for i in images:
+        print(i.size)
+
+      ww = [images[ii].size[0] for ii in range(len(images))]
+      hh = [images[ii].size[1] for ii in range(len(images))]
+
+      w = max(ww)
+      h = sum(hh)
+
+      result = Image.new("RGBA", (w, h))
+
+      v1 = 0
+      for i in images:
+        result.paste( i, (0, v1))
+        v1 += i.size[1]
+
+      result.save(outFile)
+
+# def_combineImage2(files, nCol, outFile):  for now only works for nCol=2
+def combineImage2(files, nCol, outFile):
+      from PIL import Image
+
+      images = list(map(Image.open, files))
+      nImg = len(images)
+      for i in images:
+        print(i.size)
+
+      ww = [images[ii].size[0] for ii in range(len(images))]
+      hh = [images[ii].size[1] for ii in range(len(images))]
+
+      if nCol==1:
+        w = max(ww)
+        h = sum(hh)
+      else:
+        w = max(ww) * 2
+        h = int( (sum(hh) /2) ) + hh[0] 
+
+      result = Image.new("RGBA", (w, h))
+
+      v1 = 0
+      iImg = 0
+      for i in images:
+        if iImg%2==0:
+          result.paste( i, (0, v1))
+        else:
+          result.paste( i, (int(w/2), v1))
+          v1 += i.size[1]
+        iImg += 1
+
+      result.save(outFile)
+
+#date = datetime.datetime(2003,8,1,12,4,5)
+#for i in range(5): 
+#    date += datetime.timedelta(days=1)
+#    print(date) 
+
+# def_time2YearMonth(time1):
+def time2YearMonth(time1):
+  if time1.find('-')>-1:
+    time1a = ''.join( time1.split('-') )
+  else:
+    time1a = time1[:]
+
+  is0000 = 0
+  if int(time1[:4])<1000:
+    is0000 = 1
+    time1a = '1'+time1a[1:]
+
+  time2 = int(time1a)
+  if time2<10000000:
+    time2 = time2*100 + 15
+
+  year1 = time2 / 10000
+  month1 = int(time2 % 10000 / 100)
+  day1 = time2 % 100
+ 
+  if is0000: year1 = year1 - 1000
+  print('time1, time1a,  time2, year, month, day: ', time1, time1a, time2, year1, month1, day1)
+  return year1, month1, day1
+
+
+# to be modified for a modern version. not done
+# def_time2YearMonth2(time1):
+def time2YearMonth2(time1):
+  if time1.find('-')>-1:
+    time1a = ''.join( time1.split('-') )
+  else:
+    time1a = time1
+  time2 = int(time1a)
+  if time2<10000000:
+    time2 = time2*100 + 15
+
+  year1 = time2 / 10000
+  month1 = time2 % 10000 / 100
+  day1 = time2 % 100
+ 
+  print('time, year, month, day: ', time2, year1, month1, day1)
+  return year1, month1, day1
+
+basins0 = {
+1 : "Atlantic Ocean",
+2 : "Pacific Ocean",
+3 : "Indian Ocean",
+4 : "Mediterranean Sea",
+5 : "Baltic Sea",
+6 : "Black Sea",
+7 : "Red Sea",
+8 : "Persian Gulf",
+9 : "Hudson Bay",
+10: "Southern Ocean",
+11: "Arctic Ocean",
+12: "Sea of Japan",
+13: "Kara Sea",
+14: "Sulu Sea",
+15: "Baffin Bay",
+16: "East Mediterranean",
+17: "West Mediterranean",
+18: "Sea of Okhotsk",
+19: "Banda Sea",
+20: "Caribbean Sea",
+21: "Andaman Basin",
+22: "North Caribbean",
+23: "Gulf of Mexico",
+24: "Beaufort Sea",
+25: "South China Sea",
+26: "Barents Sea",
+27: "Celebes Sea",
+28: "Aleutian Basin",
+29: "Fiji Basin",
+30: "North American Basin",
+31: "West European Basin",
+32: "Southeast Indian Basin",
+33: "Coral Sea",
+34: "East Indian Basin",
+35: "Central Indian Basin",
+36: "Southwest Atlantic Basin",
+37: "Southeast Atlantic Basin",
+38: "Southeast Pacific Basin",
+39: "Guatemala Basin",
+40: "East Caroline Basin",
+41: "Marianas Basin",
+42: "Philippine Sea",
+43: "Arabian Sea",
+44: "Chile Basin",
+45: "Somali Basin",
+46: "Mascarene Basin",
+47: "Crozet Basin",
+48: "Guinea Basin",
+49: "Brazil Basin",
+50: "Argentine Basin",
+51: "Tasman Sea",
+52: "Atlantic Indian Basin",
+53: "Caspian Sea",
+54: "Sulu Sea II",
+55: "Venezuela Basin",
+56: "Bay of Bengal",
+57: "Java Sea",
+58: "East Indian Atlantic Basin" 
+}
+
+# basin1 is the other way of basins0
+basins1 = {}
+for k in list(basins0.keys()):
+  basins1[basins0[k]] =  k
+
+# basin_list
+'''
+for k in basins0.keys():
+  #print("'%s': %d, "%(basins0[k],k))
+  print("'%s',"%(basins0[k]))
+
+'Atlantic Ocean': 1, 
+'Pacific Ocean': 2, 
+'Indian Ocean': 3, 
+'Mediterranean Sea': 4, 
+'Baltic Sea': 5, 
+'Black Sea': 6, 
+'Red Sea': 7, 
+'Persian Gulf': 8, 
+'Hudson Bay': 9, 
+'Southern Ocean': 10, 
+'Arctic Ocean': 11, 
+'Sea of Japan': 12, 
+'Kara Sea': 13, 
+'Sulu Sea': 14, 
+'Baffin Bay': 15, 
+'East Mediterranean': 16, 
+'West Mediterranean': 17, 
+'Sea of Okhotsk': 18, 
+'Banda Sea': 19, 
+'Caribbean Sea': 20, 
+'Andaman Basin': 21, 
+'North Caribbean': 22, 
+'Gulf of Mexico': 23, 
+'Beaufort Sea': 24, 
+'South China Sea': 25, 
+'Barents Sea': 26, 
+'Celebes Sea': 27, 
+'Aleutian Basin': 28, 
+'Fiji Basin': 29, 
+'North American Basin': 30, 
+'West European Basin': 31, 
+'Southeast Indian Basin': 32, 
+'Coral Sea': 33, 
+'East Indian Basin': 34, 
+'Central Indian Basin': 35, 
+'Southwest Atlantic Basin': 36, 
+'Southeast Atlantic Basin': 37, 
+'Southeast Pacific Basin': 38, 
+'Guatemala Basin': 39, 
+'East Caroline Basin': 40, 
+'Marianas Basin': 41, 
+'Philippine Sea': 42, 
+'Arabian Sea': 43, 
+'Chile Basin': 44, 
+'Somali Basin': 45, 
+'Mascarene Basin': 46, 
+'Crozet Basin': 47, 
+'Guinea Basin': 48, 
+'Brazil Basin': 49, 
+'Argentine Basin': 50, 
+'Tasman Sea': 51, 
+'Atlantic Indian Basin': 52, 
+'Caspian Sea': 53, 
+'Sulu Sea II': 54, 
+'Venezuela Basin': 55, 
+'Bay of Bengal': 56, 
+'Java Sea': 57, 
+'East Indian Atlantic Basin': 58,  
+'''
+# basin_list2
+'''
+'Atlantic Ocean',
+'Pacific Ocean',
+'Indian Ocean',
+'Mediterranean Sea',
+'Baltic Sea',
+'Black Sea',
+'Red Sea',
+'Persian Gulf',
+'Hudson Bay',
+'Southern Ocean',
+'Arctic Ocean',
+'Sea of Japan',
+'Kara Sea',
+'Sulu Sea',
+'Baffin Bay',
+'East Mediterranean',
+'West Mediterranean',
+'Sea of Okhotsk',
+'Banda Sea',
+'Caribbean Sea',
+'Andaman Basin',
+'North Caribbean',
+'Gulf of Mexico',
+'Beaufort Sea',
+'South China Sea',
+'Barents Sea',
+'Celebes Sea',
+'Aleutian Basin',
+'Fiji Basin',
+'North American Basin',
+'West European Basin',
+'Southeast Indian Basin',
+'Coral Sea',
+'East Indian Basin',
+'Central Indian Basin',
+'Southwest Atlantic Basin',
+'Southeast Atlantic Basin',
+'Southeast Pacific Basin',
+'Guatemala Basin',
+'East Caroline Basin',
+'Marianas Basin',
+'Philippine Sea',
+'Arabian Sea',
+'Chile Basin',
+'Somali Basin',
+'Mascarene Basin',
+'Crozet Basin',
+'Guinea Basin',
+'Brazil Basin',
+'Argentine Basin',
+'Tasman Sea',
+'Atlantic Indian Basin',
+'Caspian Sea',
+'Sulu Sea II',
+'Venezuela Basin',
+'Bay of Bengal',
+'Java Sea',
+'East Indian Atlantic Basin',
+'''
+#== def_ferretAve  not used
+def ferretAve(runF, indexStr, varName, varNameOut):
+  indexStr = a.getSubsetIndex5(ii)
+  temp1 = 'let %s = %s[%s]'%(varNameOut, varName, indexStr)
+  runF(temp1)
+
+#== def_ferretBasin2  may not needed. for debugging
+def ferretBasin2(runF, basinName, nData, var1a):
+
+  iBasin = basins1[basinName[0]]
+
+  temp1 = 'use "http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NODC/.WOA05/.Masks/.basin/dods"'
+  runF(temp1)
+
+  #temp1 = 'let mask1 = if basin[k=1] eq %d then 1'%(iBasin)
+  #temp1 = 'let mask1 = if basin[%s, k=1] eq %d then 1'%(indexStr, iBasin)
+  #runF(temp1)
+
+  for ii in range(nData):
+    indexStr = a.getSubsetIndex3a(ii,xyzt='xy')
+    temp1 = 'let mask1%d = if basin[%s k=1] eq %d then 1'%(ii,indexStr, iBasin)
+    runF(temp1)
+
+    var1t = var1a[ii]+'_A'
+    temp1 = 'let %s = %s *  mask1%d[gxy=%s]'%(var1t, var1a[ii], ii, var1a[ii])
+    #temp1 = 'let %s = %s *  mask1[gxy=%s@nrst]'%(var1t, var1a[ii], var1a[ii])
+    #temp1 = 'let %s = %s *  mask1[gxy=%s@ave]'%(var1t, var1a[ii], var1a[ii])
+    runF(temp1)
+    var1a[ii] = var1t
+
+#== def_ferretBasin
+def ferretBasin(runF, basinName, nData, var1a):
+
+  iBasin = basins1[basinName[0]]
+
+  temp1 = 'use "http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NODC/.WOA05/.Masks/.basin/dods"'
+  runF(temp1)
+
+  temp1 = 'let basin9 = basin[k=1]'
+  runF(temp1)
+
+  temp1 = 'let mask9 = if basin9 eq %d then 1'%(iBasin)
+  runF(temp1)
+
+  for ii in range(nData):
+    var1t = var1a[ii]+'_A'
+    temp1 = 'let %s = %s[gxy=basin9] * mask9'%(var1t, var1a[ii])
+    runF(temp1)
+    var1a[ii] = var1t
+
+    #var1t = var1a[ii]+'_A'
+    #temp1 = 'let %s = %s *  mask1[gxy=%s]'%(var1t, var1a[ii], var1a[ii])
+    #runF(temp1)
+    #var1a[ii] = var1t
+
+#== def_ferretAnomaly(runF, indexStr, varName, d, varNameOut):
+def ferretAnomaly(runF, indexStr, affix1, varName, varNameOut):
+  temp1 = 'USE climatological_axes'
+  runF(temp1)
+  temp1 = 'CANCEL DATA climatological_axes'
+  runF(temp1)
+
+  temp1 = 'define axis/%s:30.436875/units=days tax1'%indexStr
+  runF(temp1)
+
+  refStr = 'GT=month_reg@MOD'
+
+  # regrid to monthly
+  temp1 = 'let dd1%s = %s[gt=tax1]'%(affix1,varName)
+  runF(temp1)
+
+  # regrid to monthly climatology
+  temp1 = 'let dd2c%s = dd1%s[%s]'%(affix1, affix1, refStr)
+  runF(temp1)
+
+  #temp1 = 'let dd1b = dd1[t=@ave]'
+  #runF(temp1)
+
+  # regrid the climatology to monthly
+  temp1 = 'let dd2ca%s = dd2c%s[gt=tax1]'%(affix1, affix1)
+  runF(temp1)
+
+  # calc anomaly
+  temp1 = 'let dd1a%s = dd1%s - dd2ca%s'%(affix1, affix1, affix1) 
+  runF(temp1)
+
+  # define new var for anomaly
+  if 0: # units not working
+    temp1 = 'define var/bad=-999999.0/title="`%s.long_name`"/units="`%s.units`" %s = dd1a%s'%(
+      varName,
+      varName,
+      varNameOut,
+      affix1,
+      )
+
+  if 1:
+    temp1 = 'define var/bad=-999999.0 %s = dd1a%s'%(
+      varNameOut,
+      affix1,
+      )
+
+  runF(temp1)
+
+#== def_ferretAnomaly2(runF, indexStr, varName, d, varNameOut):
+def ferretAnomaly2(runF, indexStr, affix1, varName, varNameOut):
+  if 1:
+    temp1 = 'USE coads_climatology'
+    runF(temp1)
+
+  if 1:
+    temp1 = 'USE climatological_axes'
+    runF(temp1)
+    temp1 = 'CANCEL DATA climatological_axes'
+    runF(temp1)
+
+  #temp1 = 'define axis/%s:30.436875/units=days tax1'%indexStr
+  #runF(temp1)
+
+  refStr = 'GT=month_gregorian@MOD'
+  #refStr = 'GT=sst[d=coads_climatology]@MOD'
+
+  # regrid to monthly
+  #temp1 = 'let dd1%s = %s[gt=tax1]'%(affix1,varName)
+  #runF(temp1)
+
+  # regrid to monthly climatology
+  temp1 = 'let ddc%s = %s[%s]'%(affix1, varName, refStr)
+  runF(temp1)
+
+  #temp1 = 'let dd1b = dd1[t=@ave]'
+  #runF(temp1)
+
+  # regrid the climatology to monthly
+  temp1 = 'let ddca%s = ddc%s[gt=%s]'%(affix1, affix1, varName)
+  runF(temp1)
+
+  # calc anomaly
+  #temp1 = 'let dda%s = %s - ddc%s[gt=%s]'%(affix1, varName, affix1, varName) 
+  #temp1 = 'let dda%s = %s[gt=ddca%s] - ddca%s'%(affix1, varName, affix1, affix1 ) 
+  temp1 = 'let dda%s = %s - ddca%s'%(affix1, varName, affix1 ) 
+  runF(temp1)
+
+  if 1:
+    temp1 = 'define var/bad=-999999.0 %s = dda%s'%(
+      varNameOut,
+      affix1,
+      )
+
+  runF(temp1)
+
+#== def_ferretAnomaly3(runF, indexStr, varName, d, varNameOut):
+def ferretAnomaly3(runF, indexStr, affix1, varName, varNameOut):
+  temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, varName) 
+  runF(temp1)
+
+  import xarray as xr
+  ds1 = xr.load_dataset('%s/temp9.nc'%(a.outDir))
+  da1 = ds1[varName]
+  shape1 = da1.shape
+  print('da1.shape: ', da1.shape)
+
+  # EOF_anomaly__
+  m1 = 12
+  if a.timeMean=='q': m1 = 4
+  anom = np.ones( (m1, shape1[-2], shape1[-1]), dtype=np.float32 )
+  for i in range(m1):
+    print(da1.data[i::m1])
+    anom[i] = da1.data[i::m1].mean(axis=0)
+    da1.data[i::m1] -= anom[i][np.newaxis, :]
+  ds2 = da1.to_dataset(name='%sz'%varName)
+  ds2.to_netcdf('%s/temp8.nc'%a.outDir)
+
+  temp1 = 'use %s/temp8.nc'%a.outDir
+  runF(temp1)
+  temp1 = 'let %s = %sz[d=%s/temp8.nc]'%(varNameOut, varName, a.outDir)
+  runF(temp1)
+
+#== def_ferretAnomaly4(runF, indexStr, varName, d, varNameOut):
+def ferretAnomaly4(runF, indexStr, affix1, varName, varNameOut):
+  temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, varName) 
+  runF(temp1)
+
+  import xarray as xr
+  ds1 = xr.load_dataset('%s/temp9.nc'%(a.outDir))
+  da1 = ds1[varName]
+  shape1 = da1.shape
+  timeDim = da1.dims[0]
+  print('da1.shape: ', da1.shape)
+  print('da1.dims: ', da1.dims)
+
+  if a.anomaly==1: 
+    clim = da1.groupby('%s.month'%timeDim).mean(dim=timeDim)
+    da2 = (da1.groupby('%s.month'%timeDim) - clim)
+  else:
+    da2 = da1
+
+  if a.timeMean=='y': 
+    #clim = da1.groupby('%s.year'%timeDim).mean(dim=timeDim)
+    #da1 = da1.groupby('%s.year'%timeDim) - clim * 0.0
+    da2 = eval("da2.resample(%s='1Y')"%timeDim).mean()
+  elif a.timeMean=='q': 
+    #clim = da1.groupby('%s.season'%timeDim).mean(dim=timeDim)
+    #da1 = da1.groupby('%s.season'%timeDim)  - clim * 0.0
+    da2 = eval("da2.resample(%s='1Q')"%timeDim).mean()
+  
+  ds2 = da2.to_dataset(name='%sz'%varName)
+  ds2.to_netcdf('%s/temp8.nc'%a.outDir)
+
+  temp1 = 'use %s/temp8.nc'%a.outDir
+  runF(temp1)
+  temp1 = 'let %s = %sz[d=%s/temp8.nc]'%(varNameOut, varName, a.outDir)
+  runF(temp1)
+
+#== def_ferretMean(runF, a):
+def ferretMean(runF, a, i):
+  if a.timeMethod[i]==3:
+#define axis/t="01-jan-1901 00:00":"01-jan-2013":1/units=years taxyear
+#let hadisst1new = hadsst1[gt=taxyear@ave]
+
+    a.dayS[i] = 1
+    if a.monthS[i]>1: 
+      a.yearS[i] = a.yearS[i] + 1
+      a.monthS[i] = 1
+
+    a.dayE[i] = 1
+    if a.monthE[i]==12: 
+      a.yearE[i] = a.yearE[i] + 1
+    a.monthE[i] = 1
+
+    if a.timeMean=='y':
+      temp1 = 'define axis/calendar=`%s,return=calendar`/t="%02d-%s-%04d 00:00":"%02d-%s-%04d":1/units=years taxyear'\
+        %(a.var1a[i], a.dayS[i], num2month[a.monthS[i]], a.yearS[i], a.dayE[i], num2month[a.monthE[i]], a.yearE[i])
+
+    elif a.timeMean=='q':
+      temp1 = 'define axis/calendar=`%s,return=calendar`/t="%02d-%s-%04d 00:00":"%02d-%s-%04d":3/units=months taxyear'\
+        %(a.var1a[i], a.dayS[i], num2month[a.monthS[i]], a.yearS[i], a.dayE[i], num2month[a.monthE[i]], a.yearE[i])
+
+    runF(temp1)
+
+    #temp1 = 'DEFINE AXIS/CALENDAR=noleap/t="%02d-%s-%04d 00:00":"%02d-%s-%04d":1/units=months newT'\
+    #    %(a.dayS[i], num2month[a.monthS[i]], a.yearS[i], a.dayE[i], num2month[a.monthE[i]], a.yearE[i])
+
+    #temp1 = 'DEFINE AXIS/CALENDAR=`%s,return=calendar`/t="%02d-%s-%04d 00:00":"%02d-%s-%04d":1/units=months newT'\
+    #     %(a.var1a[i],a.dayS[i], num2month[a.monthS[i]], a.yearS[i], a.dayE[i], num2month[a.monthE[i]], a.yearE[i])
+
+    #runF(temp1)
+
+    #var1aaa = a.var1a[i] + '_AAZ'
+    #temp1 = 'let %s = %s[gt=newT@nrst]'%(var1aaa, a.var1a[i])
+    #runF(temp1)
+
+    #temp1 = "set axis/calendar=noleap `%s,return=taxis`"%a.var1a[i]
+    #runF(temp1)
+
+    var1aa = a.var1a[i] + '_AA'
+    temp1 = 'let %s = %s[gt=taxyear@ave]'%(var1aa, a.var1a[i])
+    #temp1 = 'let %s = %s[gt=taxyear@ave]'%(var1aa, var1aaa)
+    #temp1 = 'let %s = %s[gt=taxyear@lin]'%(var1aa, var1aaa)
+    a.var1a[i] = var1aa
+    runF(temp1)
+
+    a.var1a[i] = var1aa
+
+# class_SUBSET_REGION():
+class SUBSET_REGION():
+  #== def___init__
+  def __init__(self):
+
+    ### self.ferretCmd = '/home/bytang/install/bin/ferret' 
+    # /mnt/xvdf/data/
+    self.ferretCmd = '/home/svc/install/bin/ferret' 
+
+    self.clipL = 0.02
+    self.clipR = 0.02
+
+    self.ferretMem = 100
+    self.isDiffPlot = 0
+
+    self.inFile = '' 
+    self.inFile2 = '' 
+#   self.inFileBU = '' 
+#   self.netcdfFile = '' 
+#   self.netcdfDirRemote = '' 
+#   self.pngFile = '' 
+#   self.pdfFile = '' 
+#   self.lockFile = '' 
+#
+#   self.isCoastline = 1 
+#   self.regionName = '' 
+#   self.dataName = '' 
+#   self.dateStr = '' 
+#
+#   self.regionTitle = 'same' 
+#   self.dataTitle = 'same' 
+#   self.dateTitle = 'same' 
+#
+#   self.offset = 0.0 
+#
+
+    if 0:
+      self.lon1S = -10.5
+      self.lon1E = 20.3
+      #self.dLon = 1.0
+
+    if 0:
+      self.lon1S = -180.0
+      self.lon1E = 180.0
+      #self.dLon = 1.0
+  
+    if 0:
+      self.lat1S = -70.1
+      self.lat1E = -20.9
+      #self.dLat = 1.0
+
+    if 1:
+      self.lon1S = -180.0
+      self.lon1E = 180.0
+
+    if 1:
+      self.lat1S = -80.0
+      self.lat1E =  80.0
+
+#
+    if 1:
+      self.center1 = 'ukmo'  # not used ?
+      # model1 -- a list of files or wildcards?
+      self.model1  = 'hadgem2-a'
+      self.varName1='ts'
+
+    if 0:
+      self.center2 = 'giss'
+      self.model2  = 'e2-r'
+      #self.varName2='rsdt'
+      self.varName2='ts'
+
+    if 1:
+      self.center2 = 'gfdl'
+      #self.model2  = 'esm2g'
+      self.model2  = 'cm3'
+      #self.varName2='rsdt'
+      self.varName2='ta'  # working
+      self.varName2='clw' # not working
+      self.varName2='lai' # not working
+
+    if 0:
+      self.center2 = 'ukmo'
+      self.model2  = 'hadgem2-a'
+      self.varName2='ts'
+      #self.varName2='cli'
+
+    self.nDim = 3
+
+    self.presS = 3000
+    self.presE = 3000
+
+    self.yearS = 1990
+    self.yearE = 1991
+
+    self.monthS = 1
+    self.monthE = 1
+
+    self.dayS = 15
+    self.dayE = 15
+
+    self.nSample = 5000
+
+    self.outDir = '.'
+  
+    self.noData = None
+
+  #== def_derived
+  def derived(self):
+    pass
+
+  # def_noDataExit()
+  def noDataExit(self, msg):
+    print("No Data !!!")
+    print(msg)
+    sys.exit(1)
+
+  # def_getUnits(self):
+  def getUnits(self ):
+    self.units = []
+    for ii in range(self.nData):
+      nc1 = Dataset(self.fList[ii][0], 'r')
+      data = nc1.variables[self.var1[ii]]
+      try:
+        self.units.append(  data.units )
+      except:
+        print((traceback.format_exc())) 
+        self.units.append(  ' ' )
+     
+      nc1.close()
+
+  def setAxisLim(self, ncFile, varName):
+    # open file
+    nc1 = Dataset(ncFile, 'r')
+
+    # read time
+    data = nc1.variables[varName]
+    dims = data.dimensions
+
+    lonName = dims[-1]
+    lon1 = nc1.variables[lonName]
+    self.lonS = [lon1.min(),] * self.nData
+    self.lonE = [lon1.max(),] * self.nData
+
+    latName = dims[-1]
+    lat1 = nc1.variables[latName]
+    self.latS = [lat1.min(),] * self.nData
+    self.latE = [lat1.max(),] * self.nData
+
+    timeName = dims[-1]
+    time1 = nc1.variables[timeName]
+    self.timeS = [time1.min(),] * self.nData
+    self.timeE = [time1.max(),] * self.nData
+
+  # def_checkTime   not used
+  def checkTime(self, ncFile, varName):
+    # open file
+    nc1 = Dataset(ncFile, 'r')
+
+    # read time
+    data = nc1.variables[varName]
+    dims = data.dimensions
+    timeName = dims[0]
+    time1 = nc1.variables[timeName]
+
+    tS = nC4.num2date(time1[0], time1.units)
+    tE = nC4.num2date(time1[-1], time1.units)
+
+    tNumS = nC4.date2num(datetime.datetime(self.yearS, self.monthS, self.dayS, 0,0,0), time1.units)
+    tNumE = nC4.date2num(datetime.datetime(self.yearE, self.monthE, self.dayE, 0,0,0), time1.units)
+
+    if tNumS<time1[0]:
+      self.yearS = tS.year
+      self.monthS = tS.month
+      self.dayS = tS.day
+      print('start time changed to: %d-%2d-%2d'%(self.yearS, self.monthS, self.dayS))
+
+
+    if tNumE>time1[-1]:
+      self.yearE = tE.year
+      self.monthE = tE.month
+      self.dayE = tE.day
+      print('  end time changed to: %d-%2d-%2d'%(self.yearE, self.monthE, self.dayE))
+
+    nc1.close()
+
+  # def_getOpenDatasetStr(self);
+  def getOpenDatasetStr(self):
+    self.fList = []
+    self.openStr = []
+    ii = 0
+    print('yyyy model1:', end=' ')
+    print(self.model1)
+    for mo in self.model1:
+      ii += 1
+      #-- get_file_list
+      if mo.find('*')>-1:
+        fList = glob.glob( mo )
+      else:
+        fList = [mo, ]
+
+      self.fList.append(  fList )
+
+      print('yyyy fList:', end=' ')
+      print(fList)
+
+      #-- load_str
+      if len(fList)>1:
+        ff = ''
+        for f1 in fList:
+          ff += f1 + ', '
+        ff = ff[:-2]
+
+        temp1 = str('def data/agg/t dd%d=%s'%(ii,ff))
+
+      else:
+        temp1 = str('use "%s"'%fList[0])
+      print('openStr: ',  temp1)
+      self.openStr.append(temp1)
+
+  # def_getAxis3D(self, i):
+  def getAxis3D(self, i):
+    self.axis3D = ''
+    #if self.lonMethod[i]==3:
+    if self.lonMethod[i]>1:
+      self.axis3D = self.axis3D + 'x'
+
+    #if self.latMethod[i]==3:
+    if self.latMethod[i]>1:
+      self.axis3D = self.axis3D + 'y'
+
+    #if self.presMethod[i]==3:
+    if self.presMethod[i]>1:
+      self.axis3D = self.axis3D + 'z'
+
+    #if self.timeMethod[i]==3:
+    if self.timeMethod[i]>1:
+      self.axis3D = self.axis3D + 't'
+
+  # def_getSubsetIndex2a(self):  # set region, include axisMethod=2,4
+  def getSubsetIndex2a(self, i):
+    indexStr = ''
+    if self.lonMethod[i] in (2,3,4):
+      lonStr = '/x=%.2f:%.2f'%(self.lonS[i], self.lonE[i])
+      indexStr += lonStr
+
+    if self.latMethod[i] in (2,3,4):
+      latStr = '/y=%.2f:%.2f'%(self.latS[i], self.latE[i])
+      indexStr += latStr
+
+    if self.presMethod[i] in (2,3,4):
+      presStr = '/z=%.2f:%.2f'%(self.presS[i], self.presE[i])
+      indexStr += presStr
+
+    if self.timeMethod[i] in (2,3,4):
+      timeStr = '/t="%02d-%s-%04d":"%02d-%s-%04d"' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i], self.dayE[i], num2month[self.monthE[i]], self.yearE[i])
+      indexStr += timeStr
+
+    return indexStr
+
+  # def_getSubsetIndex2(self):  # set region, for axismethod=3
+  def getSubsetIndex2(self, i):
+    indexStr = ''
+    if self.lonMethod[i]==3:
+      lonStr = '/x=%.2f:%.2f'%(self.lonS[i], self.lonE[i])
+      indexStr += lonStr
+
+    if self.latMethod[i]==3:
+      latStr = '/y=%.2f:%.2f'%(self.latS[i], self.latE[i])
+      indexStr += latStr
+
+    if self.presMethod[i]==3:
+      presStr = '/z=%.2f:%.2f'%(self.presS[i], self.presE[i])
+      indexStr += presStr
+
+    if self.timeMethod[i]==3:
+      timeStr = '/t="%02d-%s-%04d":"%02d-%s-%04d"' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i], self.dayE[i], num2month[self.monthE[i]], self.yearE[i])
+      indexStr += timeStr
+
+    return indexStr
+
+  # def_getSubsetIndex3(self):  # used in 'define var'. Was overwriten, and not used.
+  def getSubsetIndex3(self, i):
+    indexStr = ''
+    if self.lonMethod[i]<3:
+      lonStr = ''
+      if self.lonMethod[i]==1:
+        lonStr = 'x=%.2f,'%(self.lonS[i])
+      elif self.lonMethod[i]==2:
+        #lonStr = 'x=%.2f:%.2f@ave,'%(self.lonS[i], self.lonE[i])
+        lonStr = 'x=%.2f:%.2f,'%(self.lonS[i], self.lonE[i])
+      indexStr += lonStr
+
+    if self.latMethod[i]<3:
+      latStr = ''
+      if self.latMethod[i]==1:
+        latStr = 'y=%.2f,'%(self.latS[i])
+      elif self.latMethod[i]==2:
+        #latStr = 'y=%.2f:%.2f@ave,'%(self.latS[i], self.latE[i])
+        latStr = 'y=%.2f:%.2f,'%(self.latS[i], self.latE[i])
+      indexStr += latStr
+
+    if self.presMethod[i]<3:
+      presStr = ''
+      if self.presMethod[i]==1:
+        presStr = 'z=%.2f,'%(self.presS[i])
+      elif self.presMethod[i]==2:
+        #presStr = 'z=%.2f:%.2f@ave,'%(self.presS[i], self.presE[i])
+        presStr = 'z=%.2f:%.2f,'%(self.presS[i], self.presE[i])
+      indexStr += presStr
+
+    if self.timeMethod[i]<3:
+      #zzzz
+      if self.isGetFromNc:
+        #timeStr = 't=@ave,'
+        pass
+
+      else:
+        timeStr = ''
+        if self.timeMethod[i]==1:
+          timeStr = 't="%02d-%s-%04d",' \
+            %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i])
+        elif self.timeMethod[i]==2:
+          #timeStr = 't="%02d-%s-%04d":"%02d-%s-%04d"@ave,' \
+          timeStr = 't="%02d-%s-%04d":"%02d-%s-%04d",' \
+            %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i], 
+              self.dayE[i], num2month[self.monthE[i]], self.yearE[i])
+      indexStr += timeStr
+      #indexStr = indexStr[:-1]
+    return indexStr
+
+  # def_getSubsetIndex3a(self):  # include all  axisMethod==1,2,3,4
+  def getSubsetIndex3a(self, i, xyzt='xyzt'):
+    indexStr = ''
+    if 'x' in xyzt:
+      lonStr = ''
+      if self.lonMethod[i]==1:
+        lonStr = 'x=%.2f,'%(self.lonS[i])
+      elif self.lonMethod[i] in (2,3,4):
+        #lonStr = 'x=%.2f:%.2f@ave,'%(self.lonS[i], self.lonE[i])
+        lonStr = 'x=%.2f:%.2f,'%(self.lonS[i], self.lonE[i])
+      indexStr += lonStr
+
+    if 'y' in xyzt:
+      latStr = ''
+      if self.latMethod[i]==1:
+        latStr = 'y=%.2f,'%(self.latS[i])
+      elif self.latMethod[i] in (2,3,4):
+        #latStr = 'y=%.2f:%.2f@ave,'%(self.latS[i], self.latE[i])
+        latStr = 'y=%.2f:%.2f,'%(self.latS[i], self.latE[i])
+      indexStr += latStr
+
+    if 'z' in xyzt:
+      presStr = ''
+      if self.presMethod[i]==1:
+        presStr = 'z=%.2f,'%(self.presS[i])
+      elif self.presMethod[i] in (2,3,4):
+        #presStr = 'z=%.2f:%.2f@ave,'%(self.presS[i], self.presE[i])
+        presStr = 'z=%.2f:%.2f,'%(self.presS[i], self.presE[i])
+      indexStr += presStr
+
+    if 't' in xyzt:
+      timeStr = ''
+      if self.timeMethod[i]==1:
+        timeStr = 't="%02d-%s-%04d",' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i])
+      elif self.timeMethod[i] in (2,3,4):
+        #timeStr = 't="%02d-%s-%04d":"%02d-%s-%04d"@ave,' \
+        timeStr = 't="%02d-%s-%04d":"%02d-%s-%04d",' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i], 
+            self.dayE[i], num2month[self.monthE[i]], self.yearE[i])
+
+      indexStr += timeStr
+
+    #indexStr = indexStr[:-1]
+    return indexStr
+
+  # def_getSubsetIndex3b(self):  # used in 'define var'. only for axisMethod=1
+  def getSubsetIndex3(self, i):
+    indexStr = ''
+    if self.lonMethod[i]<3:
+      lonStr = ''
+      if self.lonMethod[i]==1:
+        lonStr = 'x=%.2f,'%(self.lonS[i])
+      indexStr += lonStr
+
+    if self.latMethod[i]<3:
+      latStr = ''
+      if self.latMethod[i]==1:
+        latStr = 'y=%.2f,'%(self.latS[i])
+      indexStr += latStr
+
+    if self.presMethod[i]<3:
+      presStr = ''
+      if self.presMethod[i]==1:
+        presStr = 'z=%.2f,'%(self.presS[i])
+      indexStr += presStr
+
+    if self.timeMethod[i]<3:
+      timeStr = ''
+      if self.timeMethod[i]==1:
+        timeStr = 't="%02d-%s-%04d",' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i])
+      indexStr += timeStr
+
+      #indexStr = indexStr[:-1]
+    return indexStr
+
+  # def_getSubsetIndex4(self):
+  # for time only, used in anaomaly
+  def getSubsetIndex4(self, i):
+    if self.timeMethod[i]==3:
+      timeStr = 't="%02d-%s-%04d":"%02d-%s-%04d"' \
+          %(self.dayS[i], num2month[self.monthS[i]], self.yearS[i], self.dayE[i], num2month[self.monthE[i]], self.yearE[i])
+      indexStr = timeStr
+    return indexStr
+
+  # def_getSubsetIndex5(self):  # for ave and sum
+  def getSubsetIndex5(self,i):  # for ave and sum
+    indexStr = ''
+
+    lonStr = ''
+    if self.lonMethod[i]==2:
+      lonStr = 'x=@ave,'
+    elif self.lonMethod[i]==4:
+      lonStr = 'x=@din,'
+    indexStr += lonStr
+
+    latStr = ''
+    if self.latMethod[i]==2:
+      latStr = 'y=@ave,'
+    elif self.latMethod[i]==4:
+      latStr = 'y=@din,'
+    indexStr += latStr
+
+    presStr = ''
+    if self.presMethod[i]==2:
+      presStr = 'z=@ave,'
+    elif self.presMethod[i]==4:
+      presStr = 'z=@din,'
+    indexStr += presStr
+
+    timeStr = ''
+    if self.timeMethod[i]==2:
+      timeStr = 't=@ave,'
+    elif self.timeMethod[i]==4:
+      timeStr = 't=@din,'
+    indexStr += timeStr
+
+    indexStr = indexStr[:-1]
+    return indexStr
+
+  # def_corr2 #
+  def corr2(self, ncFile1, ncFile2, varName1='DATA1', varName2='DATA2'):
+
+    # open file
+    nc1 = Dataset(ncFile1, 'r')
+    ncVar1 = nc1.variables[varName1]
+    dims1 = ncVar1.dimensions
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+
+    if self.nData==2:
+      nc2 = Dataset(ncFile2, 'r')
+      ncVar2 = nc2.variables[varName2]
+      dims2 = ncVar2.dimensions
+      lon2 = nc2.variables[dims2[-1]][:]
+      lat2 = nc2.variables[dims2[-2]][:]
+
+    else:
+      ncVar2 = ncVar1
+      dims2 = dims1
+      lon2 = lon1
+      lat2 = lat1
+
+    print(ncVar1.shape)
+
+    nMonth = ncVar1.shape[0]
+ 
+    # loop over time
+    monthCount = 0
+    for iMonth in range(self.laggedTime, nMonth):
+      monthCount += 1
+      a1 = ncVar1[iMonth-self.laggedTime]
+      if self.nData==1 and self.laggedTime==0:
+        a2 = a1.copy()
+      else:
+        a2 = ncVar2[iMonth]
+
+      if len(a1.shape)>2:
+        a1 = np.squeeze( a1 )
+
+      if len(a2.shape)>2:
+        a2 = np.squeeze( a2 )
+
+      if self.nData==2:
+        # sometimes the 2 data may not have the save shape
+        if (a1.shape[-1] != a2.shape[-1]):
+          min1 = min(a1.shape[-1], a2.shape[-1]) 
+          a1 = a1[:, :min1] 
+          a2 = a2[:, :min1] 
+
+        if (a1.shape[0] != a2.shape[0]):
+          min1 = min(a1.shape[0], a2.shape[0]) 
+          a1 = a1[:min1,:] 
+          a2 = a2[:min1,:] 
+
+      # remove the invalid data
+      if 1:
+        temp1 = np.ma.arange(5)
+        valid1 = np.ones( a1.shape ) > 0
+        valid2 = np.ones( a1.shape ) > 0
+        if type(a1) == type(temp1):
+          if a1.mask is not None:
+            valid1 = ~( a1.mask )
+        if type(a2) == type(temp1):
+          if a2.mask is not None:
+            valid2 = ~( a2.mask )
+
+        valid = valid1 & valid2
+        #aa1 = np.ones(a1.shape)
+        aa = np.ones(a1.shape)
+        aa[~valid] = 0
+
+        a1 *= aa
+        a2 *= aa
+
+      if monthCount==1:
+        nn = aa
+        xb = a1
+        yb = a2
+        xyb = a1*a2
+        xxb = a1*a1
+        yyb = a2*a2
+      else:
+        nn += aa
+        xb += a1
+        yb += a2
+        xyb += a1*a2
+        xxb += a1*a1
+        yyb += a2*a2
+        
+      if 0:
+        print('yb: ')
+        print(yb.min(), yb.max(), yb.mean(), yb.std())
+
+    nc1.close()
+    if self.nData==2:
+      nc2.close()
+
+    nn = nn.astype('f')
+
+    nn0 = nn<=3
+
+    nn[nn0] = 1.0
+
+    print('nn0: %% of not valid: %d / %d ' %( nn0.sum(), np.prod( nn.shape)))
+
+    # calc corr
+    xb /= nn
+    yb /= nn
+    xyb /= nn
+    xxb /= nn
+    yyb /= nn
+
+    if 0:
+      print('xb: ')
+      print(xb.min(), xb.max(), xb.mean(), xb.std())
+
+      print('yb: ')
+      print(yb.min(), yb.max(), yb.mean(), yb.std())
+
+      print('xyb: ')
+      print(xyb.min(), xyb.max(), xyb.mean(), xyb.std())
+
+      print('xxb: ')
+      print(xxb.min(), xxb.max(), xxb.mean(), xxb.std())
+
+      print('yyb: ')
+      print(yyb.min(), yyb.max(), yyb.mean(), yyb.std())
+
+    temp1 = np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
+    std1 = np.std(temp1)
+    print(('std = %f'%std1)) 
+    #small1 = 1e-10
+    small1 = 0.000001 * std1
+    temp2 = temp1<small1
+    print('<1e-10: %% of not valid %d / %d '%(temp2.sum(), np.prod(temp2.shape)))
+    temp1[temp2] = 1.0
+
+    temp3 = (xyb - xb*yb)
+    corrxy = np.ma.array(temp3/temp1)
+    corrxy[temp2] = np.ma.masked
+    corrxy[nn0] = np.ma.masked
+
+    print('corrxy: min, max, mean, std: ')
+    print(corrxy.min(), corrxy.max(), corrxy.mean(), corrxy.std())
+
+    title1 = 'corrcoef' 
+    if 1:
+      if a.nData==1:
+        varName2 = a.var1[0]
+      else:
+        varName2 = a.var1[1]
+
+      title1 = 'corrcoef(%s[t-%d] , %s[t]). # of month: %d'\
+          %( a.var1[0], 
+          a.laggedTime, 
+          varName2,
+          monthCount)
+
+    # save corr data
+    if 1:
+      # lon1 and lon2 sometimes differ.
+      if len(lon1) < len(lon2):
+        lon12 = lon1
+      else: 
+        lon12 = lon2
+
+      if len(lat1) < len(lat2):
+        lat12 = lat1
+      else: 
+        lat12 = lat2
+
+      sys.path.append('../util')
+      corrxya = corrxy.filled(-9999.0)
+
+      fn = '%s/data.nc'%self.outDir
+
+      #NC1.save2nc(corrxya, ncfile=fn, name='DATA', 
+      NC1.save2nc(corrxya, ncfile=fn, name='corr', 
+        newfile=1,
+        format='NETCDF3_CLASSIC',
+        missing_value=-9999.0,
+        axisorder='yx', axislib=NC1.axislib0, axisarray=[lat12, lon12])
+
+    # plot_using_ferret
+    if 1:
+      temp1 = 'use "%s"'%(fn)
+      runF(temp1)
+      
+      temp1 = str( 'palette %s'%a.colorMap[0] )
+      runF(temp1)
+
+      if len(a.ferretLevel[0])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[0])
+      else:
+        vminStr = ''
+
+      temp1 =  'shade%s/title="%s" corr'%(vminStr, title1)
+      runF(temp1)
+
+      if a.isMap==1:
+        temp1 = 'go land'
+        runF(temp1)
+
+      #temp1 = 'frame /file="%s"'%figFile 
+      #temp1 = 'frame/xpixel=3000/file="%s"'%a.figFile 
+      temp1 = 'frame/xpixel=800/file="%s"'%a.figFile 
+      runF(temp1)
+
+    # using mapPlot
+    if 0:
+      map1 = cmac.MAPPLOT()
+      map1.data1 = corrxy 
+      map1.lon1 = lon1 
+      map1.lat1 = lat1 
+      map1.vmin1 = -1.0 
+      map1.vmax1 = 1.0 
+      map1.title = title1
+      map1.xLabel = 'Longitude'
+      map1.yLabel = 'Latitude'
+      map1.plotH = 6.0
+      map1.outFile = a.figFile
+
+      map1.plot()
+
+  # def_scatterPlot3 # this is one used
+  def scatterPlot3(self, ncFile1, ncFile2, varName1='DATA1', varName2='DATA2'):
+    import matplotlib 
+    matplotlib.use('Agg')  
+    import matplotlib.pylab as Mat
+    Mat.ioff()
+
+    nBin = 30 
+    nBin1 = 40 
+
+    self.clipL = 0.02
+    self.clipR = 0.02
+
+    # open file
+    nc1 = Dataset(ncFile1, 'r')
+    nc2 = Dataset(ncFile2, 'r')
+
+    ncVar1 = nc1.variables[varName1]
+    ncVar2 = nc2.variables[varName2]
+
+    print(ncVar1.shape)
+
+    nMonth = ncVar1.shape[0]
+ 
+    # how many points to take each month
+    nSampleM = int(self.nSample/nMonth + 1)
+
+    # hold data for scatter plot
+    dataAll1 = []
+    dataAll2 = []
+
+    histAll1 = []
+    histAll2 = []
+
+    binsAll1 = []
+    binsAll2 = []
+
+    # loop over time
+    monthCount = 0
+    for iMonth in range(nMonth):
+      monthCount += 1
+      a1 = ncVar1[iMonth]
+      a2 = ncVar2[iMonth]
+
+      # sometimes the 2 data may not have the save shape
+      if a1.shape[-1] != a2.shape[-1]:
+        min1 = min(a1.shape[-1], a2.shape[-1]) 
+        a1 = a1[:, :min1] 
+        a2 = a2[:, :min1] 
+
+      if a1.shape[0] != a2.shape[0]:
+        min1 = min(a1.shape[0], a2.shape[0]) 
+        a1 = a1[:min1,:] 
+        a2 = a2[:min1,:] 
+
+      # remove the invalid data
+      temp1 = np.ma.arange(5)
+      valid = None
+      if type(a1) == type(temp1):
+        if a1.mask is not None:
+          valid1 = ~( a1.mask )
+          valid = valid1
+      if type(a2) == type(temp1):
+        if a2.mask is not None:
+          valid2 = ~( a2.mask )
+          if valid is not None:
+            valid = valid & valid2
+          else:
+            valid = valid2
+
+      if valid is not None:
+        aa1 = a1[valid]
+        aa2 = a2[valid]
+      else:
+        aa1 = a1
+        aa2 = a2
+
+      aa1 = aa1.ravel()
+      aa2 = aa2.ravel()
+
+      # calc hist
+      hist1, bins1 = np.histogram(aa1, bins=nBin1)
+      hist2, bins2 = np.histogram(aa2, bins=nBin1)
+
+      histAll1.append(hist1)
+      histAll2.append(hist2)
+
+      bins1 = (bins1[1:] + bins1[:-1]) / 2.0
+      bins2 = (bins2[1:] + bins2[:-1]) / 2.0
+
+      binsAll1.append(bins1)
+      binsAll2.append(bins2)
+
+      # only use a subset for scatter plot
+      if len(aa1) > nSampleM:
+        ind2 = np.random.permutation(len(aa1))[:nSampleM]
+        aaa1 = aa1[ind2]
+        aaa2 = aa2[ind2]
+      else:
+        aaa1 = aa1
+        aaa2 = aa2
+
+      dataAll1.append(aaa1)
+      dataAll2.append(aaa2)
+        
+    nc1.close()
+    nc2.close()
+
+    # concatenate data  for scatter plot
+    aaa1 = np.concatenate( dataAll1, axis=0 )
+    aaa2 = np.concatenate( dataAll2, axis=0 )
+
+    # clip ends
+    if self.var1[0]==self.var1[1]:
+      aaa12 = np.concatenate( (aaa1, aaa2), axis=0 )
+      min1, max1 = clipEnd(aaa12, np.ones( (len(aaa12),)), self.clipL, self.clipR)
+      min2, max2 = min1, max1
+
+    else:
+      min1, max1 = clipEnd(aaa1, np.ones( (len(aaa1),)), self.clipL, self.clipR)
+      min2, max2 = clipEnd(aaa2, np.ones( (len(aaa2),)), self.clipL, self.clipR)
+
+    dd = (max1-min1)*0.02
+    min1a = min1 - dd
+    max1a = max1 + dd
+
+    dd = (max2-min2)*0.02
+    min2a = min2 - dd
+    max2a = max2 + dd
+
+    # figure
+    fig1 = Mat.figure(figsize=(10,25))
+    Mat.clf()
+
+    # plot scatter plot
+    Mat.subplot(3,1,1)
+    #fig1.tight_layout()
+
+    Mat.scatter(aaa1, aaa2)
+    Mat.ylim(min2a,max2a)
+    Mat.xlim(min1a,max1a)
+    if self.var1[0]==self.var1[1]:
+      #Mat.hold('on')
+      Mat.plot([min1, max1], [min1, max1], 'r-')
+      #Mat.hold('off')
+
+    Mat.xlabel('%s (%s)'%(self.var1[0], self.units[0]))
+    Mat.ylabel('%s (%s)'%(self.var1[1], self.units[1]))
+
+    # corr
+    corr1 = np.corrcoef(aaa1,aaa2) 
+    print('corr1:  ', end=' ')
+    print(corr1.shape)
+    print(corr1)
+    #Mat.title('corr coef = %.4f'%(corr1[0,1]))
+    Mat.title('corr coef = %.4f.  Period: %d/%02d-%d/%02d.  Number of random points: %d'%(corr1[0,1], 
+        self.yearS[0], self.monthS[0],
+        self.yearE[0], self.monthE[0],
+        self.nSample, 
+        ))
+
+
+    bins12 = nBin
+
+    if 0:
+      # concatenate data for histogram
+      hist1 = np.concatenate( histAll1, axis=0 ).astype('f')
+      hist2 = np.concatenate( histAll2, axis=0 ).astype('f')
+      center1 = np.concatenate( binsAll1, axis=0 )
+      center2 = np.concatenate( binsAll2, axis=0 )
+
+
+      print('hist1__:  center1')
+      print((center1.shape))
+      print((center1.min()))
+      print((center1.max()))
+      print((center1.std()))
+      print('hist1__:  hist1')
+      print((hist1.shape))
+      print((hist1.min()))
+      print((hist1.max()))
+      print((hist1.std()))
+
+    # histogram 1
+    axes2 = Mat.subplot(3,1,2)
+    if 0:
+      n1, bins1a, patches1 = Mat.hist(center1, bins=bins12, range=(min1,max1), 
+                weights=hist1/hist1.sum(),
+                color='red', histtype='bar', rwidth=0.8)
+    if 1:
+      n1, bins1a, patches1 = Mat.hist(aaa1, bins=bins12, range=(min1,max1), 
+                color='red', histtype='bar', rwidth=0.8)
+    Mat.ylabel('probability density distribution')
+    Mat.title('%s. Histogram(%d/%02d - %d/%02d)'%( 
+        self.var1[0], 
+        self.yearS[0], self.monthS[0],
+        self.yearE[0], self.monthE[0],
+        ))
+    if self.var1[0]==self.var1[1]:
+      pass
+      #Mat.ylim(0, histMax*1.1)
+
+    # histogram 2
+    axes3 = Mat.subplot(3,1,3)
+    if 0:
+      n2, bins2a, patches2 = Mat.hist(center2, bins=bins12, range=(min2,max2),
+                weights=hist2/hist2.sum(),
+                color='blue', histtype='bar', rwidth=0.8)
+    if 1:
+      n2, bins2a, patches2 = Mat.hist(aaa2, bins=bins12, range=(min2,max2),
+                color='blue', histtype='bar', rwidth=0.8)
+    Mat.ylabel('probability density distribution')
+    Mat.title('%s. Histogram(%d/%02d - %d/%02d)'%( 
+        self.var1[1], 
+        self.yearS[1], self.monthS[1],
+        self.yearE[1], self.monthE[1],
+        ))
+    if self.var1[0]==self.var1[1]:
+      histMax = max(n1.max(), n2.max())
+      Mat.ylim(0, histMax*1.1)
+
+      Mat.axes(axes2)
+      Mat.ylim(0, histMax*1.1)
+
+    # output png file
+    print('save scatter plot.')
+    Mat.savefig(a.figFile, dpi=100)
+
+  # def_diffPlot4   # this is one used
+  def diffPlot4(self, tempFile1, tempFile2):
+    # load data
+    nc1 = Dataset(tempFile1, 'r')
+    data1a = nc1.variables['DATA1']
+    dims1 = data1a.dimensions
+    data1 = data1a[:]
+    if len(data1.shape)==3:
+      data1 = data1[0]
+
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nc2 = Dataset(tempFile2, 'r')
+    data2a = nc2.variables['DATA2']
+    dims2 = data2a.dimensions
+    data2 = data2a[:]
+    if len(data2.shape)==3:
+      data2 = data2[0]
+
+    lon2 = nc2.variables[dims2[-1]][:]
+    lat2 = nc2.variables[dims2[-2]][:]
+    nc2.close()
+
+    # sometimes the 2 data may not have the save shape
+    nLon = min( len(lon1), len(lon2) )
+    nLat = min( len(lat1), len(lat2) )
+    if len(lon1)>nLon or len(lat1)>nLat:
+      lon1 = lon1[:nLon]
+      lat1 = lat1[:nLat]
+      data1 = data1[:nLat, :nLon]
+
+    if len(lon2)>nLon or len(lat2)>nLat:
+      lon2 = lon2[:nLon]
+      lat2 = lat2[:nLat]
+      data2 = data2[:nLat, :nLon]
+
+    # min/max
+    if self.varName1==self.varName2:
+      min1 = min2 = min(data1.min(), data2.min())
+      max1 = max2 = max(data1.max(), data2.max())
+    else:
+      min1 = data1.min()
+      max1 = data1.max()
+      min2 = data2.min()
+      max2 = data2.max()
+
+    cmap1 = Mat.get_cmap('gist_rainbow_r')
+    # m.pcolor(lon1[a], lat1[a], SST1[0, a, a], cmap=cmap1)
+
+    # plot 1
+    fig1 = Mat.figure(figsize=(10,16))
+    Mat.clf()
+
+    Mat.subplot(3,1,1)
+    fig1.tight_layout()
+    m1 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+    temp1 = m1.pcolor(lon1, lat1, data1, cmap=cmap1, vmin=min1, vmax=max1)
+    temp1 = m1.drawcoastlines()
+    #change_labels(Mat.gca())
+    Mat.colorbar()
+    Mat.title('%s_%s:%s (%s).  mean(%d/%02d - %d/%02d )'%(self.center1, self.model1, 
+        self.varName1, self.units1,
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
+
+    # plot 2
+    Mat.subplot(3,1,2)
+    m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+    temp1 = m2.pcolor(lon2, lat2, data2, cmap=cmap1, vmin=min2, vmax=max2)
+    temp1 = m2.drawcoastlines()
+    #change_labels(Mat.gca())
+    Mat.colorbar()
+    #Mat.title('%s_%s:%s (%s)'%(self.center2, self.model2, self.varName2, self.units2))
+    Mat.title('%s_%s:%s (%s).  mean(%d/%02d - %d/%02d )'%(self.center2, self.model2, 
+        self.varName2, self.units2,
+        self.yearS, self.monthS,
+        self.yearE, self.monthE,
+        ))
+
+    # plot diff
+    #if self.varName1==self.varName2:
+    if 1:
+      ax1 = Mat.subplot(3,1,3)
+      m2 = Basemap(self.lon1S, self.lat1S, self.lon1E, self.lat1E, resolution='c', suppress_ticks=False)
+
+      temp2 = data2 - data1
+      min2 = temp2.min()      
+      max2 = temp2.max()      
+      min3 = data1.min() 
+      max3 = data1.max() 
+      
+      if (max2-min2)/(max3-min3)>1.0e-6:
+        temp1 = m2.pcolor(lon2, lat2, data2-data1, cmap=cmap1  )
+      else:
+        Mat.axes(ax1)
+        Mat.text(\
+              .5, \
+              .5, \
+              'The two fields are identical', \
+              size=20, \
+              transform=ax1.transAxes, \
+              ha='center')
+
+      temp1 = m2.drawcoastlines()
+      #change_labels(Mat.gca())
+      Mat.colorbar()
+      Mat.title('the difference: (%s_%s:%s) - (%s_%s:%s)'\
+        %(a.center2, a.model2, a.varName2, a.center1, a.model1, a.varName1))
+
+    Mat.subplots_adjust(hspace=0.15)
+    Mat.savefig(a.figFile, dpi=100)
+
+  # def_getFromNc(self):  not used
+  def getFromNc(self):
+    self.fList[0]
+    nc = Dataset(self.fList[0])
+    var9 = nc.variables['DATA']
+    #dim9 = var9.dimensions
+     
+    nc.close()
+
+  # def_setAspect__(self):
+  def setAspect(self):
+    #-- aspect_ratio
+    import math
+
+    if self.isMap==1:
+      dLat = float(self.latE[0] - self.latS[0])
+      mLat = (self.latE[0] + self.latS[0])/2.0
+      dLon = float(self.lonE[0] - self.lonS[0]) * math.cos(mLat/180.0*math.pi)
+
+      if dLat/dLon>5 :
+        dLon=dLat*0.2
+      if dLat/dLon<0.2 :
+        dLon=dLat*5.0
+
+    else:
+      dLat = 100.0
+      dLon = 100.0
+
+    aspect1 = dLat/dLon
+    print('aspect1: ', end=' ')
+    print(aspect1)
+
+    marginL = marginR = marginD = marginU = 0.2 * max(dLon, dLat)
+    #marginL = 0.2 * dLon
+    #marginR = 0.2 * dLon
+    #marginD = 0.3 * dLat
+    #marginU = 0.2 * dLat
+    hor = marginL + dLon + marginR
+    vert = marginD + dLat + marginU
+
+    #-- set_viewport
+    # to remove the thin white lines. A work around to a Ferret problem
+    temp1 = 'set window/outline=0.5/aspect=%.3f '%(vert/hor)
+    runF(temp1)
+
+    temp1 = 'def vi/axes/xli=%.4f,%.4f/yli=%.4f,%.4f newasp'%(\
+marginL/hor, \
+(marginL+dLon)/hor, \
+marginD/vert, \
+(marginD+dLat)/vert)
+    runF(temp1)
+
+    temp1 = 'set vi newasp'
+    runF(temp1)
+
+  # def_corr #
+  def corr(self, ncFile1, ncFile2, varName1='DATA1', varName2='DATA2'):
+    # open file
+    nc1 = Dataset(ncFile1, 'r')
+    nc2 = Dataset(ncFile2, 'r')
+
+    ncVar1 = nc1.variables[varName1]
+    ncVar2 = nc2.variables[varName2]
+
+    dims1 = ncVar1.dimensions
+    dims2 = ncVar2.dimensions
+
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+
+    lon2 = nc2.variables[dims2[-1]][:]
+    lat2 = nc2.variables[dims2[-2]][:]
+
+    print(ncVar1.shape)
+
+    nMonth = ncVar1.shape[0]
+ 
+    # loop over time
+    monthCount = 0
+    for iMonth in range(self.laggedTime, nMonth):
+      monthCount += 1
+      a1 = ncVar1[iMonth-self.laggedTime]
+      a2 = ncVar2[iMonth]
+
+      if len(a1.shape)>2:
+        a1 = np.squeeze( a1 )
+
+      if len(a2.shape)>2:
+        a2 = np.squeeze( a2 )
+
+      # sometimes the 2 data may not have the save shape
+      if (a1.shape[-1] != a2.shape[-1]):
+        min1 = min(a1.shape[-1], a2.shape[-1]) 
+        a1 = a1[:, :min1] 
+        a2 = a2[:, :min1] 
+
+      if (a1.shape[0] != a2.shape[0]):
+        min1 = min(a1.shape[0], a2.shape[0]) 
+        a1 = a1[:min1,:] 
+        a2 = a2[:min1,:] 
+
+      # remove the invalid data
+      if 1:
+        temp1 = np.ma.arange(5)
+        valid1 = np.ones( a1.shape ) > 0
+        valid2 = np.ones( a1.shape ) > 0
+        if type(a1) == type(temp1):
+          if a1.mask is not None:
+            valid1 = ~( a1.mask )
+        if type(a2) == type(temp1):
+          if a2.mask is not None:
+            valid2 = ~( a2.mask )
+
+        valid = valid1 & valid2
+        #aa1 = np.ones(a1.shape)
+        aa = np.ones(a1.shape)
+        aa[~valid] = 0
+
+        a1 *= aa
+        a2 *= aa
+
+      if monthCount==1:
+        nn = aa
+        xb = a1
+        yb = a2
+        xyb = a1*a2
+        xxb = a1*a1
+        yyb = a2*a2
+      else:
+        nn += aa
+        xb += a1
+        yb += a2
+        xyb += a1*a2
+        xxb += a1*a1
+        yyb += a2*a2
+        
+      if 0:
+        print('yb: ')
+        print(yb.min(), yb.max(), yb.mean(), yb.std())
+
+    nc1.close()
+    nc2.close()
+
+    nn = nn.astype('f')
+
+    nn0 = nn<=3
+
+    nn[nn0] = 1.0
+
+    print('nn0: %% of not valid: %d / %d ' %( nn0.sum(), np.prod( nn.shape)))
+
+    # calc corr
+    xb /= nn
+    yb /= nn
+    xyb /= nn
+    xxb /= nn
+    yyb /= nn
+
+    if 0:
+      print('xb: ')
+      print(xb.min(), xb.max(), xb.mean(), xb.std())
+
+      print('yb: ')
+      print(yb.min(), yb.max(), yb.mean(), yb.std())
+
+      print('xyb: ')
+      print(xyb.min(), xyb.max(), xyb.mean(), xyb.std())
+
+      print('xxb: ')
+      print(xxb.min(), xxb.max(), xxb.mean(), xxb.std())
+
+      print('yyb: ')
+      print(yyb.min(), yyb.max(), yyb.mean(), yyb.std())
+
+    temp1 = np.sqrt( (xxb-xb*xb)*(yyb-yb*yb) )
+    temp2 = temp1<1e-10
+    print('<1e-10: %% of not valid %d / %d '%(temp2.sum(), np.prod(temp2.shape)))
+    temp1[temp2] = 1.0
+
+    temp3 = (xyb - xb*yb)
+    corrxy = np.ma.array(temp3/temp1)
+    corrxy[temp2] = np.ma.masked
+    corrxy[nn0] = np.ma.masked
+
+    print('corrxy: min, max, mean, std: ')
+    print(corrxy.min(), corrxy.max(), corrxy.mean(), corrxy.std())
+
+    title1 = 'corrcoef' 
+    if 1:
+      if a.nData==1:
+        varName2 = a.var1[0]
+      else:
+        varName2 = a.var1[1]
+
+      title1 = 'corrcoef(%s[t-%d] , %s[t]). # of month: %d'\
+          %( a.var1[0], 
+          a.laggedTime, 
+          varName2,
+          monthCount)
+
+    # save corr data
+    if 1:
+      # lon1 and lon2 sometimes differ.
+      if len(lon1) < len(lon2):
+        lon12 = lon1
+      else: 
+        lon12 = lon2
+
+      if len(lat1) < len(lat2):
+        lat12 = lat1
+      else: 
+        lat12 = lat2
+
+      sys.path.append('../util')
+      corrxya = corrxy.filled(-9999.0)
+
+      fn = '%s/data.nc'%self.outDir
+
+      #NC1.save2nc(corrxya, ncfile=fn, name='corr', 
+      NC1.save2nc(corrxya, ncfile=fn, name='DATA', 
+        newfile=1,
+        format='NETCDF3_CLASSIC',
+        missing_value=-9999.0,
+        axisorder='yx', axislib=NC1.axislib0, axisarray=[lat12, lon12])
+
+    # plot_using_ferret
+    if 1:
+      temp1 = 'use "%s"'%(fn)
+      runF(temp1)
+      
+      temp1 = str( 'palette %s'%a.colorMap[0] )
+      runF(temp1)
+
+      if len(a.ferretLevel[0])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[0])
+      else:
+        vminStr = ''
+
+      temp1 =  'shade%s/title="%s" corr'%(vminStr, title1)
+      runF(temp1)
+
+      if a.isMap==1:
+        temp1 = 'go land'
+        runF(temp1)
+
+      temp1 = 'frame/xpixel=3000/file="%s"'%a.figFile 
+      runF(temp1)
+
+    # using mapPlot
+    if 0:
+      map1 = cmac.MAPPLOT()
+      map1.data1 = corrxy 
+      map1.lon1 = lon1 
+      map1.lat1 = lat1 
+      map1.vmin1 = -1.0 
+      map1.vmax1 = 1.0 
+      map1.title = title1
+      map1.xLabel = 'Longitude'
+      map1.yLabel = 'Latitude'
+      map1.plotH = 6.0
+      map1.outFile = figFile
+
+      map1.plot()
+
+    print('figFile: %s'%figFile)
+
+  # def_setAspect__(self):
+  def setAspect(self):
+    #-- aspect_ratio
+    import math
+
+    if self.isMap==1:
+      dLat = float(self.latE[0] - self.latS[0])
+      mLat = (self.latE[0] + self.latS[0])/2.0
+      dLon = float(self.lonE[0] - self.lonS[0]) * math.cos(mLat/180.0*math.pi)
+
+      if dLat/dLon>5 :
+        dLon=dLat*0.2
+      if dLat/dLon<0.2 :
+        dLon=dLat*5.0
+
+    else:
+      dLat = 100.0
+      dLon = 100.0
+
+    aspect1 = dLat/dLon
+    print('aspect1: ', end=' ')
+    print(aspect1)
+
+    marginL = marginR = marginD = marginU = 0.2 * max(dLon, dLat)
+    #marginL = 0.2 * dLon
+    #marginR = 0.2 * dLon
+    #marginD = 0.3 * dLat
+    #marginU = 0.2 * dLat
+    hor = marginL + dLon + marginR
+    vert = marginD + dLat + marginU
+
+    #-- set_viewport
+    # to remove the thin white lines. A work around to a Ferret problem
+    temp1 = 'set window/outline=0.5/aspect=%.3f '%(vert/hor)
+    runF(temp1)
+
+    temp1 = 'def vi/axes/xli=%.4f,%.4f/yli=%.4f,%.4f newasp'%(\
+marginL/hor, \
+(marginL+dLon)/hor, \
+marginD/vert, \
+(marginD+dLat)/vert)
+    runF(temp1)
+
+    temp1 = 'set vi newasp'
+    runF(temp1)
+
+if cr['init_class']       == 1:
+  a = SUBSET_REGION()
+
+if cr['command_arg']       == 1:
+  print('a new run')
+  if len(sys.argv)>1:
+    argv = sys.argv
+    pid = open(argv[1],'rb')
+    argDict = pickle.load(pid)
+    pid.close()
+
+    for k in list(argDict.keys()):
+      temp1 = 'a.' + k + '=argDict[k]'   
+      print('%s: %s'%(k, argDict[k]))
+      exec(temp1)
+
+    # aaaa1
+    a.timeFull = 0
+
+    # others
+    try:
+      a.datasets = a.inputDataFile
+    except:
+      pass
+
+    a.model1 = [str(ii) for ii in a.datasets.split(',')]
+
+    # for user uploaded data
+    for i in range(len(a.model1)):
+      if a.model1[i].find('13.56.67.192')>=0:
+        temp1 = a.model1[i].find('universalPlotting6b')
+        a.model1[i] = \
+        '/home/svc/new_github/CMDA/JPL_CMDA/services/svc/svc/static/' \
+        + a.model1[i][temp1:]
+        print('model1: ', a.model1[0])
+
+    a.nData = len(a.model1)
+    print(('number of datasets: %d'%a.nData))
+
+    a.isGetFromNc = 0  # always set to 0 for now
+    print('a.vars:  "%s"'%a.vars)
+    #try: 
+    if len(a.vars.strip().split())>0:
+      a.var1 = [str(ii) for ii in a.vars.strip().split(',')]
+    #except:
+    else:
+      a.var1 = ['DATA',] * a.nData
+
+    print("wwww var1: ", a.var1)  
+
+    try: 
+    #if len(a.lonS.split(','))>0:
+      a.lonS = [float(ii) for ii in a.lonS.split(',')]
+      a.lonE = [float(ii) for ii in a.lonE.split(',')]
+      a.latS = [float(ii) for ii in a.latS.split(',')]
+      a.latE = [float(ii) for ii in a.latE.split(',')]
+      a.presS = [float(ii) for ii in a.presS.split(',')]
+      a.presE = [float(ii) for ii in a.presE.split(',')]
+
+      a.yearS = []
+      a.monthS = []
+      a.dayS = []
+      for ii in a.timeS.split(','):
+        a1, a2, a3  = time2YearMonth( ii )
+        a.yearS.append(a1)
+        a.monthS.append(a2)
+        a.dayS.append(a3)
+
+      a.yearE = []
+      a.monthE = []
+      a.dayE = []
+      for ii in a.timeE.split(','):
+        a1, a2, a3  = time2YearMonth( ii )
+        a.yearE.append(a1)
+        a.monthE.append(a2)
+        a.dayE.append(a3)
+
+      print('a.lon: ', end=' ')
+      print(a.lonS, a.lonE, a.presS, a.presE)
+      a.lonMethod = [int(ii) for ii in a.lonMethod.split(',')]
+      a.latMethod = [int(ii) for ii in a.latMethod.split(',')]
+      a.presMethod = [int(ii) for ii in a.presMethod.split(',')]
+      a.timeMethod = [int(ii) for ii in a.timeMethod.split(',')]
+
+    except:
+      print((traceback.format_exc())) 
+    #else:
+      a.isGetFromNc = 1 # use the dataset full axes
+
+      a.LonS = []
+      a.LonE = []
+      a.LatS = []
+      a.LatE = []
+      a.presS = []
+      a.presE = []
+
+      a.yearS = []
+      a.monthS = []
+      a.dayS = []
+
+      a.yearE = []
+      a.monthE = []
+      a.dayE = []
+
+      a.lonMethod = [3,] * a.nData
+      a.latMethod = [3,] * a.nData
+      a.presMethod = [0,] * a.nData
+      if a.service in ['plot', 'contour', 'plotContour']:
+        a.timeMethod = [2,] * a.nData
+      elif a.service in [
+           'EOF', 
+           'randomForest',
+           'diffPlot', 
+           'correlationMap',
+           'anomaly',
+           'basinMask',
+           ]:
+        a.timeMethod = [3,] * a.nData
+
+    a.anomaly = int(a.anomaly)
+    a.timeMean = str(a.timeMean)
+    a.colorMap = [str(ii) for ii in a.colorMap.split(',')]
+    a.ferretLevel = [str(ii).replace('_C_',',') for ii in a.ferretLevel.split(',')]
+
+    import urllib.request, urllib.parse, urllib.error
+    a.plotTitle = [urllib.parse.unquote( str(ii) ) for ii in a.plotTitle.split(',')]
+    a.nPlot = len(a.colorMap)
+
+    a.outDir = str(a.outDir)
+    a.uploadDir = '/home/svc/upload'
+    a.service = str(a.service)
+    if a.basin:
+      a.basin = [urllib.parse.unquote(str(a.basin)),]
+    else:
+      a.basin = []
+
+    if a.service == 'correlationMap':
+      a.laggedTime = int(a.laggedTime)
+
+    if a.service == 'basinMask':
+      pass
+
+    if a.service == 'linear':
+      coeff0 = a.coeff[:]
+      a.coeff = []
+      for ii in coeff0.split(','):
+        a.coeff.append(float(ii))
+
+    if a.service == 'EOF':
+      pass
+
+    # name_fig_data_files
+    figFile = '%s/plot.png'%a.outDir
+    dataFile = '%s/data.nc'%a.outDir
+
+    a.figFile = figFile
+    a.dataFile = dataFile
+
+    # the caller uses these 2 lines to get file paths
+    print('figFile: %s'%figFile)
+
+    if a.service!='downloadOriginal':
+      print('dataFile: %s'%dataFile)
+
+if cr['figure_out_dim']       == 1:
+  dimMethod = []
+  for ii in range(len(a.timeMethod)):
+    a1 = '%d%d%d%d'%(
+a.timeMethod[ii], 
+a.presMethod[ii], 
+a.latMethod[ii], 
+a.lonMethod[ii], 
+)
+    print('dimMethod: ', a1)
+    dimMethod.append(a1)
+
+  a.dimMethod = dimMethod
+
+  # plotType__
+  # 3 plotType, for 2d, 1d, and 0d: shade, plot, stats
+  a.nDim = a.dimMethod[0].count('3')
+
+# def_checkSync
+def checkSync(para1, a, t0, checkMsg):
+  #temp1 = "t0 = a.%s"%para1
+  #print(temp1)
+  #exec(temp1)
+  nData = a.nData
+  # t1 = a.lonS.split(',')
+  if [t0[0],]*nData != t0:
+    checkMsg += 'Elments in %s=%s need to be the same.\n'%(para1, str(t0))
+
+
+# class_SERVICE():
+class SERVICE():
+  #== def___init__
+  def __init__(self):
+    self.key = 'plot'
+    self.nData = (1,)
+    self.nDim = (2,)
+    self.nPlot = (1,)
+    self.sync = 1
+    self.tMethod = '01234'
+    self.zMethod = '01234'
+    self.yMethod = '01234'
+    self.xMethod = '01234'
+
+'''
+  s.key = 'plot'
+  s.nData = (1,)
+  s.nDim = (2,)
+  s.nPlot = (1,)
+  s.sync = 1
+  s.tMethod = '1234'
+  s.zMethod = '01234'
+  s.yMethod = '1234'
+  s.xMethod = '1234'
+'''
+
+if cr['check_parameters']       == 1:
+  #== services_configure
+  services = {}
+
+  key1 = 'plot'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (0,1,2)
+  services[key1] = s
+
+  key1 = 'contour'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (2,)
+  s.tMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  key1 = 'plotContour'
+  s = SERVICE()
+  s.key = key1
+  s.nData = (2,)
+  s.nDim = (2,)
+  s.tMethod = '0124'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
+  services[key1] = s
+
+  key1 = 'subsetDownload'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (1,2,3,4)
+  services[key1] = s
+
+  key1 = 'downloadOriginal'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (1,2,3,4)
+  services[key1] = s
+
+  key1 = 'EOF'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (3,)
+  s.tMethod = '3'
+  s.tMethod = '3'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
+  services[key1] = s
+
+  key1 = 'randomForest'
+  s = SERVICE()
+  s.key = key1
+  s.nData = list(range(2,12))
+  s.nDim = (1,2,3,4)
+  s.tMethod = '3'
+  s.zMethod = '01234'
+  s.yMethod = '01234'
+  s.xMethod = '01234'
+  services[key1] = s
+
+  key1 = 'timeSeries'
+  s = SERVICE()
+  s.key = key1
+  s.nData = list(range(1,7))
+  s.nDim = (1,)
+  s.sync = 0
+  s.tMethod = '3'
+  s.zMethod = '0124'
+  s.yMethod = '0124'
+  s.xMethod = '0124'
+  services[key1] = s
+
+  key1 = 'mapView'
+  s = SERVICE()
+  s.key = key1
+  s.nData = list(range(1,11))
+  s.nDim = (1,2,)
+  s.sync = 0
+  services[key1] = s
+
+  
+  key1 = 'linear'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (1,2,3,)
+  s.nData = list(range(1,11))
+  s.tMethod = '01234'
+  s.zMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  key1 = 'anomaly'
+  s = SERVICE()
+  s.key = key1
+  s.nDim = (3,)
+  s.tMethod = '3'
+  s.zMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  key1 = 'scatterPlot'
+  s = SERVICE()
+  s.key = key1
+  s.nData = (2,)
+  s.nDim = (3,)
+  s.tMethod = '01234'
+  s.zMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  key1 = 'diffPlot'
+  s = SERVICE()
+  s.key = key1
+  s.nData = (2,)
+  s.nDim = (2,3,)
+  s.tMethod = '01234'
+  s.zMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  key1 = 'correlationMap'
+  s = SERVICE()
+  s.key = key1
+  s.nData = (2,)
+  s.nDim = (3,)
+  s.tMethod = '3'
+  s.zMethod = '0124'
+  s.yMethod = '3'
+  s.xMethod = '3'
+  services[key1] = s
+
+  #== check_para
+  checkMsg = '\nservice: %s\n'%a.service
+   
+  #-- check nData
+  if a.nData not in services[a.service].nData:
+    checkMsg += 'nData: Number of datasets needs to be among %s\n'%str(services[a.service].nData)
+
+  #-- check nDim
+  if a.nDim not in services[a.service].nDim:
+    checkMsg += 'nDim: Number of dimensions needs to be among %s\n'%str(services[a.service].nDim)
+
+  print('a.lonS: ', a.lonS)
+  #-- check sync
+  if services[a.service].sync==1:
+    checkSync('lonS',  a, a.lonS, checkMsg)
+    checkSync('lonE',  a, a.lonE, checkMsg)
+    checkSync('latS',  a, a.latE, checkMsg)
+    checkSync('latE',  a, a.latE, checkMsg)
+    checkSync('timeS', a, a.timeE, checkMsg)
+    checkSync('timeE', a, a.timeE, checkMsg)
+
+  #-- check axisMethod
+    #for ii in a.dimMethod[i]:
+  tzyx = {
+      0: 'time',
+      1: 'vertical',
+      2: 'latitude',
+      3: 'longitude',
+  }
+  methods1 = {
+    0: '',
+    1: 'Pick a value',
+    2: 'Average over', 
+    3: 'Form an axis', 
+    4: 'Sum over', 
+  }
+  for iD in range(4):
+    if iD==0: 
+      t1 = services[a.service].tMethod
+    elif iD==1: 
+      t1 = services[a.service].zMethod
+    elif iD==2: 
+      t1 = services[a.service].yMethod
+    elif iD==3: 
+      t1 = services[a.service].xMethod
+
+    for i in range(a.nData):
+      if a.dimMethod[i][iD] not in t1:
+        t2 = list(t1)
+        t3 = ['%s'%methods1[int(ii)] for ii in t2]
+        t3 = tuple(t3)
+        checkMsg += 'For dataset %d, The %s subset method needs to be among %s \n'%(i+1, tzyx[iD], str(t3))
+
+  print('checkMsg: ', checkMsg)
+
+  if len(checkMsg)<50:
+    print('checkMsg: ', checkMsg)
+  else:
+    checkMsg1 = '<h3 style="background-color:Orange;">WARNING: Parameter Check Failed<h3>' + checkMsg.replace('\n', '<br>') + '<br><br>'
+    print('failedCheck: ', checkMsg1)
+    sys.exit(0)
+
+if cr['services__']       == 1:
+  # init_ferret
+  import pyferret as pf
+  pf.start(quiet=True, journal=False, unmapped=True)
+  pf.run('set memory/size=500')
+  pf.run('cancel mode logo' )
+  pf.run('cancel mode journal' )
+
+  #print 'a.data_url: ',
+  #print a.data_url
+
+  cwd1 = os.getcwd()
+
+  #temp1 = 'show data'
+  #print temp1
+  #pf.run(temp1)
+
+  if a.service in ['plot', 'contour', 'plotContour', 'linear','subsetDownload']:
+    # those service cannot deal with nDim>2
+    # how to deal with 3D output data
+    #if a.nDim==3:
+    #  if a.dimMethod[0][0]=='3': 
+    #    #a.dimMethod[0][0]=='2' 
+    #    a.dimMethod[0] = '2'+a.dimMethod[0][1:]
+    #    a.timeMethod[0] = 2  # average over
+    #  elif a.dimMethod[0][1]=='3': 
+    #    #a.dimMethod[0][1]=='2' 
+    #    a.dimMethod[0] = a.dimMethod[0][0] + '2' + dimMethod[0][2:]
+    #    a.presMethod[0] = 2
+
+    #  print 'timeMethod, presMethod:'
+    #  print a.timeMethod
+    #  print a.presMethod
+    #  print 'change to nDim=2'
+    #  a.nDim=2
+
+    a.plotAveStr = ''
+    if a.nDim==3:  # for line plot
+      if a.dimMethod[0][0]=='3': 
+        a.plotAveStr = '[t=@ave]'
+      elif a.dimMethod[0][1]=='3':   # ?
+        a.plotAveStr = '[z=@ave]'
+
+    if a.nDim==2 or a.nDim==3:
+      plotType = 'shade' # this includes 'contour'
+      if a.service=='contour':
+        plotCmd = 'contour/fill/line/key'   
+        #plotCmd = 'fill'   
+      else:
+        plotCmd = 'shade'   
+    elif a.nDim==1:
+      plotType = 'plot'   
+
+    elif a.nDim==0:
+      plotType = 'stats'
+
+  # whether to call 'go land'
+  if a.dimMethod[0][-1]=='3' and a.dimMethod[0][-2]=='3':
+    a.isMap = 1
+  else: 
+    a.isMap = 0
+
+  # set_region_
+  a.getAxis3D(0)
+
+  #if a.isGetFromNc==0:
+  #  #indexStr = a.getSubsetIndex2(0)
+  #  indexStr = a.getSubsetIndex2a(0)
+  #  runF( 'set region%s'%indexStr ) 
+  
+  #if a.service in ('correlationMap'):
+
+  # open_data and regrid to the first dataset
+  # it costs nothing to open data
+  a.getOpenDatasetStr();
+  a.getUnits()
+  print('a.getOpenDatasetStr: ', end=' ')
+  print(a.getOpenDatasetStr)
+
+  #== download_original
+  if a.service=='downloadOriginal':
+    if len(a.fList[0])==1: # only download the first file
+      ncFile = a.fList[0][0]
+      #ncFile = os.path.split(a.fList[0][0])[1]
+      dataFile = '%s/%s'%(a.outDir, os.path.split(ncFile)[1])
+
+      #temp1 = 'cp -f %s %s'%(ncFile, dataFile)
+      temp1 = 'rsync -tv %s %s'%(ncFile, dataFile)
+      print(temp1)
+      os.system(temp1)
+
+    else: # tar files 
+      dataFile = '%s/data.tar'%(a.outDir)
+      temp1 = 'tar -cf %s '%(dataFile)
+      dir9 = os.getcwd()
+      os.chdir(os.path.split(a.fList[0][0])[0])  #zzzz
+      for f in a.fList[0]:
+        temp1 = temp1 + os.path.split(f)[1] + ' '
+      print(temp1)
+      os.system(temp1)
+      os.chdir(dir9)
+
+    print('dataFile: %s'%dataFile)
+
+    sys.exit(0)
+
+  #== open_files
+  a.var1a = []
+  for ii in range(a.nData):
+    runF( a.openStr[ii] )
+
+    a.var1a.append('DATA%02d'%(ii+1))
+
+    if a.isGetFromNc==0:
+      print("call getSubsetIndex3_: ",ii)
+      print(a)
+      print(a.yearS)
+      print(a.monthS)
+      print(a.dayS)
+      #indexStr = a.getSubsetIndex3(ii)
+      indexStr = a.getSubsetIndex3a(ii)
+      if ii==0:
+        #if indexStr=='': indexStr1 = ''
+        #else: indexStr1 = '[%s]'%indexStr[:-1]
+        
+        temp1 = 'define var/bad=-9999.0 %s=%s[%s d=1]'\
+                %(a.var1a[ii], a.var1[ii], indexStr)
+      else: # regrid to the first variable
+
+        # no need of regrid for shade+contour
+        #if a.service in ('plotContour','mapView','timeSeries'):
+        if a.service in ('plotContour','mapView'):
+          temp1 = 'define var/bad=-9999.0 %s=%s[%s d=%d]'\
+                %(a.var1a[ii], a.var1[ii], indexStr, ii+1)
+        else:
+          regridStr = 'g%s=%s[d=1], '%(a.axis3D, a.var1[0])
+          temp1 = 'define var/bad=-9999.0 %s=%s[%s %s d=%d]'\
+                 %(a.var1a[ii], a.var1[ii], indexStr, regridStr, ii+1)
+
+    # a.isGetFromNc>0
+    else:
+      if ii==0:
+        temp1 = 'define var/bad=-9999.0 %s=%s[d=1]'%(a.var1a[ii], a.var1[ii] )
+      else: # regrid to the first variable
+        regridStr = 'g%s=%s[d=1], '%(a.axis3D, a.var1[0])
+        temp1 = 'define var/bad=-9999.0 %s=%s[%s d=%d]'%(a.var1a[ii], a.var1[ii], regridStr, ii+1)
+
+    runF(temp1)
+
+  # calc_time mean
+  if 0:
+    if a.timeMethod[0]==3 and len(a.timeMean)>0:
+      for ii in range(a.nData):
+        ferretMean(runF, a, ii)
+
+    # calc_anomaly
+    if a.timeMethod[0]==3 and a.anomaly==1 and a.timeMean!='y':
+      print('call anomaly')
+      for ii in range(a.nData):
+        indexStr4 = a.getSubsetIndex4(ii)
+        var1aa = a.var1a[ii] + '_A'
+        affix1 = '%d'%(ii+1)
+        #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
+        ferretAnomaly4(runF, indexStr4, affix1, a.var1a[ii], var1aa)
+        a.var1a[ii] = var1aa
+
+  if 1:
+    if a.timeMethod[0]==3 and (a.anomaly==1 or len(a.timeMean)>0):
+      print('call anomaly / time mean')
+      for ii in range(a.nData):
+        indexStr4 = a.getSubsetIndex4(ii)
+        var1aa = a.var1a[ii] + '_A'
+        affix1 = '%d'%(ii+1)
+        #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
+        ferretAnomaly4(runF, indexStr4, affix1, a.var1a[ii], var1aa)
+        a.var1a[ii] = var1aa
+
+  # mask_basin
+  if len(a.basin)>0:
+    print('a.basin')
+    if a.basin[0]!='Global':
+      ferretBasin(runF, a.basin, a.nData, a.var1a)
+
+  # average_Or_Sum
+  for ii in range(a.nData):
+    if a.dimMethod[ii].count('2')>0 \
+         or a.dimMethod[ii].count('4')>0:
+      indexStr5 = a.getSubsetIndex5(ii)
+      var1aa = a.var1a[ii] + 'A'
+      temp1 = 'let %s = %s[%s]'%(var1aa, a.var1a[ii], indexStr5)
+      runF(temp1)
+      a.var1a[ii] = var1aa
+
+  #=== this is for individual services
+
+  #== subsetDownload__
+  if a.service=='subsetDownload':
+    #import NC_btang_v4 as NC1
+
+    # save dataFile
+    temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
+    runF(temp1)
+
+    
+    # copy globle attr
+    nc1 = Dataset(a.fList[0][0])
+    nc2 = Dataset(dataFile, 'r+')
+    NC1.copy_att(nc1,nc2)
+    nc1.close()
+    nc2.close()
+
+    '''
+                        temp1 += 'ncrename -v lon,longitude -v lat,latitude %s\n'%(fn2)
+                            temp1 += 'ncrename -d longitude,lon -d latitude,lat  %s\n'%(fn2)
+                                temp1 += 'ncrename -v longitude,lon -v latitude,lat %s\n'%(fn2)
+                                '''
+
+    # sys.exit()  # need to plot later in the code
+
+  #== mapView__
+  if a.service=='mapView':
+    if a.isGetFromNc==0:
+      a.setAspect()
+
+    plotCmd = 'shade'   
+
+    #-- set_pallette
+    temp1 = str( 'palette %s'%a.colorMap[0] )
+    runF(temp1)
+
+    #-- set_level
+    if len(a.ferretLevel[0])>0:
+      vminStr = '/level=%s'%(a.ferretLevel[0])
+    else:
+      vminStr = ''
+
+    for i in range(a.nData):
+      if a.timeMethod[i]==3:
+        temp1 =  '%s%s  %s[t=@ave]'%(plotCmd, vminStr, a.var1a[i]) 
+      else:
+        temp1 =  '%s%s  %s'%(plotCmd, vminStr, a.var1a[i]) 
+      runF(temp1)
+
+      temp1 = 'go land'
+      runF(temp1)
+
+      temp1 = 'frame /file="%s/plot%d.png"'%(a.outDir, i+1)
+      runF(temp1)
+
+    #-- combine
+    files = ['%s/plot%d.png'%(a.outDir, ii+1) for ii in range(a.nData)]
+
+    #files = [
+    #  '%s/plot1.png'%a.outDir,
+    #  '%s/plot2.png'%a.outDir,
+    #  '%s/plot3.png'%a.outDir,
+    #]
+    combineImage2(files, 2, figFile)
+  
+    #-- save_first_data
+    temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
+    runF(temp1)
+
+    sys.exit()
+
+  #== timeSeries__
+  if a.service=='timeSeries':
+
+    temp1 = 'set window/outline=0.5/aspect=%f '%(0.4)
+    runF(temp1)
+
+    if 0:
+      for i in range(a.nData):
+        if i==0:
+          temp1 = 'plot/title="1" %s '%(a.var1a[0] )
+        else:
+          temp1 = 'plot/over/title="%d"  %s'%(i+1, a.var1a[i] )
+        runF(temp1)
+
+    if 1:
+      for i in range(a.nData):
+        if i==0:
+          title1 = 'dataset_1:black'
+        elif i==1:
+          title1 += ', dataset_2:red'
+        elif i==2:
+          title1 += ', dataset_3:green'
+        elif i==3:
+          title1 += ', dataset_4:blue'
+        elif i==4:
+          title1 += ', dataset_5:cyan'
+        elif i==5:
+          title1 += ', dataset_6:magenta'
+
+      for i in range(a.nData):
+        #temp1 = 'plot/symbol=1/line %s'%(a.var1a[i]) 
+        if i==0:
+          temp1 = 'go multi_yaxis_plot1 %s %d "@ac%s"'%(a.var1a[0], a.nData-1, title1 )
+        else:
+          var1i = a.var1a[i]+'_A'
+          temp1 = 'let %s = %s[gt=%s]'%(var1i, a.var1a[i], a.var1a[0])
+          runF(temp1)
+          a.var1a[i] = var1i
+
+          temp1 = 'go multi_yaxis_overlay  %s %d "-" " " "%d" '%(a.var1a[i], i, i+1 )
+        runF(temp1)
+
+    temp1 = 'frame/xpixel=3000/file="%s"'%a.figFile 
+    runF(temp1)
+
+    #-- save_first_data
+    if 0:
+        temp1 = 'save/clobber/file="%s" %s'%(dataFile, a.var1a[0])
+        runF(temp1)
+
+    if 1:
+      import xarray as xr
+      fns9 = []
+      dss9 = []
+      das9 = []
+      for i in range(a.nData):
+        fn9 = "%s/temp%d.nc"%(a.outDir, i+1)
+        temp1 = 'save/clobber/file="%s" %s'%(fn9, a.var1a[i])
+        runF(temp1)
+
+        ds9 = xr.open_dataset(fn9) 
+        da9 = ds9[a.var1a[i]].squeeze()
+        fns9.append(fn9)
+        dss9.append(ds9)
+        das9.append(da9)
+
+      da99 = xr.concat(das9,'i')
+      ds99 = da99.to_dataset( name="data")
+      ds99a = ds99.rename({"TIME":"time"})
+      ds99a.to_netcdf(dataFile)
+
+      for i in range(a.nData):
+        dss9[i].close()
+
+    if 0:
+      missingV = -9999.0
+      for i in range(a.nData):
+        nc1 = Dataset("%s/temp%d.nc"%a.outDir, i+1, 'r')
+        data9 = nc1.variables[a.var1a[i]]
+        dims9 = data9.dimensions
+        timeName = dims9[0]
+        time9 = nc1.variables[timeName][:]
+        nc1.close()
+
+        if i==0:
+          NC1.save2nc(
+            a.var1a[0],
+            ncfile=dataFile, 
+            name='DATA%d'%(i+1),
+            newfile=1,
+            format='NETCDF3_CLASSIC',
+            missing_value=missingV,
+            axisorder='t', 
+            axisarray=[time9])
+        else:
+          NC1.save2nc(
+            a.var1a[i],
+            ncfile=dataFile, 
+            name='DATA%d'%(i+1),
+            newfile=0,
+            format='NETCDF3_CLASSIC',
+            missing_value=missingV,
+            axisorder='t', 
+            axisarray=[time9])
+
+    sys.exit()
+
+
+  '''
+  plot/over/i=1:100/title="short two-line<nl>title for the overlay line" i*sin(i/8)
+plot/over/i=1:100/title="here is the key for the<nl>second overlay line" i*sin(i/4)
+
+plot/i=1:100/title="@p2TWO-LINE<NL>RED TITLE"/set i*cos(i/8)
+ppl ylab "A four-line y label.<nl>second line<nl>third line<NL>fourth line"
+ppl xlab "a two-line X label. <nl>Not good together with a multi-line title"
+ppl plot
+
+plot/title="multi-line key labels"/i=1:100 i*sin(i/12)
+plot/over/i=1:100/title="Three-lines<nl>second line<nl>overlay 1" i*sin(i/6)
+plot/over/i=1:100/title="Two-lines<nl>overlay 2" i*cos(i/6)
+plot/over/i=1:100/title="Three-lines<nl>second line<nl>overlay 3" -1*cos(i/10)
+plot/over/i=1:100/title="One-line" i*cos(i/8)
+plot/over/i=1:100/title="Three-line<nl>second<nl>overlay5" i*cos(i/14)
+plot/over/i=1:100/title="Two-line<nl>overlay6" i*cos(i/20)
+plot/over/i=1:100/title="Three-line<nl>second<nl>overlay7" i*sin(i/12)
+ 
+go multi_yaxis_overlay  salt    ! quick and dirty multi-axis overlay
+go multi_yaxis_overlay  dens 2  ! "2" indicating a second overlay
+
+go multi_yaxis_plot1 temp 2             ! "2" variables to follow
+go multi_yaxis_overlay salt 1 "-"       ! overlay #1 left of axis ("-")
+go multi_yaxis_overlay dens 2 "-"       ! overlay #2 left of axis ("-")
+
+go multi_yaxis_plot1 temp 3 "0.21  @CRPlot With Customized Axes"
+go multi_yaxis_overlay salt 1 "-" "33,36,0.5" "My Salinity" 0.25 1.5
+go multi_yaxis_overlay dens 2 "-" " " @CI"Density" .3 1.5  ",1,,,.13,(1PG10.3)"
+
+'''
+
+  #== linear__
+  if a.service=='linear':
+    formula = ''
+    title1 = ''
+
+    if float(a.coeff[0])!=0.0:
+      formula += '%s'%a.coeff[0]
+      title1 += '%s'%a.coeff[0]
+
+    for ii in range(a.nData):
+      if float(a.coeff[ii+1])>=0:
+        sign1 = ' + '
+      else:
+        sign1 = ' '
+
+      if ii==0 and float(a.coeff[0])==0.0:
+        sign1 = ''
+
+      if float(a.coeff[ii+1])==1.0:
+        formula += '%s%s'%(sign1, a.var1a[ii])  
+        title1 += '%s%s '%(sign1, a.var1[ii])
+
+      else:
+        formula += '%s%s * %s'%(sign1, a.coeff[ii+1], a.var1a[ii])  
+        title1 += '%s%s*%s '%(sign1, a.coeff[ii+1],a.var1[ii])
+
+    varNameOut = 'DATA99'
+    temp1 = 'define var/bad=-9999.0/title="%s" %s = %s' \
+            %(title1, varNameOut, formula)
+    runF(temp1)
+    temp1 = 'show var'
+    runF(temp1)
+
+    a.plotTitle[0] = ''
+    a.var1a[0] = varNameOut
+
+    if 0:
+      indexStr = a.getSubsetIndex3(0)
+
+      try:
+        indexStr = indexStr[:-1] 
+      except: pass
+
+      cmac.ferretPlot(runF, plotType, indexStr, varNameOut, 0, \
+        a.isMap, a.lonS[0],a.lonE[0],a.latS[0],a.latE[0], \
+        '', a.colorMap[0], a.ferretLevel[0])
+
+      # save fig file
+      temp1 = 'frame /file="%s"'%figFile
+      runF(temp1)
+
+      temp1 = 'save/clobber/file="%s" %s'%( dataFile, varNameOut)
+      runF(temp1)
+
+      sys.exit()
+
+  #== scatter__
+  if a.service=='scatterPlot':
+    if 1:
+      tempFile = tempfile.mkstemp(suffix='', dir=a.outDir)[1]
+      tempFile1 = '%s01.nc'%(tempFile)
+      temp1 = 'save/clobber/file="%s" %s'%(tempFile1, a.var1a[0])
+      runF(temp1)
+      
+      tempFile2 = '%s02.nc'%(tempFile)
+      temp1 = 'save/clobber/file="%s" %s'%(tempFile2, a.var1a[1])
+      runF(temp1)
+      varName2 = a.var1a[1]
+
+      # see func def: def_corr #
+      a.scatterPlot3(tempFile1,tempFile2,varName1=a.var1a[0],varName2=a.var1a[1])
+
+      sys.exit()
+
+  #== anomaly__
+  if a.service=='anomaly':
+
+    if 0:
+      temp1 = 'USE climatological_axes'
+      runF(temp1)
+      temp1 = 'CANCEL DATA climatological_axes'
+      runF(temp1)
+
+      # not used?
+      d2Str = 'd=1'
+
+      indexStr = a.getSubsetIndex4(0)
+      temp1 = 'define axis/%s:30.436875/units=days tax1'%indexStr
+      runF(temp1)
+
+      # not needed?
+      #temp1 = 'define axis/%s:30.436875/units=days tax2'%indexStr
+      #runF(temp1)
+
+      refStr = 'GT=month_reg@MOD'
+
+      # regrid to monthly
+      temp1 = 'let dd1 = data01[gt=tax1]'
+      runF(temp1)
+
+      # regrid to monthly climatology
+      temp1 = 'let dd2c = dd1[%s]'%refStr
+      runF(temp1)
+
+      #temp1 = 'let dd1b = dd1[t=@ave]'
+      #runF(temp1)
+
+      # regrid the climatology to monthly
+      temp1 = 'let dd2ca = dd2c[gt=tax1]'
+      runF(temp1)
+
+      # calc anomaly
+      temp1 = 'let dd1a = dd1 - dd2ca'
+      runF(temp1)
+
+      # save
+      temp1 = 'define var/bad=-9999.0/title="anomaly" data = dd1a'
+      runF(temp1)
+
+      temp1 = 'save/clobber/file="%s" data'%dataFile
+      runF(temp1)
+
+    if 1:
+      indexStr4 = a.getSubsetIndex4(0)
+      var1aa = a.var1a[0] + '_A'
+      affix1 = '%d'%(1)
+      ferretAnomaly(runF, indexStr4, affix1, a.var1a[0], var1aa)
+      a.var1a[0] = var1aa
+
+      # save
+      temp1 = 'define var/bad=-9999.0/title="anomaly" data = %s'%a.var1a[0]
+      runF(temp1)
+
+      temp1 = 'save/clobber/file="%s" data'%dataFile
+      runF(temp1)
+
+    # plot
+    #temp1 = 'set viewport upper'
+    #runF(temp1)
+
+    temp1 = 'shade data[l=1]'
+    runF(temp1)
+
+    temp1 = 'go land'
+    runF(temp1)
+
+    #temp1 = 'set viewport lower'
+    #runF(temp1)
+
+    #temp1 = 'shade dd1a[l=1]'
+    #runF(temp1)
+
+    #temp1 = 'go land'
+    #runF(temp1)
+
+    temp1 = 'frame /file="%s"'%figFile
+    runF(temp1)
+
+    sys.exit()
+
+  #== basinMask__  not needed
+  basins = {
+'Atlantic Ocean': 1,
+'Pacific Ocean': 2,
+'Indian Ocean': 3,
+'Mediterranean Sea': 4, 
+'Southern Ocean': 10,
+'Arctic Ocean': 11, 
+'Sea of Japan': 12, 
+'Sea of Okhotsk': 18, 
+'North Caribbean': 22, 
+'Gulf of Mexico': 23, 
+'Beaufort Sea': 24, 
+'South China Sea': 25, 
+}
+  # not used
+  if a.service=='basinMask':  
+    iBasin = basins[a.basin]
+
+    temp1 = 'use "http://iridl.ldeo.columbia.edu/SOURCES/.NOAA/.NODC/.WOA05/.Masks/.basin/dods"'
+    runF(temp1)
+
+    temp1 = 'let mask1 = if basin[k=1, d=2] eq %d then 1'%iBasin
+    runF(temp1)
+
+    temp1 = 'let dd1 = data01[d=1] *  mask1[d=2, gxy=data01[d=1,l=1]]'
+    runF(temp1)
+
+    # save
+    temp1 = 'define var/bad=-9999.0/title="masked" data_a = dd1'
+    runF(temp1)
+
+    temp1 = 'save/clobber/file="%s" data_a'%dataFile
+    runF(temp1)
+
+    temp1 = 'cancel data/all'
+    runF(temp1)
+
+    temp1 = 'cancel var/all'
+    runF(temp1)
+
+    temp1 = 'use %s'%dataFile
+    runF(temp1)
+
+    temp1 = 'define var data = data_a'
+    runF(temp1)
+
+    temp1 = 'save/clobber/file="%s" data'%dataFile
+    runF(temp1)
+
+    # plot
+    temp1 = 'shade data[l=1]'
+    runF(temp1)
+
+    temp1 = 'go land'
+    runF(temp1)
+
+    # save fig file
+    temp1 = 'frame /file="%s"'%figFile
+    runF(temp1)
+
+    import sys
+    sys.exit()
+
+  #== randomForest__
+  if a.service=='randomForest':
+    # RF_import
+    from sklearn.ensemble import RandomForestRegressor as RFR
+    from sklearn.metrics import mean_squared_error
+    from sklearn.metrics import r2_score
+    from sklearn.metrics import explained_variance_score
+
+    import matplotlib 
+    matplotlib.use('Agg')  
+    import matplotlib.pylab as Mat
+    Mat.ioff()
+    #from mpl_toolkits.basemap import NetCDFFile
+    from mpl_toolkits.basemap import Basemap
+
+    import matplotlib as mpl
+    mpl.rcParams['image.cmap'] = 'gist_rainbow'
+
+    # load_data
+    data2b = []
+    ss = []
+    for ii in range(a.nData):
+      tempFile = tempfile.mkstemp(suffix='', dir=a.outDir)[1]
+      tempFile1 = '%s%02d.nc'%(tempFile, ii+1)
+      temp1 = 'save/clobber/file="%s" %s'%(tempFile1, a.var1a[ii])
+      runF(temp1)
+
+      if ii==0:
+        nc1 = Dataset(tempFile1, 'r')
+        data1 = nc1.variables[a.var1a[ii]][:]
+        data1.shape = np.prod(data1.shape),
+    
+        dims1 = nc1.variables[a.var1a[ii]].dimensions
+        lon1 = nc1.variables[dims1[-1]][:]
+        lat1 = nc1.variables[dims1[-2]][:]
+        nc1.close()
+
+      else:
+        nc1 = Dataset(tempFile1, 'r')
+        data2a = nc1.variables[a.var1a[ii]][:]
+        nc1.close()
+
+        data2a.shape = np.prod(data2a.shape), 1
+        data2b.append(data2a)
+        ss.append(len(data2a))
+
+    # align data
+    print(('data len:'), end=' ')
+    print(ss)
+
+    ssMin = np.array(ss).min()
+    for ii in range(a.nData-1):
+      if len(data2b[ii])>ssMin:
+        data2b[ii] = data2b[ii][:ssMin]
+    
+    # combine__
+    data2 = np.ma.concatenate(data2b, axis=1)
+    print('data1.shape, data2.shape: ', data1.shape, data2.shape)
+
+    # filter_out_invalid
+    temp1 = np.ma.arange(5)
+    valid1 = np.ones( data1.shape, dtype=bool )
+    if type(data1) == type(temp1):
+      if data1.mask is not None:
+        valid1 = ~( data1.mask )
+
+    valid2 = np.ones( data2.shape, dtype=bool )
+    if type(data2) == type(temp1):
+      if data2.mask is not None:
+        valid2 = ~( data2.mask )
+
+    if valid2.shape != data2.shape:
+      valid2 = np.ones( data2.shape, dtype=bool )
+
+    print('data2.mask: ', type(data2.mask), data2.mask.shape, data2.mask)
+    print('valid2.shape: ', valid2.shape)
+
+    # invalid times and grid:
+    temp2 = valid2.sum(axis=1)
+    valid2a = temp2==data2.shape[1]
+
+    print('valid1.sum(), valid2a.sum(): ', valid1.sum(), valid2a.sum())
+
+    valid = valid1 & valid2a
+    if valid.sum()<data1.shape[0]:
+      data1c = data1[valid]
+      data2c = data2[valid]
+    else:
+      data1c = data1
+      data2c = data2
+
+    data1c = np.array(data1c)
+    data2c = np.array(data2c)
+    print('data1c.shape, data2c.shape: ', data1c.shape, data2c.shape)
+    nPoint = len(data1c)
+    nFeature = data2c.shape[1]
+
+    # reduce nPoint
+    nPointAllow = 5000
+    nPoint0 = nPoint
+    if nPoint > nPointAllow:
+      ind1 = np.random.choice(nPoint, nPointAllow)
+      data1c = data1c[ind1] 
+      data2c = data2c[ind1] 
+      nPoint = len(data1c)
+
+    # initiate_RFR
+    nTree = 500
+    nJob = 8
+    maxDepth = 20
+    #rfr = RFR(n_estimators=nTree, n_jobs=nJob, max_depth=maxDepth,compute_importances=True, oob_score=True)
+    rfr = RFR(n_estimators=nTree, n_jobs=nJob, max_depth=maxDepth, oob_score=True)
+
+    # train_RFR
+    t0 = time.time()
+    rfr.fit(data2c,data1c)
+    print('training dt = %.2f'%(time.time()-t0))
+    print('rfr.feature_importances_: ', rfr.feature_importances_.shape, rfr.feature_importances_)
+    print('training skill: %.3f'%rfr.oob_score_)
+
+    # RF_plot
+    fig1 = Mat.figure(1)
+    Mat.clf()
+    fig1.set_size_inches(15, 10)
+    #Mat.bar(range(rfr.feature_importances_.shape[0]), rfr.feature_importances_)
+    Mat.bar(list(range(nFeature)), rfr.feature_importances_)
+    #Mat.xticks(range(23), pp)
+    #Mat.xlabel("Pressure (hPa)")
+    Mat.ylabel("random forest importance")
+
+    lab = []
+
+    #yyyy
+    a.presS = [-1,]*a.nData
+
+    for i in range(a.nData):
+      if a.presS[i]>0:
+        pStr = '[p=%.0f]'%a.presS[i]
+      else:
+        pStr = ''
+      lab.append( '%s%s'%(a.var1[i], pStr) )
+    
+    Mat.xticks(np.arange(nFeature)+0.5, lab[1:], rotation=15, ha='right')
+    Mat.title("random forest model to predict %s.  nPoint=%d  nPointUsed=%d  R2=%.3f"%(lab[0], nPoint0, nPoint, rfr.oob_score_) )
+
+    Mat.savefig(figFile, dpi=100)
+
+    # save to a file
+    fn = '%s/data.nc'%a.outDir
+    index1 = np.arange(nFeature).astype('i')
+    NC1.save2nc(rfr.feature_importances_, ncfile=fn, name='importance',
+      newfile=1,
+      format='NETCDF3_CLASSIC',
+      missing_value=-9999.0,
+      axisorder='i', axislib=NC1.axislib0, axisarray=[index1])
+  
+    import sys
+    sys.exit()
+
+  #== eof__
+  if a.service=='EOF':
+
+    temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, a.var1a[0]) 
+    runF(temp1)
+
+    nc1 = Dataset('%s/temp9.nc'%(a.outDir), 'r')
+    ncVar1 = nc1.variables[a.var1a[0]]
+    data1 = ncVar1[:]
+    print('data1: ', data1.shape)
+ 
+    dims1 = ncVar1.dimensions
+    time1 = nc1.variables[dims1[0]][:]
+    print('time1: ',time1)
+
+    timeUnits = nc1.variables[dims1[0]].units
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nLon = len(lon1)
+    nLat = len(lat1)
+
+    # EOF_anomaly__
+    if a.anomaly==1 and a.timeMean!='y' and False:
+      m1 = 12
+      if a.timeMean=='q': m1 = 4
+      anom = np.ones( (m1, nLat, nLon), dtype=np.float32 )
+      for i in range(m1):
+        anom[i] = data1[i::m1].mean(axis=0)
+        data1[i::m1] -= anom[i][np.newaxis, :]
+
+    # import__
+    cwd2 = os.getcwd()
+    os.chdir(cwd1)
+
+    from netCDF4 import Dataset
+    import netCDF4 as nC4
+    sys.path.insert(0, '../py')
+    import NC_btang_v4 as NC1
+    import pca_v4 as pca
+
+    import matplotlib 
+    matplotlib.use('Agg')  
+    import matplotlib.pylab as Mat
+    Mat.ioff()
+    #from mpl_toolkits.basemap import NetCDFFile
+    from mpl_toolkits.basemap import Basemap
+
+    import matplotlib as mpl
+    mpl.rcParams['image.cmap'] = 'gist_rainbow'
+
+    os.chdir(cwd2)
+
+    print('data1.shape: ', data1.shape)
+    data1.shape = data1.shape[0], nLon*nLat
+
+    weightLat = np.cos(lat1*np.pi/180.)
+    weight1 = np.ones( (nLat, nLon), dtype=np.float32 )
+    weight1.shape = nLon*nLat, 
+
+    # filter out invalid
+    temp1 = np.ma.arange(5)
+    valid1 = np.ones( data1.shape, dtype=bool )
+    isMask = 0
+    if type(data1) == type(temp1):
+      if data1.count() < data1.shape[0]*data1.shape[1] :
+        isMask = 1
+        valid1 = ~( data1.mask )
+        print('data1.count() < np.prod(data1.shape) :', data1.count(), np.prod(data1.shape) )
+
+    print('isMask: ', isMask)
+    # remove time of most invalid
+    if isMask:
+      temp3 = valid1.sum(axis=1)
+      #valid1b = temp3>temp3.mean()*0.1
+      valid1b = temp3>temp3.mean()*0.5
+      if valid1b.sum()<data1.shape[0]:
+        data1 = data1[valid1b,:]
+        valid1 = valid1[valid1b,:]
+        time1 = time1[valid1b]
+  
+    # invalid times and grid:
+    temp2 = valid1.sum(axis=0)
+    valid = temp2==data1.shape[0]  # valid lat/lon points
+
+    if 0:
+      for jj in (10000,20000,30000,40000):
+        print(jj)
+        print((temp2[jj]))
+        for i in range(data1.shape[0]): print((int(valid1[i,jj])), end=' ')
+        print(' ')
+
+      #print('np.isfortran:')
+      #print(np.isfortran(data1))
+      print('data1.shape')
+      print((data1.shape))
+      print('temp2')
+      print(temp2)
+      print('valid1.sum(): ', valid1.sum())
+      print('valid1a.sum(): ', valid1a.sum())
+
+    if valid.sum()<data1.shape[1]:
+      data1c = data1[:, valid]
+      weight1 = weight1[valid]
+      isGap = 1
+    else:
+      data1c = data1
+      isGap = 0
+
+    data1c = np.array(data1c)
+    mean1 = data1c.mean(axis=0)
+    data1c = data1c - mean1[np.newaxis, :]
+    print('data1c.shape: ', data1c.shape)
+    nPoint = len(data1c)
+    nFeature = data1c.shape[1]
+
+    # calc_PCA
+    nKeepMax = min(nPoint, nFeature)
+    nKeep = min(10, nKeepMax)
+    #weight1 = None
+    p1= pca.PCA(data1c,missingvalue=None, nkeep=nKeep, mask=None, weight=weight1)
+    p1.calculate2()
+
+    # labels for the variables
+    lab = [' ',]
+    #for i in range(a.nVar):
+    #  if a.pres[i]>0:
+    #    pStr = '[p=%.0f]'%a.pres[i]
+    #  else:
+    #    pStr = ''
+    #  lab.append( '%s_%s:%s%s'%(a.center[i], a.model[i], a.varName[i], pStr) )
+
+    #nPlot = nKeep
+    nPlot = 5
+
+    #== calc_min_max, before putting in lat/lon grid
+    min2 = p1.pattern.min()
+    max2 = p1.pattern.max()
+
+    # fill lat/lon
+    if isGap:
+      pattern1 = np.ma.ones( (nPlot, nLon*nLat), dtype = np.float32 ) * np.ma.masked
+      pattern1[:, valid] = p1.pattern[:nPlot, :]
+    else:
+      pattern1 = p1.pattern[:nPlot, :]
+  
+    pattern1.shape = nPlot, nLat, nLon
+
+    #== save_eof
+    sys.path.insert(0, '../py')
+    import NC_btang_v4 as NC1
+
+    fn = '%s/data.nc'%a.outDir
+    index1 = np.arange(nPlot).astype('i') + 1
+    index1a = np.arange(nKeep).astype('i') + 1
+
+    # save pattern
+    missingV = -9999.0
+    try:
+      pattern2 = pattern1[:nPlot].filled(missingV)
+    except:
+      pattern2 = pattern1[:nPlot]
+
+    NC1.save2nc(
+      pattern2,
+      ncfile=fn, 
+      name='pattern',
+      newfile=1,
+      format='NETCDF3_CLASSIC',
+      missing_value=missingV,
+      axisorder='zyx', 
+      axisarray=[index1, lat1, lon1])
+
+    # save tser
+    NC1.axislib0['t']['unit'] = timeUnits
+    NC1.save2nc(
+      p1.tser[:nPlot], 
+      format='NETCDF3_CLASSIC',
+      name='tser',
+      ncfile=fn,
+      missing_value=missingV, 
+      newfile=0, 
+      axisorder='zt', 
+      axisarray=[index1, time1])
+
+    # save varP
+    NC1.save2nc(
+      p1.varP[:nPlot], 
+      ncfile=fn, 
+      name='varP',
+      newfile=0,
+      format='NETCDF3_CLASSIC',
+      missing_value=missingV,
+      axisorder='z', 
+      axisarray=[index1])
+ 
+    #== plot_variance
+    if 1:
+      fig1 = Mat.figure(figsize=(10,6))
+      Mat.clf()
+      #varP[0] = 0.
+      Mat.plot(np.arange(1,nKeep+1), p1.varP[:nKeep]*100, 'o')
+      Mat.xlim(0.5, nKeep+0.5)
+      Mat.grid()
+      Mat.ylabel('Percentage of Variance')
+      Mat.title('Variances of the First %d EOFs, for %s'%(nKeep, lab[0]) )
+
+      figFileVariance = '%s/variance.png'%a.outDir
+      Mat.savefig(figFileVariance, dpi=100)
+
+    #== plot_tser_ferret
+    if 0:
+      tserW = 8
+      tserH = 6
+
+      if 0:
+        sys.path.insert(0, '../py')
+        import NC_btang_v4 as NC1
+
+        print('time1, p1.tser: ', time1.shape, p1.tser.shape)
+        # save to nc file
+        missingV = -9999.0
+        tempFile9 = tempfile.mkstemp(suffix='.nc', dir=a.outDir)[1]
+        print("EOF tser to: ", tempFile9)
+        ii = (np.arange(nPlot)+1).astype('i')
+
+        NC1.axislib0['t']['unit'] = timeUnits
+
+        NC1.save2nc(
+            p1.tser[:nPlot], 
+            format='NETCDF3_CLASSIC',
+            name='tser',
+            ncfile=tempFile9,
+            missing_value=missingV, 
+            newfile=1, 
+            axisorder='it', 
+            axisarray=[ii, time1]
+            )
+
+      # ferret window
+      runF('set window/xinches=%.1f/yinches=%.1f'
+         %(tserW, tserH*nPlot))
+
+      # define viewports
+      for i in range(nPlot):
+        dY = 1./nPlot
+        runF( 'DEFINE VIEWPORT/XLIMITS=0.,1/yLIMITS=%.2f,%.2f v%02d'
+            %(i*dY, (i+1)*dY, nPlot-i) )
+
+      # open in ferret
+      runF( 'use "%s"'%fn )
+      runF( 'show data' )
+ 
+      # plot
+      #for i in ():
+      for i in range(nPlot):
+        runF( 'set view v%02d'%(i+1 ) )
+        runF( 'go margins 0.5' )
+        runF( 'plot/hgrat=(DASH,COLOR=lightblue)/vgrat=(DASH,COLOR=lightblue)/set tser[k=%d]'%(i+1) )
+        runF( 'ppl list labels ' )
+        runF( 'ppl title "EOF %d"'%(i+1) )
+        runF( 'ppl ylab ' )
+        runF( 'go unlabel 1' )
+        runF( 'go unlabel 2' )
+        runF( 'ppl plot ' )
+
+      # save
+      print('save tser png')
+      figFileTser = '%s/tser.png'%a.outDir
+      runF( 'frame/file="%s"/ypixels=%d'%(figFileTser, tserH*nPlot*100) )
+
+    #== plot_tser_ferret2
+    if 1:
+      print('in tser_ferret2')
+      if 1:
+        sys.path.insert(0, '../py')
+        import NC_btang_v4 as NC1
+
+        print('time1, p1.tser: ', time1.shape, p1.tser.shape)
+        # save to nc file
+        missingV = -9999.0
+        tempFile9 = tempfile.mkstemp(suffix='.nc', dir=a.outDir)[1]
+        print("EOF tser to: ", tempFile9)
+        ii = (np.arange(nPlot)+1).astype('i')
+
+        NC1.axislib0['t']['unit'] = timeUnits
+
+        NC1.save2nc(
+            p1.tser[:nPlot], 
+            format='NETCDF3_CLASSIC',
+            name='tser',
+            ncfile=tempFile9,
+            missing_value=missingV, 
+            newfile=1, 
+            axisorder='it', 
+            axisarray=[ii, time1]
+            )
+
+      tserW = 12
+      tserH = 6.6  # 3300 pixel height
+
+      # open in ferret
+      runF( 'use "%s"'%tempFile9 )
+      runF( 'show data' )
+
+       # ferret window
+      runF('set window/xinches=%.1f/yinches=%.1f'
+         %(tserW, tserH*nPlot))
+
+      # define viewports
+      #temp1 = 'go multi_view 5,1'
+      temp1 = 'go multi_view 5,1, 0.8, 0.1, ,   0.10, 0.1, 0.08'
+      runF(temp1)
+
+      # plot
+      #for i in ():
+      for i in range(nPlot):
+        runF( 'set view v%d1'%(i+1 ) )
+        #runF( 'go margins 0.5' )
+        runF( 'plot/hgrat=(DASH,COLOR=lightblue)/vgrat=(DASH,COLOR=lightblue)/set tser[m=%d]'%(i+1) )
+        runF( 'ppl list labels ' )
+        runF( 'ppl title "EOF %d"'%(i+1) )
+        runF( 'ppl ylab ' )
+        runF( 'go unlabel 1' )
+        runF( 'go unlabel 2' )
+        runF( 'ppl plot ' )
+
+      # save
+      figFileTser = '%s/tser.png'%a.outDir
+      runF( 'frame/file="%s"/ypixels=%d'%(figFileTser, tserH*nPlot*100) )
+
+
+    #== plot_tser_python
+    if 0:
+      tserW = 8
+      tserH = 6
+
+      fig1 = Mat.figure(figsize=(tserW,tserH*nPlot))
+      Mat.clf()
+
+      min1 = p1.tser.min()
+      max1 = p1.tser.max()
+      max1 = max(max1, np.abs(min1))
+
+      try:
+        time9 = convertTime(time1, timeUnits)
+      except:
+        time9 = None   
+
+      for i in range(nPlot):
+        ax = Mat.subplot(nPlot,1,i+1)
+        if time9 is None:
+          plotTser(p1.tser, i,i, max1)
+        else:
+          plotTser2(time9, p1.tser, i,i, max1)
+
+      figFileTser = '%s/tser.png'%a.outDir
+      Mat.savefig(figFileTser, dpi=100)
+
+    #== plot_patterns_python
+    if 0:
+      from mpl_toolkits.basemap import Basemap
+      patternH = 6.0
+
+      aspect1 = (lat1[-1]-lat1[0]) / (lon1[-1]-lon1[0])
+      patternW = min( patternH/aspect1, 12)
+
+      Mat.clf()
+      xPlot = 1
+      yPlot = ((nPlot-1)/xPlot+1)
+      f1 =Mat.figure(figsize=(patternW*xPlot, patternH*yPlot))
+
+      lon2 = find_bound(lon1)
+      lat2 = find_bound(lat1)
+
+      lat2[0] = max(-90, lat2[0])
+      lat2[-1] = min(90, lat2[-1])
+
+      m = Basemap(lon2[0], lat2[0], lon2[-1], lat2[-1], resolution='c', suppress_ticks=False)
+
+      for i in range(nPlot):
+        ax = Mat.subplot(yPlot,xPlot,i+1)
+        plotPattern(i, min2, max2)
+
+      figFilePattern = '%s/pattern.png'%a.outDir
+      Mat.savefig(figFilePattern, dpi=100)
+
+    #== plot_patterns_ferret
+    if 1:
+      if 0:
+        sys.path.insert(0, '../py')
+        import NC_btang_v4 as NC1
+
+        # save to nc file
+        missingV = -9999.0
+        try:
+          pattern2 = pattern1[:nPlot].filled(missingV)
+        except:
+          pattern2 = pattern1[:nPlot]
+        print('pattern2.shape: ', pattern2.shape, nPlot)
+        print('lon1, lat1: ', lon1.shape, lat1.shape)
+        tempFile9 = tempfile.mkstemp(suffix='.nc', dir=a.outDir)[1]
+        print("EOF patterns to: ", tempFile9)
+        ii = (np.arange(nPlot)+1).astype('i')
+
+        NC1.save2nc(
+  pattern2, 
+  name='pattern',
+  ncfile=tempFile9,
+  missing_value=missingV, 
+  newfile=1, 
+  axisorder='iyx', 
+  axisarray=[ii, lat1, lon1]
+  )
+
+      # ferret window
+      patternH = 6.0  # 6.0 * 5 * 100 = 3000 pixel height
+      import math
+      dLat = float(a.latE[0] - a.latS[0])
+      mLat = (a.latE[0] + a.latS[0])/2.0
+      dLon = float(a.lonE[0] - a.lonS[0]) * math.cos(mLat/180.0*math.pi)
+      aspect1 = max(min(nPlot*1.2*dLat/dLon,20),0.4)
+      
+      runF('set window/outline=0.5/aspect=%.3f/yinches=%.1f'
+         %(aspect1, patternH*nPlot))
+
+      runF( 'palette %s'%a.colorMap[0] )
+      if len(a.ferretLevel[0])>0:
+        levelStr = '/level=%s'%a.ferretLevel[0]
+      else:
+        levelStr = ''
+
+      # define viewports
+      for i in range(nPlot):
+        dY = 1./nPlot
+        runF( 'DEFINE VIEWPORT/XLIMITS=0.,1/yLIMITS=%.2f,%.2f v%02d'
+            %(i*dY, (i+1)*dY, nPlot-i) )
+
+      # open in ferret
+      runF( 'use "%s"'%fn )
+      runF( 'show data' )
+      
+      # plot
+      for i in range(nPlot):
+        runF( 'set view v%02d'%(i+1 ) )
+        runF( 'go margins 0.5' )
+        runF( 'shade/set%s pattern[k=%d]'%(levelStr, i+1 ) )
+        runF( 'ppl xlab EOF %d'%(i+1) )
+        runF( 'ppl ylab ' )
+        runF( 'ppl title ' )
+        runF( 'go unlabel 1' )
+        runF( 'go unlabel 2' )
+        runF( 'ppl shade ' )
+        runF( 'go land ' )
+
+      # save
+      figFilePattern = '%s/pattern.png'%a.outDir
+      runF( 'frame/file="%s"/ypixels=%d'%(figFilePattern, patternH*nPlot*100) )
+
+    #== concatenate_plots
+    if 1:
+      from PIL import Image
+      import PIL
+
+      print('files--')
+      files = [
+        figFileVariance, 
+        figFileTser, 
+        figFilePattern, 
+        ]
+      print(files)
+
+      images = list(map(Image.open, files))
+      for i in images:
+        print(i.size)
+
+      # no need now, as both plots are 3000 height
+      if 0:  # resize tser plot to match the patern plot height.
+        h2 = images[2].size[1]
+        w1 = images[1].size[0]
+        h1 = images[1].size[1]
+        new1 = (int((h2/h1)*w1), h2)
+        print('new size: ', new1)
+        images[1] = images[1].resize(new1,resample=PIL.Image.BILINEAR)
+        print('new size: ', images[1].size)
+
+      w1 = images[1].size[0]
+      h1 = images[1].size[1]
+      images[1] = images[1].crop((0,200, w1, h1-100))
+
+      w = images[1].size[0] + images[2].size[0] 
+      h = images[0].size[1] + max( images[1].size[1], images[2].size[1] )
+
+      result = Image.new("RGBA", (w, h))
+
+      result.paste( images[0], (0, 0) )
+      result.paste( images[1], (0, images[0].size[1]) )
+      result.paste( images[2], (images[1].size[0], images[0].size[1]) )
+
+      result.save(figFile)
+
+    sys.exit()
+
+  #== eof__2
+  if a.service=='EOF':
+    import xarray as xr
+
+    temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, a.var1a[0]) 
+    runF(temp1)
+
+    
+    nc1 = xr.open_dataset('%s/temp9.nc'%(a.outDir))
+    ncVar1 = nc1.variables[a.var1a[0]]
+    data1 = ncVar1[:]
+    print('data1: ', data1.shape)
+ 
+    dims1 = ncVar1.dimensions
+    time1 = nc1.variables[dims1[0]][:]
+    print('time1: ',time1)
+
+    timeUnits = nc1.variables[dims1[0]].units
+    lon1 = nc1.variables[dims1[-1]][:]
+    lat1 = nc1.variables[dims1[-2]][:]
+    nc1.close()
+
+    nLon = len(lon1)
+    nLat = len(lat1)
+
+    # import__
+    cwd2 = os.getcwd()
+    os.chdir(cwd1)
+
+    from netCDF4 import Dataset
+    import netCDF4 as nC4
+    sys.path.insert(0, '../py')
+    import NC_btang_v4 as NC1
+    import pca_v4 as pca
+
+    import matplotlib 
+    matplotlib.use('Agg')  
+    import matplotlib.pylab as Mat
+    Mat.ioff()
+    #from mpl_toolkits.basemap import NetCDFFile
+    from mpl_toolkits.basemap import Basemap
+
+    import matplotlib as mpl
+    mpl.rcParams['image.cmap'] = 'gist_rainbow'
+
+    os.chdir(cwd2)
+
+    print('data1.shape: ', data1.shape)
+    data1.shape = data1.shape[0], nLon*nLat
+
+    weightLat = np.cos(lat1*np.pi/180.)
+    weight1 = np.ones( (nLat, nLon), dtype=np.float32 )
+    weight1.shape = nLon*nLat, 
+
+    # filter out invalid
+    temp1 = np.ma.arange(5)
+    valid1 = np.ones( data1.shape, dtype=bool )
+    isMask = 0
+    if type(data1) == type(temp1):
+      if data1.count() < data1.shape[0]*data1.shape[1] :
+        isMask = 1
+        valid1 = ~( data1.mask )
+        print('data1.count() < np.prod(data1.shape) :', data1.count(), np.prod(data1.shape) )
+
+    print('isMask: ', isMask)
+    # remove time of most invalid
+    if isMask:
+      temp3 = valid1.sum(axis=1)
+      #valid1b = temp3>temp3.mean()*0.1
+      valid1b = temp3>temp3.mean()*0.5
+      if valid1b.sum()<data1.shape[0]:
+        data1 = data1[valid1b,:]
+        valid1 = valid1[valid1b,:]
+        time1 = time1[valid1b]
+  
+    # invalid times and grid:
+    temp2 = valid1.sum(axis=0)
+    valid = temp2==data1.shape[0]  # valid lat/lon points
+
+    if 0:
+      for jj in (10000,20000,30000,40000):
+        print(jj)
+        print((temp2[jj]))
+        for i in range(data1.shape[0]): print((int(valid1[i,jj])), end=' ')
+        print(' ')
+
+      #print('np.isfortran:')
+      #print(np.isfortran(data1))
+      print('data1.shape')
+      print((data1.shape))
+      print('temp2')
+      print(temp2)
+      print('valid1.sum(): ', valid1.sum())
+      print('valid1a.sum(): ', valid1a.sum())
+
+    if valid.sum()<data1.shape[1]:
+      data1c = data1[:, valid]
+      weight1 = weight1[valid]
+      isGap = 1
+    else:
+      data1c = data1
+      isGap = 0
+
+    data1c = np.array(data1c)
+    mean1 = data1c.mean(axis=0)
+    data1c = data1c - mean1[np.newaxis, :]
+    print('data1c.shape: ', data1c.shape)
+    nPoint = len(data1c)
+    nFeature = data1c.shape[1]
+
+    # calc_PCA
+    nKeepMax = min(nPoint, nFeature)
+    nKeep = min(10, nKeepMax)
+    #weight1 = None
+    p1= pca.PCA(data1c,missingvalue=None, nkeep=nKeep, mask=None, weight=weight1)
+    p1.calculate2()
+
+    # labels for the variables
+    lab = [' ',]
+    #for i in range(a.nVar):
+    #  if a.pres[i]>0:
+    #    pStr = '[p=%.0f]'%a.pres[i]
+    #  else:
+    #    pStr = ''
+    #  lab.append( '%s_%s:%s%s'%(a.center[i], a.model[i], a.varName[i], pStr) )
+
+    #nPlot = nKeep
+    nPlot = 5
+
+    #== calc_min_max, before putting in lat/lon grid
+    min2 = p1.pattern.min()
+    max2 = p1.pattern.max()
+
+    # fill lat/lon
+    if isGap:
+      pattern1 = np.ma.ones( (nPlot, nLon*nLat), dtype = np.float32 ) * np.ma.masked
+      pattern1[:, valid] = p1.pattern[:nPlot, :]
+    else:
+      pattern1 = p1.pattern[:nPlot, :]
+  
+    pattern1.shape = nPlot, nLat, nLon
+
+    #== save_eof
+    sys.path.insert(0, '../py')
+    import NC_btang_v4 as NC1
+
+    fn = '%s/data.nc'%a.outDir
+    index1 = np.arange(nPlot).astype('i') + 1
+    index1a = np.arange(nKeep).astype('i') + 1
+
+    # save pattern
+    print(' save pattern ')
+    missingV = -9999.0
+    try:
+      pattern2 = pattern1[:nPlot].filled(missingV)
+    except:
+      pattern2 = pattern1[:nPlot]
+
+    NC1.save2nc(
+      pattern2,
+      ncfile=fn, 
+      name='pattern',
+      newfile=1,
+      format='NETCDF3_CLASSIC',
+      missing_value=missingV,
+      axisorder='zyx', 
+      axisarray=[index1, lat1, lon1])
+
+    # save tser
+    print(' save tser ')
+    NC1.axislib0['t']['unit'] = timeUnits
+    NC1.save2nc(
+      p1.tser[:nPlot], 
+      format='NETCDF3_CLASSIC',
+      name='tser',
+      ncfile=fn,
+      missing_value=missingV, 
+      newfile=0, 
+      axisorder='zt', 
+      axisarray=[index1, time1])
+
+    # save varP
+    print(' save varP ')
+    NC1.save2nc(
+      p1.varP[:nPlot], 
+      ncfile=fn, 
+      name='varP',
+      newfile=0,
+      format='NETCDF3_CLASSIC',
+      missing_value=missingV,
+      axisorder='z', 
+      axisarray=[index1])
+ 
+    #== plot_variance
+    if 1:
+      fig1 = Mat.figure(figsize=(10,6))
+      Mat.clf()
+      #varP[0] = 0.
+      Mat.plot(np.arange(1,nKeep+1), p1.varP[:nKeep]*100, 'o')
+      Mat.xlim(0.5, nKeep+0.5)
+      Mat.grid()
+      Mat.ylabel('Percentage of Variance')
+      Mat.title('Variances of the First %d EOFs, for %s'%(nKeep, lab[0]) )
+
+      figFileVariance = '%s/variance.png'%a.outDir
+      Mat.savefig(figFileVariance, dpi=100)
+
+    #== plot_tser_ferret
+    if 0:
+      tserW = 8
+      tserH = 6
+
+      if 0:
+        sys.path.insert(0, '../py')
+        import NC_btang_v4 as NC1
+
+        print('time1, p1.tser: ', time1.shape, p1.tser.shape)
+        # save to nc file
+        missingV = -9999.0
+        tempFile9 = tempfile.mkstemp(suffix='.nc', dir=a.outDir)[1]
+        print("EOF tser to: ", tempFile9)
+        ii = (np.arange(nPlot)+1).astype('i')
+
+        NC1.axislib0['t']['unit'] = timeUnits
+
+        NC1.save2nc(
+            p1.tser[:nPlot], 
+            format='NETCDF3_CLASSIC',
+            name='tser',
+            ncfile=tempFile9,
+            missing_value=missingV, 
+            newfile=1, 
+            axisorder='it', 
+            axisarray=[ii, time1]
+            )
+
+      # ferret window
+      runF('set window/xinches=%.1f/yinches=%.1f'
+         %(tserW, tserH*nPlot))
+
+      # define viewports
+      for i in range(nPlot):
+        dY = 1./nPlot
+        runF( 'DEFINE VIEWPORT/XLIMITS=0.,1/yLIMITS=%.2f,%.2f v%02d'
+            %(i*dY, (i+1)*dY, nPlot-i) )
+
+      # open in ferret
+      runF( 'use "%s"'%fn )
+      runF( 'show data' )
+ 
+      # plot
+      #for i in ():
+      for i in range(nPlot):
+        runF( 'set view v%02d'%(i+1 ) )
+        runF( 'go margins 0.5' )
+        runF( 'plot/hgrat=(DASH,COLOR=lightblue)/vgrat=(DASH,COLOR=lightblue)/set tser[k=%d]'%(i+1) )
+        runF( 'ppl list labels ' )
+        runF( 'ppl title "EOF %d"'%(i+1) )
+        runF( 'ppl ylab ' )
+        runF( 'go unlabel 1' )
+        runF( 'go unlabel 2' )
+        runF( 'ppl plot ' )
+
+      # save
+      figFileTser = '%s/tser.png'%a.outDir
+      runF( 'frame/file="%s"/ypixels=%d'%(figFileTser, tserH*nPlot*100) )
+
+
+    #== plot_tser_python
+    if 1:
+      tserW = 8
+      tserH = 6
+
+      fig1 = Mat.figure(figsize=(tserW,tserH*nPlot))
+      Mat.clf()
+
+      min1 = p1.tser.min()
+      max1 = p1.tser.max()
+      max1 = max(max1, np.abs(min1))
+
+      try:
+        time9 = convertTime(time1, timeUnits)
+      except:
+        time9 = None   
+
+      for i in range(nPlot):
+        ax = Mat.subplot(nPlot,1,i+1)
+        if time9 is None:
+          plotTser(p1.tser, i,i, max1)
+        else:
+          plotTser2(time9, p1.tser, i,i, max1)
+
+      figFileTser = '%s/tser.png'%a.outDir
+      Mat.savefig(figFileTser, dpi=100)
+
+    #== plot_patterns_python
+    if 0:
+      from mpl_toolkits.basemap import Basemap
+      patternH = 6.0
+
+      aspect1 = (lat1[-1]-lat1[0]) / (lon1[-1]-lon1[0])
+      patternW = min( patternH/aspect1, 12)
+
+      Mat.clf()
+      xPlot = 1
+      yPlot = ((nPlot-1)/xPlot+1)
+      f1 =Mat.figure(figsize=(patternW*xPlot, patternH*yPlot))
+
+      lon2 = find_bound(lon1)
+      lat2 = find_bound(lat1)
+
+      lat2[0] = max(-90, lat2[0])
+      lat2[-1] = min(90, lat2[-1])
+
+      m = Basemap(lon2[0], lat2[0], lon2[-1], lat2[-1], resolution='c', suppress_ticks=False)
+
+      for i in range(nPlot):
+        ax = Mat.subplot(yPlot,xPlot,i+1)
+        plotPattern(i, min2, max2)
+
+      figFilePattern = '%s/pattern.png'%a.outDir
+      Mat.savefig(figFilePattern, dpi=100)
+
+    #== plot_patterns_ferret
+    if 1:
+      if 0:
+        sys.path.insert(0, '../py')
+        import NC_btang_v4 as NC1
+
+        # save to nc file
+        missingV = -9999.0
+        try:
+          pattern2 = pattern1[:nPlot].filled(missingV)
+        except:
+          pattern2 = pattern1[:nPlot]
+        print('pattern2.shape: ', pattern2.shape, nPlot)
+        print('lon1, lat1: ', lon1.shape, lat1.shape)
+        tempFile9 = tempfile.mkstemp(suffix='.nc', dir=a.outDir)[1]
+        print("EOF patterns to: ", tempFile9)
+        ii = (np.arange(nPlot)+1).astype('i')
+
+        NC1.save2nc(
+  pattern2, 
+  name='pattern',
+  ncfile=tempFile9,
+  missing_value=missingV, 
+  newfile=1, 
+  axisorder='iyx', 
+  axisarray=[ii, lat1, lon1]
+  )
+
+      # ferret window
+      patternH = 6.0
+      import math
+      dLat = float(a.latE[0] - a.latS[0])
+      mLat = (a.latE[0] + a.latS[0])/2.0
+      dLon = float(a.lonE[0] - a.lonS[0]) * math.cos(mLat/180.0*math.pi)
+      runF('set window/outline=0.5/aspect=%.3f/yinches=%.1f'
+         %(nPlot*1.2*dLat/dLon, patternH*nPlot))
+
+      runF( 'palette %s'%a.colorMap[0] )
+      if len(a.ferretLevel[0])>0:
+        levelStr = '/level=%s'%a.ferretLevel[0]
+      else:
+        levelStr = ''
+
+      # define viewports
+      for i in range(nPlot):
+        dY = 1./nPlot
+        runF( 'DEFINE VIEWPORT/XLIMITS=0.,1/yLIMITS=%.2f,%.2f v%02d'
+            %(i*dY, (i+1)*dY, nPlot-i) )
+
+      # open in ferret
+      runF( 'use "%s"'%fn )
+      runF( 'show data' )
+      
+      # plot
+      for i in range(nPlot):
+        runF( 'set view v%02d'%(i+1 ) )
+        runF( 'go margins 0.5' )
+        runF( 'shade/set%s pattern[k=%d]'%(levelStr, i+1 ) )
+        runF( 'ppl xlab EOF %d'%(i+1) )
+        runF( 'ppl ylab ' )
+        runF( 'ppl title ' )
+        runF( 'go unlabel 1' )
+        runF( 'go unlabel 2' )
+        runF( 'ppl shade ' )
+        runF( 'go land ' )
+
+      # save
+      figFilePattern = '%s/pattern.png'%a.outDir
+      runF( 'frame/file="%s"/ypixels=%d'%(figFilePattern, patternH*nPlot*100) )
+
+    #== concatenate_plots
+    if 1:
+      from PIL import Image
+
+      files = [
+    figFileVariance, 
+    figFileTser, 
+    figFilePattern, 
+    ]
+
+      images = list(map(Image.open, files))
+      for i in images:
+        print(i.size)
+
+      w = images[1].size[0] + images[2].size[0] 
+      h = images[0].size[1] + max( images[1].size[1], images[2].size[1] )
+
+      result = Image.new("RGBA", (w, h))
+
+      result.paste( images[0], (0, 0) )
+      result.paste( images[1], (0, images[0].size[1]) )
+      result.paste( images[2], (images[1].size[0], images[0].size[1]) )
+
+      result.save(figFile)
+
+    sys.exit()
+
+  #== diffPlot__
+  if a.service=='diffPlot':
+    if a.isGetFromNc==0:
+      a.setAspect()
+
+    plotCmd = 'shade'   
+
+    #-- plot_data1
+    if 1:
+      temp1 = str( 'palette %s'%a.colorMap[0] )
+      runF(temp1)
+
+      if len(a.ferretLevel[0])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[0])
+      else:
+        vminStr = ''
+
+      if a.timeMethod[0]==3:
+        temp1 =  '%s%s  %s[t=@ave]'%(plotCmd, vminStr, a.var1a[0]) 
+      else:
+        temp1 =  '%s%s  %s'%(plotCmd, vminStr, a.var1a[0]) 
+      runF(temp1)
+
+      temp1 = 'go land'
+      runF(temp1)
+
+      temp1 = 'frame /file="%s/plot1.png"'%a.outDir 
+      runF(temp1)
+  
+    #-- plot_data2
+    if 1:
+      temp1 = str( 'palette %s'%a.colorMap[1] )
+      runF(temp1)
+
+      if len(a.ferretLevel[1])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[1])
+      else:
+        vminStr = ''
+
+      if a.timeMethod[1]==3:
+        temp1 =  '%s%s  %s[t=@ave]'%(plotCmd, vminStr, a.var1a[1]) 
+      else:
+        temp1 =  '%s%s  %s'%(plotCmd, vminStr, a.var1a[1]) 
+      runF(temp1)
+
+      temp1 = 'go land'
+      runF(temp1)
+
+      temp1 = 'frame /file="%s/plot2.png"'%a.outDir 
+      runF(temp1)
+
+    #-- plot_diff
+    temp1 = str( 'palette %s'%a.colorMap[2] )
+    runF(temp1)
+
+    if len(a.ferretLevel[2])>0:
+      vminStr = '/level=%s'%(a.ferretLevel[2])
+    else:
+      vminStr = ''
+
+    temp1 =  'def var datad = %s - %s'%(a.var1a[0], a.var1a[1])
+    runF(temp1)
+
+    if a.timeMethod[0]==3:
+      temp1 =  '%s%s datad[t=@ave]'%(plotCmd, vminStr) 
+    else:
+      temp1 =  '%s%s datad'%(plotCmd, vminStr) 
+    runF(temp1)
+
+    temp1 = 'go land'
+    runF(temp1)
+
+    #zzzq
+    if 1:
+      temp1 = 'frame /file="%s/plot3.png"'%a.outDir 
+    else:
+      xpi=20000
+      temp1 = str( 'frame /file="%s"/xpixels=%d'%(figFile, xpi))
+    runF(temp1)
+    
+    #-- combine
+    if 1:
+      files = [
+        '%s/plot1.png'%a.outDir,
+        '%s/plot2.png'%a.outDir,
+        '%s/plot3.png'%a.outDir,
+      ]
+      #combineImage(files, figFile)
+      combineImage2(files, 2, figFile)
+
+    #-- save_diff
+    temp1 = 'save/clobber/file="%s" datad'%(dataFile)
+    runF(temp1)
+
+    sys.exit()
+
+  #== corrMap__
+  if a.service=='correlationMap':
+    
+    if 1:
+      #a.nData = 2
+      #for ii in range(a.nData):
+      tempFile = tempfile.mkstemp(suffix='', dir=a.outDir)[1]
+      tempFile1 = '%s01.nc'%(tempFile)
+      temp1 = 'save/clobber/file="%s" %s'%(tempFile1, a.var1a[0])
+      runF(temp1)
+      
+      if a.nData==2:
+        tempFile2 = '%s02.nc'%(tempFile)
+        temp1 = 'save/clobber/file="%s" %s'%(tempFile2, a.var1a[1])
+        runF(temp1)
+        varName2 = a.var1a[1]
+
+      else: 
+        tempFile2 = None 
+        varName2 = None
+
+      # see func def: def_corr #
+      a.corr2(tempFile1,tempFile2,varName1=a.var1a[0],varName2=varName2)
+
+    if 0:
+      a.setAspect()
+      plotCmd = 'shade'   
+
+      # figure out nTime
+      temp1 = 'let aa1=data01[i=1,j=1]'
+      runF(temp1)
+      temp1 = 'save/clobber/file="%s/temp1.nc" aa1'%a.outDir
+      runF(temp1)
+
+      print('%s/temp1.nc'%a.outDir)
+
+      nc = Dataset("%s/temp1.nc"%a.outDir)
+      print(list(nc.variables.keys()))
+      temp2 = nc.variables['AA1'].shape
+      nTime = max(temp2)
+      nc.close()
+
+      temp1 = 'let data3 = data01[l=%d:%d] * data02[l=%d:%d]' \
+            %(1, nTime-a.laggedTime, a.laggedTime+1, nTime)
+      runF(temp1)
+
+      temp1 = str( 'palette %s'%a.colorMap[0] )
+      runF(temp1)
+
+      if len(a.ferretLevel[0])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[0])
+      else:
+        vminStr = ''
+
+      temp1 =  '%s%s  data3[t=@ave]'%(plotCmd, vminStr) 
+      runF(temp1)
+
+      temp1 = 'go land'
+      runF(temp1)
+
+      temp1 = 'frame /file="%s"'%figFile
+      runF(temp1)
+
+    sys.exit()
+
+  #== shade_plot_contour_
+  #if a.service in ('plot', 'contour', 'plotContour', 'linear') :
+  if a.service in ['plot', 'contour', 'plotContour', 'linear','subsetDownload']:
+    #-- save__data
+    if a.service in ['plot', 'contour', 'plotContour', 'linear']: 
+      temp1 = 'save/clobber/file="%s" %s'%( dataFile, a.var1a[0])
+      runF(temp1)
+
+    if a.plotTitle[0]:
+      titleStr = '/title="%s"'%a.plotTitle[0]
+    else:
+      titleStr = ''
+      
+    print('plotType: ', end=' ')
+    print(plotType)
+    #-- shade___
+    if plotType=='shade':
+      if not a.isGetFromNc:
+        a.setAspect()
+
+      #-- set_pallette
+      temp1 = str( 'palette %s'%a.colorMap[0] )
+      runF(temp1)
+
+      #-- set_level
+      if len(a.ferretLevel[0])>0:
+        vminStr = '/level=%s'%(a.ferretLevel[0])
+      else:
+        vminStr = ''
+
+      #-- plot command
+      if 0:
+        indexStr = a.getSubsetIndex3(0)
+        print('indexStr: ',  indexStr)
+        temp1 =  '%s%s%s %s[%s d=1]'\
+          %(plotCmd, vminStr, titleStr, a.var1a[0], indexStr) 
+
+      if 1:
+        #indexStr = a.getSubsetIndex3(0)
+        #print 'indexStr: ',  indexStr
+        temp1 =  '%s%s%s %s%s'\
+          %(plotCmd, vminStr, titleStr, a.var1a[0],a.plotAveStr) 
+
+      runF(temp1)
+
+      #-- shade_contour__
+      if a.service in ('plotContour',):
+        #-- set_level
+        if len(a.ferretLevel[1])>0:
+          vminStr = '/level=%s'%(a.ferretLevel[1])
+        else:
+          vminStr = ''
+
+        #indexStr = a.getSubsetIndex3(1)
+        temp1 =  '%s%s %s'\
+          %('contour/line/ov', vminStr,  a.var1a[1]) 
+        runF(temp1)
+
+      #-- go_land__
+      if a.isMap==1:
+        if a.service in ('contour', 'plotContour'):
+          temp1 = 'go land blue'
+        else:
+          temp1 = 'go land'
+        runF(temp1)
+
+    #-- line_plot__
+    elif plotType=='plot':
+      if 0:
+        indexStr = a.getSubsetIndex3(0)
+        temp1 = 'plot/symbol=1/line%s %s[%s]'%(titleStr, a.var1a[0], indexStr) 
+      if 1:
+        temp1 = 'plot/symbol=1/line%s %s'%(titleStr, a.var1a[0]) 
+      runF(temp1)
+
+    # title
+    #temp1 = str( "go unlabel `($labnum_dset)`" )
+    #runF(temp1)
+
+    #if a.plotTitle[0]:
+    #  temp1 =  "ppl title %s"%a.plotTitle 
+    #  runF(temp1)
+    #  
+    #if plotType=='shade':
+    #  temp1 = "ppl %s"%plotCmd2
+    #elif plotType=='plot':
+    #  temp1 = "ppl plot"
+    #runF(temp1)
+
+    elif plotType=='stats':
+      temp1 = 'let aa = %s'%(a.var1a[0])
+      runF(temp1)
+
+      temp1 = 'let aa1 = floatstr(aa, "(g10.4)")'
+      runF(temp1)
+      
+      temp1 = 'list aa1'
+      runF(temp1)
+
+      temp1 = 'plot%s/i=1:100 0*i, 0*i+1'%titleStr
+      runF(temp1)
+      temp1 = 'label 50,.5,0,0,.2 average=`aa1`'
+      #temp1 = 'label 50,.5,0,0,3 aaddfdfdfdf'
+      runF(temp1)
+
+    #-- save_plot
+    temp1 = 'frame /file="%s"'%figFile 
+    runF(temp1)
+    
+    os.chdir(cwd1)
+

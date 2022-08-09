@@ -1,0 +1,7 @@
+#!/bin/bash
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate FERRET
+#/home/svc/install/bin/pythonfe7 ./pythonWrapper $*
+#/home/btang/miniconda3/envs/FERRET/bin/python ./pythonWrapper $*
+/home/ubuntu/miniconda3/envs/FERRET/bin/python ./pythonWrapper $*
+#python ./pythonWrapper $*
