@@ -2,6 +2,7 @@
 #== js2__
 #== src_universalPlotting6c
 #== src_universalPlotting6c2
+#== src_universalPlotting6c3
 #== src_cmda1
 #== src_py
 #== src_universalPlotting
@@ -126,6 +127,10 @@ svc/src/universalPlotting6c/wrapper
 #== src_universalPlotting6c2
 svc/src/universalPlotting6c2/pythonWrapper   ####
 svc/src/universalPlotting6c2/wrapper
+
+#== src_universalPlotting6c3
+svc/src/universalPlotting6c3/pythonWrapper   ####
+svc/src/universalPlotting6c3/wrapper
 
 
 #== src_cmda1    only used by cmda1.html

@@ -2549,7 +2549,7 @@ def checkSync(para1, a, t0, checkMsg):
 class SERVICE():
   #== def___init__
   def __init__(self):
-    self.key = 'plot'
+    self.key = 'plot'  # not used?
     self.nData = (1,)
     self.nDim = (2,)
     self.nPlot = (1,)
@@ -3105,8 +3105,11 @@ if cr['services__']       == 1:
 
       da99 = xr.concat(das9,'i')
       ds99 = da99.to_dataset( name="data")
-      ds99a = ds99.rename({"TIME":"time"})
-      ds99a.to_netcdf(dataFile)
+      try:
+        ds99 = ds99.rename({"TIME":"time"})
+      except: pass
+
+      ds99.to_netcdf(dataFile)
 
       for i in range(a.nData):
         dss9[i].close()
