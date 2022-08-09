@@ -9,7 +9,7 @@
 #== def_serviceFunc__
 #== correlationMap__
 #== universalPlotting3b__   for universalPlotting
-#== universalPlotting6b__   
+#== universalPlotting6b__     now it routes to 6c
 #== universalPlotting6c__   
 #== universalPlotting6c2__   
 #== cmda1__   
@@ -439,7 +439,7 @@ def displayUniversalPlotting3b():
 @app.route('/svc/universalPlotting6b', methods=["GET"])
 #@crossdomain(origin='*')
 def displayUniversalPlotting6b():
-    return serviceFunc('universalPlotting6b')
+    return serviceFunc('universalPlotting6c')
 
 #== universalPlotting6c__   
 @app.route('/svc/universalPlotting6c', methods=["GET"])
