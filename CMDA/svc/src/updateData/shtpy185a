@@ -30,10 +30,12 @@ cr = {
 # readme__
 #parameters_':  
 #== data_labels
-#                              1  2  3  4
+# Three steps:
 # 1 -- gather list of files
 # 2 -- collect facets 
 # 3 -- save js for web
+#
+# == step 2
 'command_arg':    0, #  1,   # 1  1  1
 'collect_fileList':     1,   # 1  0  0
 'combine_break_files':  1,   # 1  0  0
@@ -41,11 +43,13 @@ cr = {
 # cp_files              1
 # change_file_list      1
 # def_makeDump(fn):     1
+# == step 2
 'extract_info_inside':  1,   # 0  1  0
 'save_json':            1,   # 0  1  0
 'combine_old_new':      1,   # 0  1  0
 # cp_fileDict           0
 # delList__             0
+# == step 3
 'facet_list':           1,   # 0  0  1
 'save_json_for_web':    1,   # 0  0  1
 # put_to_web            1
