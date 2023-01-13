@@ -9,7 +9,9 @@
 #== def_serviceFunc__
 #== correlationMap__
 #== universalPlotting3b__   for universalPlotting
-#== universalPlotting6b__   
+#== universalPlotting6b__     now it routes to 6c
+#== universalPlotting6c__   
+#== universalPlotting6c2__   
 #== cmda1__   
 #== static_html
 
@@ -58,7 +60,7 @@ from werkzeug.utils import secure_filename
 #== import_for_services__
 from svc.src.universalPlotting3 import call_universalPlotting3
 from svc.src.universalPlotting6b import call_universalPlotting6b
-from svc.src.universalPlotting import call_universalPlotting
+from svc.src.universalPlotting import call_universalPlotting  # only this one is used
 #from svc.src.py import download_file_from_url
 #from svc.src.py import checkNc
 #from svc.src.py import checkNc2
@@ -437,7 +439,20 @@ def displayUniversalPlotting3b():
 @app.route('/svc/universalPlotting6b', methods=["GET"])
 #@crossdomain(origin='*')
 def displayUniversalPlotting6b():
-    return serviceFunc('universalPlotting6b')
+    return serviceFunc('universalPlotting6c')
+
+#== universalPlotting6c__   
+@app.route('/svc/universalPlotting6c', methods=["GET"])
+#@crossdomain(origin='*')
+def displayUniversalPlotting6c():
+    return serviceFunc('universalPlotting6c')
+
+#== universalPlotting6c2__   
+@app.route('/svc/universalPlotting6c2', methods=["GET"])
+#@crossdomain(origin='*')
+def displayUniversalPlotting6c2():
+    return serviceFunc('universalPlotting6c2')
+
 
 #== cmda1__   
 @app.route('/svc/cmda1', methods=["GET"])

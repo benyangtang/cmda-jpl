@@ -42,6 +42,7 @@ cr = {
 #== def_ferretAnomaly
 #== def_ferretAnomaly2
 #== def_ferretAnomaly3
+#== def_ferretAnomaly4(runF, indexStr, varName, d, varNameOut):
 #== def_ferretMean(runF, a):
 
 # class_SUBSET_REGION():
@@ -83,8 +84,8 @@ cr = {
   # fig_data_filenames
   # set_region_  not used
   # open_data and regrid to the first dataset
-  # calc_anomaly
   # calc_time mean
+  # calc_anomaly
   # mask_basin
   # average_Or_Sum
   # name_fig_data_files
@@ -906,42 +907,65 @@ def ferretAnomaly2(runF, indexStr, affix1, varName, varNameOut):
 
 #== def_ferretAnomaly3(runF, indexStr, varName, d, varNameOut):
 def ferretAnomaly3(runF, indexStr, affix1, varName, varNameOut):
-  temp1 = 'USE coads_climatology'
+  temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, varName) 
   runF(temp1)
 
-  temp1 = 'define axis/l=1:12:1 tax1'
+  import xarray as xr
+  ds1 = xr.load_dataset('%s/temp9.nc'%(a.outDir))
+  da1 = ds1[varName]
+  shape1 = da1.shape
+  print('da1.shape: ', da1.shape)
+
+  # EOF_anomaly__
+  m1 = 12
+  if a.timeMean=='q': m1 = 4
+  anom = np.ones( (m1, shape1[-2], shape1[-1]), dtype=np.float32 )
+  for i in range(m1):
+    print(da1.data[i::m1])
+    anom[i] = da1.data[i::m1].mean(axis=0)
+    da1.data[i::m1] -= anom[i][np.newaxis, :]
+  ds2 = da1.to_dataset(name='%sz'%varName)
+  ds2.to_netcdf('%s/temp8.nc'%a.outDir)
+
+  temp1 = 'use %s/temp8.nc'%a.outDir
   runF(temp1)
-  refStr = 'GT=tax1@MOD'
-
-  #refStr = 'GT=month_reg@MOD'
-  #refStr = 'GT=sst[d=coads_climatology]@MOD'
-
-  # regrid to monthly
-  #temp1 = 'let dd1%s = %s[gt=tax1]'%(affix1,varName)
-  #runF(temp1)
-
-  # regrid to monthly climatology
-  temp1 = 'let ddc%s = %s[%s]'%(affix1, varName, refStr)
-  runF(temp1)
-
-  #temp1 = 'let dd1b = dd1[t=@ave]'
-  #runF(temp1)
-
-  # regrid the climatology to monthly
-  temp1 = 'let ddca%s = ddc%s[gt=%s]'%(affix1, affix1, varName)
-  runF(temp1)
-
-  # calc anomaly
-  #temp1 = 'let dda%s = %s - ddc%s[gt=%s]'%(affix1, varName, affix1, varName) 
-  temp1 = 'let dda%s = %s[gt=ddca%s] - ddca%s'%(affix1, varName, affix1, affix1 ) 
+  temp1 = 'let %s = %sz[d=%s/temp8.nc]'%(varNameOut, varName, a.outDir)
   runF(temp1)
 
-  if 1:
-    temp1 = 'define var/bad=-999999.0 %s = dda%s'%(
-      varNameOut,
-      affix1,
-      )
+#== def_ferretAnomaly4(runF, indexStr, varName, d, varNameOut):
+def ferretAnomaly4(runF, indexStr, affix1, varName, varNameOut):
+  temp1 = 'save/clobber/file="%s/temp9.nc" %s'%(a.outDir, varName) 
+  runF(temp1)
 
+  import xarray as xr
+  ds1 = xr.load_dataset('%s/temp9.nc'%(a.outDir))
+  da1 = ds1[varName]
+  shape1 = da1.shape
+  timeDim = da1.dims[0]
+  print('da1.shape: ', da1.shape)
+  print('da1.dims: ', da1.dims)
+
+  if a.anomaly==1: 
+    clim = da1.groupby('%s.month'%timeDim).mean(dim=timeDim)
+    da2 = (da1.groupby('%s.month'%timeDim) - clim)
+  else:
+    da2 = da1
+
+  if a.timeMean=='y': 
+    #clim = da1.groupby('%s.year'%timeDim).mean(dim=timeDim)
+    #da1 = da1.groupby('%s.year'%timeDim) - clim * 0.0
+    da2 = eval("da2.resample(%s='1Y')"%timeDim).mean()
+  elif a.timeMean=='q': 
+    #clim = da1.groupby('%s.season'%timeDim).mean(dim=timeDim)
+    #da1 = da1.groupby('%s.season'%timeDim)  - clim * 0.0
+    da2 = eval("da2.resample(%s='1Q')"%timeDim).mean()
+  
+  ds2 = da2.to_dataset(name='%sz'%varName)
+  ds2.to_netcdf('%s/temp8.nc'%a.outDir)
+
+  temp1 = 'use %s/temp8.nc'%a.outDir
+  runF(temp1)
+  temp1 = 'let %s = %sz[d=%s/temp8.nc]'%(varNameOut, varName, a.outDir)
   runF(temp1)
 
 #== def_ferretMean(runF, a):
@@ -2525,7 +2549,7 @@ def checkSync(para1, a, t0, checkMsg):
 class SERVICE():
   #== def___init__
   def __init__(self):
-    self.key = 'plot'
+    self.key = 'plot'  # not used?
     self.nData = (1,)
     self.nDim = (2,)
     self.nPlot = (1,)
@@ -2897,21 +2921,33 @@ if cr['services__']       == 1:
 
     runF(temp1)
 
-  # calc_anomaly
-  if a.timeMethod[0]==3 and a.anomaly==1:
-    if a.service != 'EOF':
+  # calc_time mean
+  if 0:
+    if a.timeMethod[0]==3 and len(a.timeMean)>0:
+      for ii in range(a.nData):
+        ferretMean(runF, a, ii)
+
+    # calc_anomaly
+    if a.timeMethod[0]==3 and a.anomaly==1 and a.timeMean!='y':
+      print('call anomaly')
       for ii in range(a.nData):
         indexStr4 = a.getSubsetIndex4(ii)
         var1aa = a.var1a[ii] + '_A'
         affix1 = '%d'%(ii+1)
         #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
-        ferretAnomaly(runF, indexStr4, affix1, a.var1a[ii], var1aa)
+        ferretAnomaly4(runF, indexStr4, affix1, a.var1a[ii], var1aa)
         a.var1a[ii] = var1aa
 
-  # calc_time mean
-  if a.timeMethod[0]==3 and len(a.timeMean)>0:
-    for ii in range(a.nData):
-      ferretMean(runF, a, ii)
+  if 1:
+    if a.timeMethod[0]==3 and (a.anomaly==1 or len(a.timeMean)>0):
+      print('call anomaly / time mean')
+      for ii in range(a.nData):
+        indexStr4 = a.getSubsetIndex4(ii)
+        var1aa = a.var1a[ii] + '_A'
+        affix1 = '%d'%(ii+1)
+        #cmac.ferretAnomaly(runF, indexStr4, a.var1a[ii], 0, var1aa)
+        ferretAnomaly4(runF, indexStr4, affix1, a.var1a[ii], var1aa)
+        a.var1a[ii] = var1aa
 
   # mask_basin
   if len(a.basin)>0:
@@ -3069,8 +3105,11 @@ if cr['services__']       == 1:
 
       da99 = xr.concat(das9,'i')
       ds99 = da99.to_dataset( name="data")
-      ds99a = ds99.rename({"TIME":"time"})
-      ds99a.to_netcdf(dataFile)
+      try:
+        ds99 = ds99.rename({"TIME":"time"})
+      except: pass
+
+      ds99.to_netcdf(dataFile)
 
       for i in range(a.nData):
         dss9[i].close()
@@ -3547,7 +3586,7 @@ go multi_yaxis_overlay dens 2 "-" " " @CI"Density" .3 1.5  ",1,,,.13,(1PG10.3)"
     nLat = len(lat1)
 
     # EOF_anomaly__
-    if a.anomaly==1 and a.timeMean!='y':
+    if a.anomaly==1 and a.timeMean!='y' and False:
       m1 = 12
       if a.timeMean=='q': m1 = 4
       anom = np.ones( (m1, nLat, nLon), dtype=np.float32 )
