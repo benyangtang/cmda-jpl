@@ -21,8 +21,6 @@ codeNum = '185a'
 import os
 import importlib
 #HOME=os.environ['HOME']
-home='/home/bytang'   # for cmda4
-HOME = home
 
 cr = {
 #                              1  2   3  4
@@ -74,47 +72,18 @@ if cr['import_']       == 1:
   import pickle
   import json
   import yaml
-  #sys.path.append('%s/bin/py'%home)
-  #import btang
 
   import tempfile
-
-  # Numeric
-  if 0:
-    import Numeric as Num
-    import RandomArray as RA
-    import numpyIO
-    import Num_btang as Num1
 
   # numpy
   import numpy as np
   #import numpy_btang as np1
-
-  if 0:
-    #import scikits
-    pass
-
-  # netCDF
-  if 0:
-    import Scientific.IO.NetCDF as NC
-    import NC_btang as NC1
-
-    from netCDF4 import Dataset
-
-    import Nio
-
-  # from mpl_toolkits.basemap import NetCDFFile
-
-    import pyferret as PF
 
 if 1:
   myPyDir = '/home/ubuntu/CMDA0/svc/src/py'
   sys.path.append(myPyDir)
   import  checkNc2
   importlib.reload(checkNc2)
-
-
-#btang.tee(HOME + '/outputs/shtpy%s_%s'%(codeNum, time.strftime('%Y%m%d_%H%M%S')))
 
 t00 = time.time()
 print('======================')
